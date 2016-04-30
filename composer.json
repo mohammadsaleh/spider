@@ -19,11 +19,11 @@
 	],
 	"autoload": {
 		"psr-4": {
-			"Spider\\": "Spider/src",
-			"AclManager\\": "AclManager/src",
-			"PluginManager\\": "PluginManager/src",
-			"Settings\\": "Settings/src",
-			"Users\\": "Users/src"
+			"Spider\\": "./Spider/src",
+			"AclManager\\": "./AclManager/src",
+			"PluginManager\\": "./PluginManager/src",
+			"Settings\\": "./Settings/src",
+			"Users\\": "./Users/src"
 		}
 	}
 }
