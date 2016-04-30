@@ -23,7 +23,7 @@
 			"AclManager\\": "AclManager/src",
 			"PluginManager\\": "PluginManager/src",
 			"Settings\\": "Settings/src",
-			"Users\\": "Users/src",
+			"Users\\": "Users/src"
 		}
 	}
 }
