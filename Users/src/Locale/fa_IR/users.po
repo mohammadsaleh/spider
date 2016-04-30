@@ -1,0 +1,106 @@
+# LANGUAGE translation of CakePHP Application
+# Copyright YEAR NAME <EMAIL@ADDRESS>
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"POT-Creation-Date: 2015-08-22 02:52+0000\n"
+"PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
+"Last-Translator: NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Controller/UsersController.php:22
+msgid "Username or password is incorrect"
+msgstr ""
+
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Roles/add.ctp:5
+msgid "Add Roles"
+msgstr "مدیریت دسترسی ها"
+
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Roles/add.ctp:15
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Roles/edit.ctp:15
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Roles/index.ctp:14
+msgid "Roles"
+msgstr "دسترسی ها"
+
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Roles/add.ctp:19
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Roles/edit.ctp:57
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Roles/index.ctp:32
+msgid "Add New Roles"
+msgstr "افزودن دسترسی جدید"
+
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Roles/add.ctp:57
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Roles/edit.ctp:63
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Roles/index.ctp:18
+msgid "List Roles"
+msgstr ""
+
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Roles/add.ctp:68
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Roles/edit.ctp:74
+msgid "parent_id"
+msgstr ""
+
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Roles/add.ctp:86
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Roles/edit.ctp:92
+msgid "name"
+msgstr ""
+
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Roles/add.ctp:102
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Roles/edit.ctp:108
+msgid "title"
+msgstr ""
+
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Roles/add.ctp:118
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Roles/edit.ctp:124
+msgid "description"
+msgstr ""
+
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Roles/add.ctp:134
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Roles/edit.ctp:140
+msgid "lft"
+msgstr ""
+
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Roles/add.ctp:150
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Roles/edit.ctp:156
+msgid "rght"
+msgstr ""
+
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Roles/edit.ctp:5
+msgid "Edit Roles"
+msgstr ""
+
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Roles/index.ctp:3
+msgid "Index Roles"
+msgstr ""
+
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Users/add.ctp:5
+msgid "Add User"
+msgstr ""
+
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Users/add.ctp:15
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Users/edit.ctp:15
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Users/index.ctp:14
+msgid "Users"
+msgstr ""
+
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Users/add.ctp:19
+msgid "Add New User"
+msgstr ""
+
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Users/edit.ctp:5
+msgid "Edit User"
+msgstr ""
+
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Users/index.ctp:3
+msgid "Index User"
+msgstr ""
+
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Users/index.ctp:18
+msgid "List Users"
+msgstr ""
+

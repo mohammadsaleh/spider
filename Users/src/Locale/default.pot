@@ -1,0 +1,357 @@
+# LANGUAGE translation of CakePHP Application
+# Copyright YEAR NAME <EMAIL@ADDRESS>
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"POT-Creation-Date: 2015-08-22 03:25+0000\n"
+"PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
+"Last-Translator: NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Controller/Admin/RolesController.php:55;81
+msgid "The role has been saved."
+msgstr ""
+
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Controller/Admin/RolesController.php:58;84
+msgid "The role could not be saved. Please, try again."
+msgstr ""
+
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Controller/Admin/RolesController.php:104
+msgid "The role has been deleted."
+msgstr ""
+
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Controller/Admin/RolesController.php:106
+msgid "The role could not be deleted. Please, try again."
+msgstr ""
+
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Controller/Admin/UsersController.php:55;84
+msgid "The user has been saved."
+msgstr ""
+
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Controller/Admin/UsersController.php:58;87
+msgid "The user could not be saved. Please, try again."
+msgstr ""
+
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Controller/Admin/UsersController.php:110
+msgid "The user has been deleted."
+msgstr ""
+
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Controller/Admin/UsersController.php:112
+msgid "The user could not be deleted. Please, try again."
+msgstr ""
+
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Roles/add.ctp:11
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Roles/edit.ctp:11
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Roles/index.ctp:10
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Users/add.ctp:11
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Users/edit.ctp:11
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Users/index.ctp:10
+msgid "Home"
+msgstr ""
+
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Roles/add.ctp:168
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Roles/edit.ctp:174
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Users/add.ctp:291
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Users/edit.ctp:291
+msgid "Submit"
+msgstr ""
+
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Roles/add.ctp:169
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Roles/edit.ctp:175
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Users/add.ctp:292
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Users/edit.ctp:292
+msgid "Cancel"
+msgstr ""
+
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Roles/edit.ctp:19
+msgid "name"
+msgstr ""
+
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Roles/index.ctp:50
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Roles/view.ctp:2;54;100
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Users/index.ctp:76
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Users/view.ctp:2;71;107;143;175
+msgid "Actions"
+msgstr ""
+
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Roles/index.ctp:70
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Roles/view.ctp:5;71;123
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Users/index.ctp:95
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Users/view.ctp:5;85;123;157;187
+msgid "Are you sure you want to delete # {0}?"
+msgstr ""
+
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Roles/index.ctp:82
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Users/index.ctp:107
+msgid "previous"
+msgstr ""
+
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Roles/index.ctp:84
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Users/index.ctp:109
+msgid "next"
+msgstr ""
+
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Roles/view.ctp:4
+msgid "Edit Role"
+msgstr ""
+
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Roles/view.ctp:5
+msgid "Delete Role"
+msgstr ""
+
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Roles/view.ctp:6
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Users/view.ctp:12
+msgid "List Roles"
+msgstr ""
+
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Roles/view.ctp:7
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Users/view.ctp:13
+msgid "New Role"
+msgstr ""
+
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Roles/view.ctp:8
+msgid "List Parent Roles"
+msgstr ""
+
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Roles/view.ctp:9
+msgid "New Parent Role"
+msgstr ""
+
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Roles/view.ctp:10
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Users/view.ctp:6;8
+msgid "List Users"
+msgstr ""
+
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Roles/view.ctp:11
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Users/view.ctp:7;9
+msgid "New User"
+msgstr ""
+
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Roles/view.ctp:18
+msgid "Parent Role"
+msgstr ""
+
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Roles/view.ctp:20;49
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Users/view.ctp:174
+msgid "Name"
+msgstr ""
+
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Roles/view.ctp:22;50
+msgid "Title"
+msgstr ""
+
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Roles/view.ctp:26;47;87
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Users/view.ctp:50;67;101;139;173
+msgid "Id"
+msgstr ""
+
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Roles/view.ctp:28;52
+msgid "Lft"
+msgstr ""
+
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Roles/view.ctp:30;53
+msgid "Rght"
+msgstr ""
+
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Roles/view.ctp:36;51
+msgid "Description"
+msgstr ""
+
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Roles/view.ctp:43
+msgid "Related Roles"
+msgstr ""
+
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Roles/view.ctp:48
+msgid "Parent Id"
+msgstr ""
+
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Roles/view.ctp:67;119
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Users/view.ctp:81;119;153;183
+msgid "View"
+msgstr ""
+
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Roles/view.ctp:69;121
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Users/view.ctp:83;121;155;185
+msgid "Edit"
+msgstr ""
+
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Roles/view.ctp:71;123
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Users/view.ctp:85;123;157;187
+msgid "Delete"
+msgstr ""
+
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Roles/view.ctp:83
+msgid "Related Users"
+msgstr ""
+
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Roles/view.ctp:88
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Users/view.ctp:28
+msgid "Username"
+msgstr ""
+
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Roles/view.ctp:89
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Users/view.ctp:30
+msgid "Password"
+msgstr ""
+
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Roles/view.ctp:90
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Users/view.ctp:32
+msgid "Firstname"
+msgstr ""
+
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Roles/view.ctp:91
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Users/view.ctp:34
+msgid "Lastname"
+msgstr ""
+
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Roles/view.ctp:92
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Users/view.ctp:36
+msgid "Alias"
+msgstr ""
+
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Roles/view.ctp:93
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Users/view.ctp:38
+msgid "Mobile"
+msgstr ""
+
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Roles/view.ctp:94
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Users/view.ctp:40
+msgid "Birthday"
+msgstr ""
+
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Roles/view.ctp:95
+msgid "Presenter Id"
+msgstr ""
+
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Roles/view.ctp:96
+msgid "City Id"
+msgstr ""
+
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Roles/view.ctp:97
+msgid "Role Id"
+msgstr ""
+
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Roles/view.ctp:98
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Users/view.ctp:52
+msgid "Status"
+msgstr ""
+
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Roles/view.ctp:99
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Users/view.ctp:56;70;106
+msgid "Created"
+msgstr ""
+
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Users/edit.ctp:19
+msgid "alias"
+msgstr ""
+
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Users/view.ctp:4
+msgid "Edit User"
+msgstr ""
+
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Users/view.ctp:5
+msgid "Delete User"
+msgstr ""
+
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Users/view.ctp:10
+msgid "List Cities"
+msgstr ""
+
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Users/view.ctp:11
+msgid "New City"
+msgstr ""
+
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Users/view.ctp:14
+msgid "List Activation Keys"
+msgstr ""
+
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Users/view.ctp:15
+msgid "New Activation Key"
+msgstr ""
+
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Users/view.ctp:16
+msgid "List User Accounts"
+msgstr ""
+
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Users/view.ctp:17
+msgid "New User Account"
+msgstr ""
+
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Users/view.ctp:18
+msgid "List User Logins"
+msgstr ""
+
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Users/view.ctp:19
+msgid "New User Login"
+msgstr ""
+
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Users/view.ctp:20
+msgid "List Banks"
+msgstr ""
+
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Users/view.ctp:21
+msgid "New Bank"
+msgstr ""
+
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Users/view.ctp:42
+msgid "User"
+msgstr ""
+
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Users/view.ctp:44
+msgid "City"
+msgstr ""
+
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Users/view.ctp:46
+msgid "Role"
+msgstr ""
+
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Users/view.ctp:63
+msgid "Related Activation Keys"
+msgstr ""
+
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Users/view.ctp:68;102;140
+msgid "User Id"
+msgstr ""
+
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Users/view.ctp:69
+msgid "Activation Key"
+msgstr ""
+
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Users/view.ctp:97
+msgid "Related User Accounts"
+msgstr ""
+
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Users/view.ctp:103
+msgid "Amount"
+msgstr ""
+
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Users/view.ctp:104
+msgid "Account Description Id"
+msgstr ""
+
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Users/view.ctp:105
+msgid "Balance"
+msgstr ""
+
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Users/view.ctp:135
+msgid "Related User Logins"
+msgstr ""
+
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Users/view.ctp:141
+msgid "Login Date"
+msgstr ""
+
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Users/view.ctp:142
+msgid "Logout Date"
+msgstr ""
+
+#: F:/WWW/htdocs/bazibartar/plugins/Users/src/Template/Admin/Users/view.ctp:169
+msgid "Related Banks"
+msgstr ""
+
