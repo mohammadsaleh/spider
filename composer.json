@@ -1,7 +1,6 @@
 {
     "name": "mohammadsaleh/spider",
     "description": "An useful package of plugins for CakePHP",
-    "type": "cakephp-plugin",
 	"license": "MIT",
 	"homepage": "http://github.com/mohammadsaleh/spider",
     "require": {
