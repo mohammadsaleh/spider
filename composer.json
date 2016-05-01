@@ -23,9 +23,6 @@
 			"Users\\": "Users/src",
 			"Settings\\": "Settings/src",
 			"AclManager\\": "AclManager/src"
-		},
-		"files": [
-			"Spider/src/config/bootstrap.php"
-		]
+		}
 	}
 }
