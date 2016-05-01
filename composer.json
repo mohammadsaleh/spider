@@ -16,14 +16,5 @@
 			"name": "Mohammad Saleh",
 			"email": "mohammadsaleh.sayari@gmail.com"
 		}
-	],
-	"autoload": {
-		"psr-4": {
-			"spider\\Spider\\": "Spider/src",
-			"spider\\PluginManager\\": "PluginManager/src",
-			"spider\\Users\\": "Users/src",
-			"spider\\Settings\\": "Settings/src",
-			"spider\\AclManager\\": "AclManager/src"
-		}
-	}
+	]
 }
