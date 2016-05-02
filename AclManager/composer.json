@@ -11,7 +11,7 @@
     },
     "autoload": {
         "psr-4": {
-            "AclManager\\": "src"
+            "Spider\\AclManager\\": "src"
         }
     },
     "autoload-dev": {

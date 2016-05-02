@@ -1,6 +1,6 @@
 {
-    "name": "your-name-here/Settings",
-    "description": "Settings plugin for CakePHP",
+    "name": "your-name-here/Users",
+    "description": "Users plugin for CakePHP",
     "type": "cakephp-plugin",
     "require": {
         "php": ">=5.4.16",
@@ -11,12 +11,12 @@
     },
     "autoload": {
         "psr-4": {
-            "Spider\\Settings\\": "src"
+            "Spider\\Users\\": "src"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Settings\\Test\\": "tests",
+            "Users\\Test\\": "tests",
             "Cake\\Test\\": "./vendor/cakephp/cakephp/tests"
         }
     }
