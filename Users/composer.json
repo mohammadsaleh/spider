@@ -11,7 +11,7 @@
     },
     "autoload": {
         "psr-4": {
-            "Spider\\Users\\": "src"
+            "Users\\": "src"
         }
     },
     "autoload-dev": {

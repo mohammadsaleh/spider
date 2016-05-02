@@ -19,19 +19,17 @@ $corePlugins = [
 Configure::write('Core.corePlugins', $corePlugins);
 
 if(!Configure::check('Hook.plugins')){
-    Configure::write('Hook.plugins', SpiderPlugin::getPlugins());
+    Configure::write('Hook.plugins', \Cake\Utility\Hash::extract(SpiderPlugin::getPlugins(), '{n}.name'));
 }
-$plugins = Configure::read('Hook.plugins');
+$plugins = array_merge(Configure::read('Hook.plugins'), Configure::read('Core.corePlugins'));
 
 //Configure::read('App.paths.plugins');
 
 foreach ($plugins as $plugin) {
-    $pluginName = Inflector::camelize($plugin['name']);
+    $pluginName = Inflector::camelize($plugin);
     $pluginPath = APP . 'plugins' . DS . $pluginName;
-//    debug(App::path('Plugin'));die;
-//    debug($pluginPath);die;
-//debug($plugin);die;
-    if ((!file_exists($pluginPath))) {
+
+    if ((!file_exists($pluginPath)) && (strpos($pluginName, 'Spider/') === false)) {
         $pluginFound = false;
         foreach (App::path('Plugin') as $path) {
             if (is_dir($path . $pluginName)) {
@@ -45,7 +43,7 @@ foreach ($plugins as $plugin) {
         }
     }
     $option = array(
-        $pluginName => array(
+        str_replace('Spider/', '', $pluginName) => array(
             'bootstrap' => true,
             'routes' => true,
             'autoload' => true,

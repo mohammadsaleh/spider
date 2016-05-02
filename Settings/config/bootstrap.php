@@ -1,4 +1,5 @@
 <?php
+
 \Spider\Lib\SpiderNav::add('sidebar', 'Settings', [
     'title' => __d('settings', 'Settings'),
     'icon' => 'fa fa-wrench',

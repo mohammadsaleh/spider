@@ -22,6 +22,7 @@ class PluginManagerEventHandler implements EventListenerInterface
         $Plugins = TableRegistry::get('PluginManager.Plugins');
         $theme = $Plugins->find('all')
             ->where(['theme' => $themeType])
+            ->where(['`status`' => 1])
             ->where(['`default`' => 1])
             ->first();
         if(!empty($theme)){
