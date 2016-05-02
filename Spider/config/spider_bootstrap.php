@@ -39,6 +39,7 @@ foreach ($plugins as $plugin) {
         $pluginName => array(
             'bootstrap' => true,
             'routes' => true,
+			'autoload' => true,
             'ignoreMissing' => true,
         )
     );
