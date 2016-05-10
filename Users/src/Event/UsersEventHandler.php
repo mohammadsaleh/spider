@@ -35,8 +35,9 @@ class UsersEventHandler implements EventListenerInterface
     public function onSuccessLogin(Event $event)
     {
         $controller = $event->subject();
-        $userInfo = $event->data['user'];
+        $userInfo = &$event->data['user'];
         $userInfo['Capabilities'] = $controller->getUserCapabilities($userInfo['id']);
+        return $userInfo;
     }
 
     /**

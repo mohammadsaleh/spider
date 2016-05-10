@@ -32,29 +32,35 @@ class CustomAuthComponent extends AuthComponent
     public function can($capabilities, $userId = null)
     {
         if(!is_array($capabilities)){
-            $capabilities = array($capabilities);
+            $capabilities = [$capabilities];
         }
-        if(empty($userId)){
-            $userId = $this->user('id');
-        }
-        $Users = TableRegistry::get('Users.Users');
-        $UserCapabilities = $Users->find()
-            ->select(['Capabilities.id', 'Capabilities.title'])
-            ->leftJoin(
-                ['UsersCapabilities' => 'users_capabilities'],
-                ['UsersCapabilities.user_id = Users.id']
-            )
-            ->leftJoin(
-                ['RolesCapabilities' => 'roles_capabilities'],
-                ['RolesCapabilities.role_id = Users.role_id']
-            )
-            ->leftJoin(
-                ['Capabilities' => 'capabilities'],
-                ['Capabilities.id IN (UsersCapabilities.capability_id, RolesCapabilities.capability_id)']
-            )
-            ->where(['Users.id' => $userId])->extract('Capabilities.title')->toArray();
+        if(!is_null($userId) && $userId != $this->user('id')){
+            $Users = TableRegistry::get('Users.Users');
+            $UserCapabilities = $Users->find()
+                ->select(['Capabilities.id', 'Capabilities.title'])
+                ->leftJoin(
+                    ['UsersCapabilities' => 'users_capabilities'],
+                    ['UsersCapabilities.user_id = Users.id']
+                )
+                ->leftJoin(
+                    ['RolesCapabilities' => 'roles_capabilities'],
+                    ['RolesCapabilities.role_id = Users.role_id']
+                )
+                ->leftJoin(
+                    ['Capabilities' => 'capabilities'],
+                    ['Capabilities.id IN (UsersCapabilities.capability_id, RolesCapabilities.capability_id)']
+                )
+                ->where(['Users.id' => $userId])->extract('Capabilities.title')->toArray();
 
-        //returning all of given capabilities that is in user capabilities.
-        return (count(array_intersect($capabilities, $UserCapabilities)) == count($capabilities));
+            //returning all of given capabilities that is in user capabilities.
+            return (count(array_intersect($capabilities, $UserCapabilities)) == count($capabilities));
+        }
+        $userCapabilities = $this->user('Capabilities');
+        foreach($capabilities as $capability){
+            if(!in_array($capability, $userCapabilities)){
+                return false;
+            }
+        }
+        return true;
     }
 }

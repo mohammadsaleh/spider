@@ -113,11 +113,54 @@ class RolesTable extends SpiderTable
     public function beforeSave(Event $event, Entity $entity, $options = []){
         //get all children of this role
         //remove this caps for all childrens
-        $capabilitiesIds = (new Collection($entity->capabilities))->extract('id')->filter()->toArray();
-        $thisRoleChildrensIds = (new Collection($this->find('children', ['for' => $entity->id])))->extract('id')->filter()->toArray();
-        $this->RolesCapabilities->deleteAll([
-            'role_id IN' => $thisRoleChildrensIds,
-            'capability_id IN' => $capabilitiesIds
-        ]);
+        if($entity->id){
+            $capabilitiesIds = (new Collection($entity->capabilities))->extract('id')->filter()->toArray();
+            $thisRoleChildrensIds = (new Collection($this->find('children', ['for' => $entity->id])))->extract('id')->filter()->toArray();
+            $this->RolesCapabilities->deleteAll([
+                'role_id IN' => $thisRoleChildrensIds,
+                'capability_id IN' => $capabilitiesIds
+            ]);
+        }
+    }
+
+    public function findCapabilities(Query $query, array $options)
+    {
+        $allCapabilities = $this->Capabilities->find('list', [
+            'keyField' => 'id',
+            'valueField' => 'description'
+        ])->toArray();
+        $parentCapabilities = [];
+        if(isset($options['id'])){
+            $parentCapabilities = $this->getAllParentCapabilities($options['id']);
+            ksort($parentCapabilities);
+        }
+        $allCapabilities = array_diff($allCapabilities, $parentCapabilities);
+        ksort($allCapabilities);
+
+        return ['parent' => $parentCapabilities, 'all' => $allCapabilities];
+    }
+
+    public function getAllParentCapabilities($id){
+        $parents = $this->find('path', ['for' => $id])->toArray();
+        if(!empty($parents)){
+            array_pop($parents);
+            $parentsIds = [];
+            foreach($parents as $parent){
+                $parentsIds[] = $parent->id;
+            }
+
+            if(!empty($parentsIds)){
+                $parentCapabilities = $this->Capabilities->find('list', [
+                    'keyField' => 'id',
+                    'valueField' => 'description'
+                ])
+                    ->matching('Roles', function($q) use ($parentsIds){
+                        return $q->where(['Roles.id IN' => $parentsIds]);
+                    });
+
+                return $parentCapabilities->toArray();
+            }
+        }
+        return [];
     }
 }

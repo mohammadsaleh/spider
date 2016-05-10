@@ -3,7 +3,7 @@
 <div class="page-content">
     <h3 class="page-title">
     <?= __d('users','Edit Roles') ?>
-    <small></small>
+        <small></small>
 </h3>    <div class="page-bar">
         <ul class="page-breadcrumb">
     <li>
@@ -142,8 +142,7 @@
                                             ]);
                                             ?>
                                             <div class="col-md-5">
-                                                <?= $this->element('Admin/capabilities', ['capabilities' => $parentCapabilities, 'isParent' => true]);?>
-                                                <?= $this->element('Admin/capabilities', ['capabilities' => $allCapabilities, compact('role')]);?>
+                                                <?= $this->element('role_capabilities', ['capabilities' => $capabilities]);?>
                                             </div>
                                         </div>
                                 </div>

@@ -57,8 +57,8 @@ class RolesController extends AppController
                 $this->Flash->error(__('The role could not be saved. Please, try again.'));
             }
         }
-        $parentRoles = $this->Roles->ParentRoles->find('list', ['limit' => 200]);
-        $capabilities = $this->Roles->Capabilities->find('list', ['limit' => 200]);
+        $parentRoles = $this->Roles->ParentRoles->find('list');
+        $capabilities = $this->Roles->Capabilities->find('list');
         $this->set(compact('role', 'parentRoles', 'capabilities'));
         $this->set('_serialize', ['role']);
     }
@@ -74,10 +74,10 @@ class RolesController extends AppController
 
             if(!empty($parentsIds)){
                 $parentCapabilities = $this->Roles->Capabilities->find('list', [
-                        'limit' => 200,
-                        'keyField' => 'id',
-                        'valueField' => 'description'
-                    ])
+                    'limit' => 200,
+                    'keyField' => 'id',
+                    'valueField' => 'description'
+                ])
                     ->matching('Roles', function($q) use ($parentsIds){
                         return $q->where(['Roles.id IN' => $parentsIds]);
                     });
@@ -99,6 +99,7 @@ class RolesController extends AppController
         $role = $this->Roles->get($id, [
             'contain' => ['Capabilities']
         ]);
+
         if ($this->request->is(['patch', 'post', 'put'])) {
             $role = $this->Roles->patchEntity($role, $this->request->data);
             if ($this->Roles->save($role)) {
@@ -108,18 +109,10 @@ class RolesController extends AppController
                 $this->Flash->error(__('The role could not be saved. Please, try again.'));
             }
         }
-        $parentRoles = $this->Roles->ParentRoles->find('list', ['limit' => 200]);
-        $allCapabilities = $this->Roles->Capabilities->find('list', [
-            'limit' => 200,
-            'keyField' => 'id',
-            'valueField' => 'description'
-        ])->toArray();
-        $parentCapabilities = $this->_getAllRoleParentCapabilities($id);
-        $allCapabilities = array_diff($allCapabilities, $parentCapabilities);
-        ksort($parentCapabilities);
-        ksort($allCapabilities);
+        $parentRoles = $this->Roles->find('list');
+        $capabilities = $this->Roles->find('capabilities', ['id' => $id]);
 
-        $this->set(compact('role', 'parentRoles', 'allCapabilities', 'parentCapabilities'));
+        $this->set(compact('role', 'parentRoles', 'capabilities'));
         $this->set('_serialize', ['role']);
     }
 

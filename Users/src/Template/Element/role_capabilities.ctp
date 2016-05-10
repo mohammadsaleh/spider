@@ -1,24 +1,22 @@
 <?php
-$roleComatibilities = [];
-if(!isset($isParent) || !$isParent){
-    $isParent = false;
+$itsOwnCapabilities = [];
+if(!isset($role)){
+    $role = [];
 }
-if(!$isParent){
-    foreach($role->capabilities as $capability){
-        $roleComatibilities[] = $capability->id;
-    }
-}
-foreach($capabilities as $key => $title){
-    $checked = false;
-    $disabled = false;
-    if(!$isParent){
-        if(in_array($key, $roleComatibilities)){
+$itsOwnCapabilities = \Cake\Utility\Hash::extract($role, 'capabilities.{n}.id');
+foreach($capabilities as $type => $allCapabilities){
+    foreach($allCapabilities as $key => $title){
+        $checked = false;
+        $disabled = false;
+        if($type == 'parent'){
             $checked = true;
+            $disabled = true;
         }
-    }else{
-        $checked = true;
-        $disabled = true;
-    }
+        if($type == 'all'){
+            if(in_array($key, $itsOwnCapabilities)){
+                $checked = true;
+            }
+        }
 ?>
     <div>
         <span>
@@ -38,4 +36,7 @@ foreach($capabilities as $key => $title){
         </span>
         <?= ' : ' . $title;?>
     </div>
-<?php }?>
+<?php
+    }
+}
+?>
