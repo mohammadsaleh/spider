@@ -28,24 +28,6 @@ class AppController extends BaseController
     }
 
     /**
-     * Get given/auth user capabilities
-     * @param null $userId
-     * @return array
-     */
-    public function getUserCapabilities($userId = null){
-        if(!$userId){
-            $userId = $this->Auth->user('id');
-        }
-        $UserCapabilities = TableRegistry::get('Users.UsersCapabilities');
-        $query = $UserCapabilities->find('all')
-            ->select(['Capabilities.title'])
-            ->contain(['Capabilities'])
-            ->where(['user_id' => $userId]);
-        $capabilities = (new Collection($query))->extract('Capabilities.title')->filter()->toArray();
-        return $capabilities;
-    }
-
-    /**
      * Send an activation link to user email
      * @param $user
      */

@@ -140,7 +140,8 @@ class RolesTable extends SpiderTable
         return ['parent' => $parentCapabilities, 'all' => $allCapabilities];
     }
 
-    public function getAllParentCapabilities($id){
+    public function getAllParentCapabilities($id, $options = ['valueField' => 'description'])
+    {
         $parents = $this->find('path', ['for' => $id])->toArray();
         if(!empty($parents)){
             array_pop($parents);
@@ -150,10 +151,11 @@ class RolesTable extends SpiderTable
             }
 
             if(!empty($parentsIds)){
-                $parentCapabilities = $this->Capabilities->find('list', [
-                    'keyField' => 'id',
-                    'valueField' => 'description'
-                ])
+                $parentCapabilities = $this->Capabilities->find('list',
+                    array_merge([
+                        'keyField' => 'id',
+                        'valueField' => 'description'
+                    ], $options))
                     ->matching('Roles', function($q) use ($parentsIds){
                         return $q->where(['Roles.id IN' => $parentsIds]);
                     });

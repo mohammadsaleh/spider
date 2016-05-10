@@ -1,8 +1,10 @@
 <?php
 namespace Users\Event;
 
+use Cake\Collection\Collection;
 use Cake\Event\Event;
 use Cake\Event\EventListenerInterface;
+use Cake\ORM\TableRegistry;
 use Cake\Routing\Router;
 use Users\Lib\UserLib;
 
@@ -36,8 +38,28 @@ class UsersEventHandler implements EventListenerInterface
     {
         $controller = $event->subject();
         $userInfo = &$event->data['user'];
-        $userInfo['Capabilities'] = $controller->getUserCapabilities($userInfo['id']);
+        $userInfo['Capabilities'] = $this->__getUserCapabilities($userInfo);
         return $userInfo;
+    }
+
+    /**
+     * Get given/auth user capabilities
+     * @param null $userInfo
+     * @return array
+     */
+    private function __getUserCapabilities($userInfo){
+        $userId = $userInfo['id'];
+        $UserCapabilities = TableRegistry::get('Users.UsersCapabilities');
+        $query = $UserCapabilities->find('all')
+            ->select(['Capabilities.title'])
+            ->contain(['Capabilities'])
+            ->where(['user_id' => $userId]);
+        $capabilities = (new Collection($query))->extract('Capabilities.title')->filter()->toArray();
+        if(empty($capabilities)){
+            $Roles = TableRegistry::get('Users.Roles');
+            $capabilities = $Roles->getAllParentCapabilities($userInfo['role_id'], ['valueField' => 'title']);
+        }
+        return $capabilities;
     }
 
     /**
