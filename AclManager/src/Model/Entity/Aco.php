@@ -1,17 +1,21 @@
 <?php
-
 namespace AclManager\Model\Entity;
 
-/**
- * AclAco Model
- *
- * @category Model
- * @package  Croogo.Acl.Model
- * @version  1.0
- * @author   Fahad Ibnay Heylaal <contact@fahad19.com>
- * @license  http://www.opensource.org/licenses/mit-license.php The MIT License
- * @link     http://www.croogo.org
- */
-class Aco extends \Acl\Model\Entity\Aco {
+use Spider\Model\Entity\Spider;
 
+/**
+ * Aco Entity.
+ */
+class Aco extends Spider
+{
+
+    /**
+     * Fields that can be mass assigned using newEntity() or patchEntity().
+     *
+     * @var array
+     */
+    protected $_accessible = [
+        '*' => true,
+        'id' => false,
+    ];
 }

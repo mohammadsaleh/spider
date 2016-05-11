@@ -1,17 +1,17 @@
 <?php
 namespace AclManager\Model\Table;
 
-use AclManager\Model\Entity\Aro;
+use AclManager\Model\Entity\ArosAco;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\Validation\Validator;
 use Spider\Model\Table\SpiderTable;
 
 /**
- * Aros Model
+ * ArosAcos Model
  *
- * @property \Cake\ORM\Association\BelongsToMany $Acos */
-class ArosTable extends SpiderTable
+ * @property \Cake\ORM\Association\BelongsTo $Aros * @property \Cake\ORM\Association\BelongsTo $Acos */
+class ArosAcosTable extends SpiderTable
 {
 
     /**
@@ -24,13 +24,17 @@ class ArosTable extends SpiderTable
     {
         parent::initialize($config);
 
-        $this->table('aclmanager_aros');
+        $this->table('aclmanager_aros_acos');
         $this->displayField('id');
         $this->primaryKey('id');
-        $this->belongsToMany('Acos', [
+        $this->belongsTo('Aros', [
             'foreignKey' => 'aro_id',
-            'targetForeignKey' => 'aco_id',
-            'joinTable' => 'aros_acos',
+            'joinType' => 'INNER',
+            'className' => 'AclManager.Aros'
+        ]);
+        $this->belongsTo('Acos', [
+            'foreignKey' => 'aco_id',
+            'joinType' => 'INNER',
             'className' => 'AclManager.Acos'
         ]);
     }
@@ -46,11 +50,20 @@ class ArosTable extends SpiderTable
         $validator
             ->add('id', 'valid', ['rule' => 'integer'])
             ->allowEmpty('id', 'create');
-        $validator
-            ->allowEmpty('model');
-        $validator
-            ->add('foreign_key', 'valid', ['rule' => 'integer'])
-            ->allowEmpty('foreign_key');
         return $validator;
+    }
+
+    /**
+     * Returns a rules checker object that will be used for validating
+     * application integrity.
+     *
+     * @param \Cake\ORM\RulesChecker $rules The rules object to be modified.
+     * @return \Cake\ORM\RulesChecker
+     */
+    public function buildRules(RulesChecker $rules)
+    {
+        $rules->add($rules->existsIn(['aro_id'], 'Aros'));
+        $rules->add($rules->existsIn(['aco_id'], 'Acos'));
+        return $rules;
     }
 }

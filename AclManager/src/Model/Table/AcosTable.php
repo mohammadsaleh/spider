@@ -1,146 +1,62 @@
 <?php
-
 namespace AclManager\Model\Table;
-use Cake\ORM\TableRegistry;
-use Cake\Utility\Hash;
+
+use AclManager\Model\Entity\Aco;
+use Cake\ORM\Query;
+use Cake\ORM\RulesChecker;
+use Cake\Validation\Validator;
+use Spider\Model\Table\SpiderTable;
 
 /**
- * AclAco Model
+ * Acos Model
  *
- * @category Model
- * @package  Croogo.Acl.Model
- * @version  1.0
- * @author   Fahad Ibnay Heylaal <contact@fahad19.com>
- * @license  http://www.opensource.org/licenses/mit-license.php The MIT License
- * @link     http://www.croogo.org
- */
-class AcosTable extends \Acl\Model\Table\AcosTable {
+ * @property \Cake\ORM\Association\BelongsToMany $Aros */
+class AcosTable extends SpiderTable
+{
 
-/**
- * getChildren
- *
- * @param integer aco id
- */
-	public function getChildren($acoId, $fields = array()) {
-		$fields = Hash::merge(array('id', 'parent_id', 'alias'), $fields);
-		$acos = $this->find('children', ['for' => $acoId])
-			->find('threaded');
-		return $acos;
-	}
+    /**
+     * Initialize method
+     *
+     * @param array $config The configuration for the Table.
+     * @return void
+     */
+    public function initialize(array $config)
+    {
+        parent::initialize($config);
 
-/**
- * Create ACO tree
- */
-	public function createFromPath($path) {
-		$pathE = explode('/', $path);
-		$parent = $current = null;
-		foreach ($pathE as $alias) {
-			$current[] = $alias;
-			$node = $this->node(join('/', $current));
-			if ($node) {
-				$parent = $node->first();
-			} else {
-				$aco = $this->newEntity([
-					'parent_id' => $parent['id'],
-					'alias' => $alias,
-				]);
-				$parent = $this->save($aco);
-			}
-		}
-		return $parent;
-	}
+        $this->table('aclmanager_acos');
+        $this->displayField('name');
+        $this->primaryKey('id');
+        $this->belongsToMany('Aros', [
+            'foreignKey' => 'aco_id',
+            'targetForeignKey' => 'aro_id',
+            'joinTable' => 'aros_acos',
+            'className' => 'AclManager.Aros'
+        ]);
+    }
 
-/**
- * ACL: add ACO
- *
- * Creates ACOs with permissions for roles.
- *
- * @param string $action possible values: Controller, Controller/action,
- *                                        Plugin/Controller/action
- * @param array $allowRoles Role aliases
- * @return void
- */
-	public function addAco($action, $allowRoles = array()) {
-		// AROs
-		$roles = array();
-		if (count($allowRoles) > 0) {
-			$roles = TableRegistry::get('Users.Roles')->find('list', array(
-				'conditions' => array(
-					'Roles.name' => $allowRoles,
-				),
-				'fields' => array(
-					'Roles.id',
-					'Roles.name',
-				),
-			));
-		}
-
-		$this->createFromPath($action);
-		die;
-		$Permission = TableRegistry::get('AclManager.Permissions');
-		foreach ($roles as $roleId => $roleAlias) {
-			$Permission->allow(array('model' => 'AclManager.Aros', 'foreign_key' => $roleId), $action);
-		}
-	}
-
-/**
- * ACL: remove ACO
- *
- * Removes ACOs and their Permissions
- *
- * @param string $action possible values: ControllerName, ControllerName/method_name
- * @return void
- */
-	public function removeAco($action) {
-		$acoNode = $this->node($action);
-		if (isset($acoNode['0']['Aco']['id'])) {
-			$this->delete($acoNode['0']['Aco']['id']);
-		}
-	}
-
-/**
- * Get valid permission roots
- *
- * @return array Array of valid permission roots
- */
-	public function getPermissionRoots() {
-		$roots = $this->find('all', array(
-			'fields' => array('id', 'alias'),
-			'conditions' => array(
-				'parent_id IS' => null,
-				'alias IN' => array('controllers', 'api'),
-			),
-		))->toArray();
-
-		$apiRoot = -1;
-		foreach ($roots as $i => &$root) {
-			if ($root->alias === 'api') {
-				$apiRoot = $root->id;
-				$apiIndex = $i;
-			}
-			$root->title = ucfirst($root->alias);
-		}
-		if (isset($apiIndex)) {
-			unset($roots[$apiIndex]);
-		}
-
-		$versionRoots = $this->find('all', array(
-			'fields' => array('id', 'alias'),
-			'conditions' => array(
-				'parent_id' => $apiRoot,
-			),
-		))->toArray();
-
-		$apiCount = count($versionRoots);
-
-		$api = __d('spider', 'API');
-		foreach ($versionRoots as &$versionRoot) {
-			$alias = strtolower(str_replace('_', '.', $versionRoot->alias));
-			$versionRoot->alias = $alias;
-			$versionRoot->title = $apiCount == 1 ? $api : $api . ' ' . $alias;
-		}
-
-		return array_merge($roots, $versionRoots);
-	}
-
+    /**
+     * Default validation rules.
+     *
+     * @param \Cake\Validation\Validator $validator Validator instance.
+     * @return \Cake\Validation\Validator
+     */
+    public function validationDefault(Validator $validator)
+    {
+        $validator
+            ->add('id', 'valid', ['rule' => 'integer'])
+            ->allowEmpty('id', 'create');
+        $validator
+            ->allowEmpty('name');
+        $validator
+            ->allowEmpty('title');
+        $validator
+            ->allowEmpty('description');
+        $validator
+            ->allowEmpty('model');
+        $validator
+            ->add('foreign_key', 'valid', ['rule' => 'integer'])
+            ->allowEmpty('foreign_key');
+        return $validator;
+    }
 }

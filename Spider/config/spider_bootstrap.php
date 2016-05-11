@@ -12,7 +12,6 @@ use Spider\Lib\SpiderPlugin;
  */
 $corePlugins = [
     'Spider/Settings',
-    'Spider/Acl',
     'Spider/AclManager',
     'Spider/PluginManager',
     'Spider/Users',

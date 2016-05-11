@@ -1,12 +1,11 @@
 <?php
+use Cake\Routing\RouteBuilder;
 use Cake\Routing\Router;
 
-Router::plugin('AclManager', function ($routes) {
-    $routes->fallbacks('DashedRoute');
-});
-Router::prefix('admin', function($routes){
-    $routes->plugin('AclManager', function($routes){
-        $routes->fallbacks('InflectedRoute');
-    });
-    $routes->fallbacks('InflectedRoute');
-});
+Router::plugin(
+    'AclManager',
+    ['path' => '/acl-manager'],
+    function (RouteBuilder $routes) {
+        $routes->fallbacks('DashedRoute');
+    }
+);

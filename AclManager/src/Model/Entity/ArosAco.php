@@ -4,9 +4,9 @@ namespace AclManager\Model\Entity;
 use Spider\Model\Entity\Spider;
 
 /**
- * Aro Entity.
+ * ArosAco Entity.
  */
-class Aro extends Spider
+class ArosAco extends Spider
 {
 
     /**
