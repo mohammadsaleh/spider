@@ -31,7 +31,7 @@ class RolesTable extends SpiderTable
     {
         parent::initialize($config);
 
-        $this->table('roles');
+        $this->table('users_roles');
         $this->displayField('name');
         $this->primaryKey('id');
         $this->addBehavior('Tree');
@@ -43,12 +43,8 @@ class RolesTable extends SpiderTable
             'className' => 'Users.Roles',
             'foreignKey' => 'parent_id'
         ]);
-        $this->hasMany('Users', [
-            'foreignKey' => 'role_id',
-            'className' => 'Users.Users'
-        ]);
-        $this->belongsToMany('Capabilities', [
-            'through' => 'RolesCapabilities',
+        $this->belongsToMany('Users', [
+            'through' => 'Users.UsersRoles'
         ]);
     }
 
