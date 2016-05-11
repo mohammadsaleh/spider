@@ -16,4 +16,14 @@ class AroComponent extends Component
      * @var array
      */
     protected $_defaultConfig = [];
+
+    public function add($aro)
+    {
+
+    }
+
+    public function remove($aro)
+    {
+
+    }
 }

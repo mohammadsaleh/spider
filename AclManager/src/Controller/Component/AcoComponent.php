@@ -16,4 +16,14 @@ class AcoComponent extends Component
      * @var array
      */
     protected $_defaultConfig = [];
+
+    public function add($aco)
+    {
+
+    }
+
+    public function remove($aco)
+    {
+
+    }
 }
