@@ -38,7 +38,6 @@ class UsersEventHandler implements EventListenerInterface
     {
         $controller = $event->subject();
         $userInfo = &$event->data['user'];
-        $userInfo['Capabilities'] = $this->__getUserCapabilities($userInfo);
         return $userInfo;
     }
 

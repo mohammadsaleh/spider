@@ -16,12 +16,6 @@ use Cake\Core\Plugin;
             'title' => __d('users', 'Role Management'),
             'url' => ['plugin' => 'Users', 'controller' => 'Roles', 'action' => 'index'],
             'weight' => 2
-        ],
-        'capabilities_list' => [
-            'title' => __d('users', 'Capabilities'),
-            'url' => ['plugin' => 'Users', 'controller' => 'Capabilities', 'action' => 'index'],
-            'weight' => 3
         ]
-
     ]
 ]);

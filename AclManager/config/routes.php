@@ -9,3 +9,14 @@ Router::plugin(
         $routes->fallbacks('DashedRoute');
     }
 );
+Router::prefix('admin', function ($routes) {
+    $routes->scope('/access', ['plugin' => 'AclManager'], function($routes){
+        $routes->connect('/list/*',
+            ['controller' => 'Permissions', 'action' => 'acoList']
+        );
+    });
+    $routes->plugin('AclManager', function ($routes){
+        $routes->fallbacks('InflectedRoute');
+    });
+    $routes->fallbacks('InflectedRoute');
+});

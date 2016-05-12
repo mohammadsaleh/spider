@@ -29,12 +29,10 @@ class ArosAcosTable extends SpiderTable
         $this->primaryKey('id');
         $this->belongsTo('Aros', [
             'foreignKey' => 'aro_id',
-            'joinType' => 'INNER',
             'className' => 'AclManager.Aros'
         ]);
         $this->belongsTo('Acos', [
             'foreignKey' => 'aco_id',
-            'joinType' => 'INNER',
             'className' => 'AclManager.Acos'
         ]);
     }
