@@ -22,4 +22,8 @@ Plugin::load('BootstrapUI');
 
 require_once 'spider_bootstrap.php';
 
+
+Plugin::load('Install', ['bootstrap' => false, 'routes' => true]);
+
+
 //test in install branch...

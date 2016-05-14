@@ -1,11 +1,9 @@
 <?php
-use Cake\Routing\RouteBuilder;
 use Cake\Routing\Router;
 
-Router::plugin(
-    'Install',
-    ['path' => '/install'],
-    function (RouteBuilder $routes) {
-        $routes->fallbacks('DashedRoute');
-    }
-);
+$request = Router::getRequest();
+if (strpos($request->url, 'install') === false) {
+    $url = ['plugin' => 'install', 'controller' => 'install'];    
+    Router::connect('/', $url);
+    Router::connect('/database', ['plugin' => 'install', 'controller' => 'install','action'=>'database']);
+}

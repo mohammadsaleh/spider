@@ -2,6 +2,7 @@
 namespace Spider\View;
 
 use Cake\View\View;
+use Cake\Core\Configure;
 
 /**
  * App View class
