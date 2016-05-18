@@ -45,7 +45,7 @@ class UsersRolesTable extends SpiderTable
     public function validationDefault(Validator $validator)
     {
         $validator
-            ->add('id', 'valid', ['rule' => 'integer'])
+            ->add('id', 'valid', ['rule' => 'numeric'])
             ->allowEmpty('id', 'create');
         return $validator;
     }

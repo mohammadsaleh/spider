@@ -28,9 +28,22 @@ class AcoComponent extends Component
      */
     protected $_defaultConfig = [];
 
-    public function add($aco)
+    public function check($name)
     {
+        $aco = $this->Acos->find()->where(['name' => $name])->first();
+        if(!empty($aco)){
+            return $aco->id;
+        }
+        return false;
+    }
 
+    public function add($acoInfo)
+    {
+        $acoEntity =$this->Acos->newEntity($acoInfo);
+        if($this->Acos->save($acoEntity)){
+            return true;
+        }
+        return false;
     }
 
     public function remove($aco)

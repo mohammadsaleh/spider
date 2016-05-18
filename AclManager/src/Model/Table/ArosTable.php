@@ -44,12 +44,12 @@ class ArosTable extends SpiderTable
     public function validationDefault(Validator $validator)
     {
         $validator
-            ->add('id', 'valid', ['rule' => 'integer'])
+            ->add('id', 'valid', ['rule' => 'numeric'])
             ->allowEmpty('id', 'create');
         $validator
             ->allowEmpty('model');
         $validator
-            ->add('foreign_key', 'valid', ['rule' => 'integer'])
+            ->add('foreign_key', 'valid', ['rule' => 'numeric'])
             ->allowEmpty('foreign_key');
         return $validator;
     }

@@ -28,9 +28,13 @@ class AroComponent extends Component
      */
     protected $_defaultConfig = [];
 
-    public function add($aro)
+    public function add($aroInfo)
     {
-
+        $aroEntity = $this->Aros->newEntity($aroInfo);
+        if($this->Aros->save($aroEntity)){
+            return true;
+        }
+        return false;
     }
 
     public function remove($aro)
@@ -78,7 +82,7 @@ class AroComponent extends Component
 
         $aro = $this->Aros->find();
         if($options['user_id']){
-            $aro->where(['model' => 'roles']);
+            $aro->where(['model' => 'users']);
             $aro->where(['foreign_key IN' => $options['user_id']]);
 
         }elseif($options['role_id']){
@@ -99,5 +103,20 @@ class AroComponent extends Component
         }
         $aros = $aro->toArray();
         return $aros;
+    }
+
+    public function check($conditions = [])
+    {
+        if(!empty($conditions)){
+            $conditions = array_merge([
+                'model' => null,
+                'foreign_key' => null
+            ], $conditions);
+        }
+        $aro = $this->Aros->find()->where($conditions)->first();
+        if(!empty($aro)){
+            return $aro->id;
+        }
+        return false;
     }
 }
