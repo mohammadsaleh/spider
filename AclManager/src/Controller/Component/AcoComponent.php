@@ -73,4 +73,13 @@ class AcoComponent extends Component
 //        $acos = Hash::expand($acos, '/');
         return $acos;
     }
+
+    /**
+     * Getting all aco that start with given word.
+     * @param string $acoName
+     */
+    public function startWith($acoName = 'plugin/ for example')
+    {
+
+    }
 }

@@ -2,9 +2,16 @@
 namespace AclManager\Controller\Component;
 
 use Cake\Controller\Component;
-use Cake\Controller\ComponentRegistry;
+use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
+use Cake\Utility\Inflector;
+use ReflectionClass;
+use ReflectionMethod;
+use Cake\Core\Plugin;
+use Cake\Filesystem\Folder;
+use Cake\Core\App;
+
 
 /**
  * Acl component
@@ -308,4 +315,73 @@ class AclComponent extends Component
         return true;
     }
 
+
+    public function findControllers($controllerDir = APP) {
+        $results = [];
+        $dir = new Folder($controllerDir . 'Controller');
+        $files = $dir->findRecursive('^.*Controller\.php$', true);
+        $ignoreList = [
+            'Controller\AppController.php',
+        ];
+        foreach($files as &$file){
+            $file = str_replace($controllerDir, '', $file);
+            if(!in_array($file, $ignoreList)) {
+                $controller = explode('.', $file)[0];
+                array_push($results, $controller);
+            }
+        }
+        return $results;
+    }
+
+    public function getActions($className) {
+        $class = new ReflectionClass($className);
+        $actions = $class->getMethods(ReflectionMethod::IS_PUBLIC);
+        $results = [];
+        $ignoreList = ['beforeFilter', 'afterFilter', 'initialize'];
+        foreach($actions as $action){
+            if($action->class == $className && !in_array($action->name, $ignoreList)){
+                $results[$action->name] = $action->name;
+            }
+        }
+        return $results;
+    }
+
+    public function getResources(){
+        $controllers = $this->findControllers();
+        foreach(Configure::read('Hook.plugins') as $plugin){
+            $pluginName = Inflector::camelize($plugin);
+            foreach (App::path('Plugin') as $pluginPath) {
+                $pluginName = str_replace('Spider/', '', $pluginName);
+                if(Plugin::loaded($pluginName)){
+                    if (is_dir($pluginPath . $pluginName)) {
+                        $findedControllers = $this->findControllers($pluginPath . $pluginName . DS . 'src' . DS);
+                        if(!empty($findedControllers)){
+                            $controllers[$pluginName] = $findedControllers;
+                        }
+                        break;
+                    }
+                }
+            }
+        }
+        $resources = [];
+        foreach($controllers as $pluginName => $controller){
+            if(is_integer($pluginName)){
+                $className = 'App\\' . $controller;
+                $cname = str_replace(['Controller\\', 'Controller', DS], ['','','/'], $controller);
+                $actions = $this->getActions($className);
+                $resources[$cname]= $actions;
+            }else{
+                foreach($controller as $controllerName){
+                    $cname = str_replace(['Controller\\', 'Controller', DS], ['','','/'], $controllerName);
+                    $cname = strtolower($cname);
+                    $pName = Inflector::underscore($pluginName);
+                    $className = $pluginName . '\\' . $controllerName;
+                    $actions = $this->getActions($className);
+                    $resources['plugin'][$pName][$cname] = $actions;
+                }
+            }
+        }
+        debug(Hash::flatten($resources, '/'));die;
+        return $resources;
+    }
 }

@@ -2,7 +2,9 @@
 namespace AclManager\Controller\Admin;
 
 use AclManager\Controller\AppController;
+use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
+
 
 /**
  * Permissions Controller
@@ -29,6 +31,8 @@ class PermissionsController extends AppController
 
     public function acoList($id = null)
     {
+        $this->Acl->getResources();
+        die;
 //        debug($this->Acl->denyRole('plugin/b2b', 'registered'));die;
 //        debug($this->Acl->allowUser('plugin/b2b', 1));die;
         debug($this->Acl->allowRole('plugin/b2b', 'registered'));die;

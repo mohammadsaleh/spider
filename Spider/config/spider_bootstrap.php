@@ -6,7 +6,7 @@ use Cake\Log\Log;
 use Cake\Utility\Inflector;
 use Spider\Event\SpiderEventManager;
 use Spider\Lib\SpiderPlugin;
-
+use Spider\Lib\Spider;
 /**
  * List of core plugins
  */
@@ -22,7 +22,7 @@ Configure::write('Core.corePlugins', $corePlugins);
 if(!Configure::check('Hook.plugins')){
     Configure::write('Hook.plugins', \Cake\Utility\Hash::extract(SpiderPlugin::getPlugins(), '{n}.name'));
 }
-$plugins = array_merge(Configure::read('Hook.plugins'), Configure::read('Core.corePlugins'));
+$plugins = Spider::mergeConfig('Hook.plugins', Configure::read('Core.corePlugins'));
 
 //Configure::read('App.paths.plugins');
 
