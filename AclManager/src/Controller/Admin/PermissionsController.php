@@ -29,9 +29,11 @@ class PermissionsController extends AppController
 
     public function acoList($id = null)
     {
-        debug($this->Acl->allowRoles('plugin/b2b', ['registered', 'public']));die;
-        debug($this->Acl->allowRoles('plugin/b2b/tours/edit', 'registered'));die;
-        debug($this->Acl->checkRoles(1, 'plugin/b2b/tours/edit'));die;
+//        debug($this->Acl->denyRole('plugin/b2b', 'registered'));die;
+//        debug($this->Acl->allowUser('plugin/b2b', 1));die;
+        debug($this->Acl->allowRole('plugin/b2b', 'registered'));die;
+        debug($this->Acl->allowRole('plugin/b2b/tours/edit', 'registered'));die;
+        debug($this->Acl->checkRole(1, 'plugin/b2b/tours/edit'));die;
         die;
         $Aros = TableRegistry::get('AclManager.Aros');
         $allAcos = $this->Aco->getAll();

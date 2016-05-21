@@ -28,39 +28,93 @@ class AclComponent extends Component
     }
 
 
+    /**
+     * Checking if userId has access to given aco name or not
+     * @param $userId
+     * @param $acoName
+     * @return bool|null
+     */
     public function checkUser($userId, $acoName)
     {
-        $aros = $this->controller->Aro->getAros(['user_id' => $userId]);
-        return $this->__check($aros, $acoName);
+        $aro = $this->controller->Aro->Aros->find()
+            ->where(['model' => 'users'])
+            ->where(['foreign_key' => $userId])->first();
+        if(!empty($aro)){
+            $aco = $this->controller->Aco->Acos->find()->where(['name' => $acoName])->first();
+            if(!empty($aco)){
+                return $this->__check($aro, $aco);
+            }
+        }
+        return false;
     }
 
-    public function checkRoles($roleId, $acoName)
+    /**
+     * Checking if role name has access to given aco name or not
+     * @param $role
+     * @param $acoName
+     * @param $inParentToo
+     * @return bool|null
+     */
+    public function checkRole($role, $acoName, $inParentToo = true)
     {
-        $aros = $this->controller->Aro->getAros(['role_id' => $roleId]);
-        return $this->__check($aros, $acoName);
+        $roleId = &$role;
+        if(!is_integer($role)){
+            //get it's id.
+            $Roles = TableRegistry::get('Users.Roles');
+            $role = $Roles->find()->where(['name' => $role])->extract('id')->first();
+        }
+        if(!empty($role)){
+            $roles = [$roleId];
+            if($inParentToo){
+                $Roles = TableRegistry::get('Users.Roles');
+                $parentRoles = Hash::extract($Roles->find('path', ['for' => $roleId])->toArray(),'{n}.id');
+                $roles = array_unique(array_filter($parentRoles));
+            }
+            $aros = $this->controller->Aro->Aros->find()
+                ->where(['model' => 'roles'])
+                ->where(['foreign_key IN' => $roles])->toArray();
+            if(!empty($aros)){
+                $aco = $this->controller->Aco->Acos->find()->where(['name' => $acoName])->first();
+                if(!empty($aco)){
+                    return $this->__check($aros, $aco);
+                }
+            }
+        }
+        return false;
     }
 
-    private function __check($aros, $acoName)
+    /**
+     * Check if aros has access to an aco or not
+     * @param $aros
+     * @param $aco
+     * @return bool|null
+     */
+    private function __check($aros, $aco)
     {
-        if(!empty($aros)){
-            $ArosAcos = TableRegistry::get('AclManager.ArosAcos');
-            $permissions = $ArosAcos->find()
-                ->matching('Acos', function($q) use($acoName) {
-                    return $q->where(['Acos.name' => $acoName]);
-                })
-                ->where(['aro_id IN' => Hash::extract($aros, '{n}.id')])->toArray();
+        if(!is_array($aros)){
+            $aros = [$aros];
+        }
+        $ArosAcos = TableRegistry::get('AclManager.ArosAcos');
+        $permissions = $ArosAcos->find()
+            ->where(['aco_id IN' => $aco->id])
+            ->where(['aro_id IN' => Hash::extract($aros, '{n}.id')])
+            ->toArray();
 //            $permissions = Hash::extract($permissions, '{n}._matchingData.Acos');
 //            $permissions = Hash::combine($permissions, '{n}.name', '{n}');
 //            $permissions = Hash::sort($permissions, '{s}.name');
 //            debug($permissions);die;
-            if(!empty($permissions)){
-                return true;
-            }
-            return false;
+        if(!empty($permissions)){
+            return true;
         }
-        return null;
+        return false;
     }
 
+    /**
+     * Allow acoName to an userId
+     * @param $acoName
+     * @param $userId
+     * @return bool
+     */
     public function allowUser($acoName, $userId)
     {
         $conditions = ['model' => 'users', 'foreign_key' => $userId];
@@ -77,69 +131,76 @@ class AclComponent extends Component
         $aro = $this->controller->Aro->Aros->find()
             ->where(['model' => 'users'])
             ->where(['foreign_key' => $userId])->first();
-        $aco = $this->controller->Aco->Acos->find()
-            ->where(['name' => $acoName])->first();
-        if(!empty($aco)){
-            return $this->__allow($aro, $aco);
+        $acos = $this->controller->Aco->Acos->find()
+            ->where(['name LIKE' => $acoName . '%'])->toArray();
+        if(!empty($acos)){
+            return $this->__allow($aro, $acos);
         }
         return false;
     }
 
-    public function allowRoles($acoName, $roleNames = [])
+    /**
+     * Allow acoName to given role
+     * @param $acoName
+     * @param $roleName
+     * @return bool|null
+     */
+    public function allowRole($acoName, $roleName)
     {
-        if(!is_array($roleNames)){
-            $roleNames = [$roleNames];
-        }
         if(!$this->controller->Aco->check($acoName)){
             $this->controller->Aco->add(['name' => $acoName]);
         }
         $Roles = TableRegistry::get('Users.Roles');
-        $roles = $Roles->find()->where(['name IN' => $roleNames])->extract('id')->toArray();
-        if(!empty($roles)){
-            foreach($roles as $key => $roleId){
-                $conditions = ['model' => 'roles', 'foreign_key' => $roleId];
-                if(!$this->controller->Aro->check($conditions)){
-                    $this->controller->Aro->add($conditions);
-                }
-                if($this->checkRoles($roleId, $acoName)){
-                    unset($roles[$key]);
-                }
+        $roleId = $Roles->find()->where(['name' => $roleName])->extract('id')->first();
+        if(!empty($roleId)){
+            $conditions = ['model' => 'roles', 'foreign_key' => $roleId];
+            if(!$this->controller->Aro->check($conditions)){
+                $this->controller->Aro->add($conditions);
             }
-            if(!empty($roles)){
-                $aros = $this->controller->Aro->Aros->find()
-                    ->where(['model' => 'roles'])
-                    ->where(['foreign_key IN' => $roles])->toArray();
-                $acos = $this->controller->Aco->Acos->find()
-                    ->where(['name LIKE' => $acoName . '%'])->toArray();
-                if(!empty($acos) && !empty($aros)){
-                    if($this->__allow($aros, $acos)){
-                        //find all users with this roles and allow thairs
-                        $UsersRoles = TableRegistry::get('Users.UsersRoles');
-                        $Roles = TableRegistry::get('Users.Roles');
-                        $rolesWithParents = [];
-                        foreach($roles as $roleId){
-                            //get all parent roles
-                            $rolesWithParents[] = Hash::extract(
-                                $Roles->find('path', ['for' => $roleId])->toArray(),
-                                '{n}.id'
-                            );
-                        }
-                        $rolesWithParents = Hash::extract($rolesWithParents, '{n}.{n}');
-                        $roles = array_unique(array_filter($rolesWithParents));
-                        //find all users having this roles
-                        $users = $UsersRoles->find()->where(['role_id IN' => $roles])->toArray();
-                        //allow all users
-                        foreach($users as $user){
-                            $this->allowUser($acoName, $user->user_id);
+            if($this->checkRole($roleId, $acoName)){
+                return true;
+            }
+            $aro = $this->controller->Aro->Aros->find()
+                ->where(['model' => 'roles'])
+                ->where(['foreign_key' => $roleId])->toArray();
+            $acos = $this->controller->Aco->Acos->find()
+                ->where(['name LIKE' => $acoName . '%'])->toArray();
+            if(!empty($acos) && !empty($aro)){
+                if($this->__allow($aro, $acos)){
+                    //find all users with this roles and allow thairs
+                    $UsersRoles = TableRegistry::get('Users.UsersRoles');
+                    //get all parent roles
+                    $childrenRoles = Hash::extract(
+                        $Roles->find('children', ['for' => $roleId])->toArray(),
+                        '{n}.id'
+                    );
+                    $roles = array_unique(array_filter($childrenRoles));
+                    array_push($roles, $roleId);
+                    foreach($roles as $roleId){
+                        $conditions = ['model' => 'roles', 'foreign_key' => $roleId];
+                        if(!$this->controller->Aro->check($conditions)){
+                            $this->controller->Aro->add($conditions);
                         }
                     }
+                    //find all users having this roles
+                    $users = $UsersRoles->find()->where(['role_id IN' => $roles])->toArray();
+                    //allow all users
+                    foreach($users as $user){
+                        $this->allowUser($acoName, $user->user_id);
+                    }
                 }
+                return true;
             }
-            return true; //was already added.
         }
         return null;
     }
 
+    /**
+     * Allow aros to acos
+     * @param $aros
+     * @param $acos
+     * @return bool
+     */
     private function __allow($aros, $acos)
     {
         if(!is_array($aros)){
@@ -162,12 +223,89 @@ class AclComponent extends Component
         return true;
     }
 
-    public function deny($aco, $userId)
+    /**
+     * Deny acoName from given user id
+     * @param $acoName
+     * @param $userId
+     * @return bool
+     */
+    public function denyUser($acoName, $userId)
+    {
+        $aro = $this->controller->Aro->Aros->find()
+            ->where(['model' => 'users'])
+            ->where(['foreign_key' => $userId])->first();
+        $acos = $this->controller->Aco->Acos->find()
+            ->where(['name LIKE' => $acoName . '%'])->toArray();
+        if(!empty($acos) && !empty($aro)){
+            return $this->__deny($aro, $acos);
+        }
+    }
+
+    /**
+     * Deny acoName from given role name
+     * @param $acoName
+     * @param $roleName
+     * @return bool
+     */
+    public function denyRole($acoName, $roleName)
+    {
+        $Roles = TableRegistry::get('Users.Roles');
+        $roleId = $Roles->find()->where(['name' => $roleName])->extract('id')->first();
+        if(!empty($roleId)){
+            $aros = $this->controller->Aro->Aros->find()
+                ->where(['model' => 'roles'])
+                ->where(['foreign_key' => $roleId])->toArray();
+            $acos = $this->controller->Aco->Acos->find()
+                ->where(['name LIKE' => $acoName . '%'])->toArray();
+            if(!empty($acos) && !empty($aros)){
+                if($this->__deny($aros, $acos)){
+                    $UsersRoles = TableRegistry::get('Users.UsersRoles');
+                    //get all parent roles
+                    $childrenRoles = Hash::extract(
+                        $Roles->find('children', ['for' => $roleId])->toArray(),
+                        '{n}.id'
+                    );
+                    $roles = array_unique(array_filter($childrenRoles));
+                    array_push($roles, $roleId);
+                    //find all users having this roles
+                    $users = $UsersRoles->find()->where(['role_id IN' => $roles])->toArray();
+                    //allow all users
+                    foreach($users as $user){
+                        $this->denyUser($acoName, $user->user_id);
+                    }
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
+
+    /**
+     * Deny aros from acos
+     * @param $aros
+     * @param $acos
+     * @return bool
+     */
+    private function __deny($aros, $acos)
     {
 
-        //select all aro from aros
-        //select relatd aco id
-        //remove from join table
+        if(!is_array($aros)){
+            $aros = [$aros];
+        }
+        if(!is_array($acos)){
+            $acos = [$acos];
+        }
+        $ArosAcos = TableRegistry::get('AclManager.ArosAcos');
+        foreach($aros as $aro){
+            foreach($acos as $aco){
+                $condition = [
+                    'aro_id' => $aro->id,
+                    'aco_id' => $aco->id
+                ];
+                $ArosAcos->deleteAll($condition);
+            }
+        }
+        return true;
     }
 
 }

@@ -28,6 +28,11 @@ class AroComponent extends Component
      */
     protected $_defaultConfig = [];
 
+    /**
+     * Add an aro
+     * @param $aroInfo
+     * @return bool
+     */
     public function add($aroInfo)
     {
         $aroEntity = $this->Aros->newEntity($aroInfo);
@@ -105,6 +110,11 @@ class AroComponent extends Component
         return $aros;
     }
 
+    /**
+     * Check if exist aro or not
+     * @param array $conditions
+     * @return bool
+     */
     public function check($conditions = [])
     {
         if(!empty($conditions)){

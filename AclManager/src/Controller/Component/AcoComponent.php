@@ -28,6 +28,11 @@ class AcoComponent extends Component
      */
     protected $_defaultConfig = [];
 
+    /**
+     * Check if aco related to this name is exist in acos table or not
+     * @param $name
+     * @return bool
+     */
     public function check($name)
     {
         $aco = $this->Acos->find()->where(['name' => $name])->first();
@@ -37,6 +42,11 @@ class AcoComponent extends Component
         return false;
     }
 
+    /**
+     * add an aco
+     * @param $acoInfo
+     * @return bool
+     */
     public function add($acoInfo)
     {
         $acoEntity =$this->Acos->newEntity($acoInfo);
