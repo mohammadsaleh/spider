@@ -11,8 +11,8 @@ use Spider\Model\Table\SpiderTable;
 class InstallTable extends SpiderTable
 {
 
-
-    /**
+  
+    /** 
      * Initialize method
      *
      * @param array $config The configuration for the Table.
