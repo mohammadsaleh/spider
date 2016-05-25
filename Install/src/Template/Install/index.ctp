@@ -82,7 +82,7 @@ $check = true;
                 'action' => 'database',
             ), array(
                 'button'  => 'success',
-                'class'   => 'btn btn-primary btn-lg active btn-action',
+                'class'   => 'btn btn-default ',
                 'id'   => 'next',
                 'tooltip' => array(
                     'data-title'     => __d('spider', 'Click here to begin installation'),
