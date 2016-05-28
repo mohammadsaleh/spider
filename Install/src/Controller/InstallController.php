@@ -29,6 +29,7 @@ class InstallController extends AppController
         
     }
 
+
     public function database(){
         $currentConfiguration = array(
             'exists' => false,
@@ -46,6 +47,12 @@ class InstallController extends AppController
                 $currentConfiguration['valid'] = true;
             } catch (Exception $e) {
             }
+        }
+        
+        if(!empty($this->request->data)){
+            debug($this->request->data);
+            die();
+        
         }
         $this->set(compact('currentConfiguration'));
         

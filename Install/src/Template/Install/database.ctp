@@ -56,7 +56,12 @@
                         <label class="col-sm-2 form-control-label">Datasource</label>
 
                         <div class="col-sm-10">
-                            <p class="form-control-static">
+                            <div class="input-group">
+                                <p class="form-control-static">
+
+                                <div class="input-group-addon">
+                                    <span class="glyphicon glyphicon-list-alt"></span>
+                                </div>
                                 <select name="datasource" placeholder="Database" id="datasource" class="form-control">
                                     <option value="Database/Mysql" selected="selected">mysql</option>
                                     <option value="Database/Sqlite">sqlite</option>
@@ -64,7 +69,8 @@
                                     <option value="Database/Sqlserver">mssql</option>
                                 </select>
 
-                            </p>
+                                </p>
+                            </div>
                         </div>
                     </div>
                     <!--==============================-->
@@ -72,10 +78,17 @@
                         <label class="col-sm-2 form-control-label">Host</label>
 
                         <div class="col-sm-10">
-                            <p class="form-control-static">
-                                <input type="text" name="host" class="form-control" id="inputPassword" placeholder="host"
+                            <div class="input-group">
+                                <p class="form-control-static">
+
+                                <div class="input-group-addon">
+                                    <span class="glyphicon glyphicon-home"></span>
+                                </div>
+                                <input type="text" name="host" class="form-control" id="inputPassword"
+                                       placeholder="host"
                                        value="localhost">
-                            </p>
+                                </p>
+                            </div>
                         </div>
                     </div>
                     <!--======================================-->
@@ -84,10 +97,17 @@
                         <label class="col-sm-2 form-control-label">Login</label>
 
                         <div class="col-sm-10">
-                            <p class="form-control-static">
-                                <input type="text" name="login" class="form-control" id="inputPassword" placeholder="Login"
+                            <div class="input-group">
+                                <p class="form-control-static">
+
+                                <div class="input-group-addon">
+                                    <span class="glyphicon glyphicon-user"></span>
+                                </div>
+                                <input type="text" name="login" class="form-control" id="inputPassword"
+                                       placeholder="Login"
                                        value="root">
-                            </p>
+                                </p>
+                            </div>
                         </div>
                     </div>
                     <!--======================================-->
@@ -96,10 +116,16 @@
                         <label class="col-sm-2 form-control-label">password</label>
 
                         <div class="col-sm-10">
-                            <p class="form-control-static">
+                            <div class="input-group">
+                                <p class="form-control-static">
+
+                                <div class="input-group-addon">
+                                    <span class="glyphicon glyphicon-eye-open"></span>
+                                </div>
                                 <input type="text" name="password" class="form-control" id="inputPassword"
                                        placeholder="password" value="">
-                            </p>
+                                </p>
+                            </div>
                         </div>
                     </div>
                     <!--======================================-->
@@ -108,22 +134,36 @@
                         <label class="col-sm-2 form-control-label">database</label>
 
                         <div class="col-sm-10">
-                            <p class="form-control-static">
+                            <div class="input-group">
+                                <p class="form-control-static">
+
+                                <div class="input-group-addon">
+                                    <span class="glyphicon glyphicon-briefcase"></span>
+                                </div>
                                 <input type="text" name="database" class="form-control" id="inputPassword"
                                        placeholder="database" value="spider">
-                            </p>
+                                </p>
+                            </div>
                         </div>
                     </div>
                     <!--======================================-->
                     <!--======================================-->
                     <div class="form-group row">
+
                         <label class="col-sm-2 form-control-label">prefix</label>
 
                         <div class="col-sm-10">
-                            <p class="form-control-static">
+                            <div class="input-group">
+                                <p class="form-control-static">
+
+
+                                <div class="input-group-addon">
+                                    <span class="glyphicon glyphicon-minus"></span>
+                                </div>
                                 <input type="text" name="prefix" class="form-control" id="inputPassword"
                                        placeholder="prefix" value="">
-                            </p>
+                                </p>
+                            </div>
                         </div>
                     </div>
                     <!--======================================-->
@@ -132,25 +172,26 @@
                         <label class="col-sm-2 form-control-label">port</label>
 
                         <div class="col-sm-10">
-                            <p class="form-control-static">                                
-                                <input type="text" name="port" class="form-control" id="inputPassword" placeholder="port"
+                            <div class="input-group">
+                                <p class="form-control-static">
+
+                                <div class="input-group-addon">
+                                    <span class="glyphicon glyphicon-asterisk"></span>
+                                </div>
+                                <input type="text" name="port" class="form-control" id="inputPassword"
+                                       placeholder="port"
                                        value="">
-                            </p>
+                                </p>
+                            </div>
                         </div>
                     </div>
                     <!--======================================-->
-
-
                 </div>
-                
-
-
             </div>
-
         </div>
         <div class="panel-footer">
             <div class="form-actions">
-                <?php echo $this->Form->submit('Submit', array('button' => 'success', 'id'=>'next', 'div' => 'input submit')); ?>
+                <?php echo $this->Form->submit('Submit', array('button' => 'success', 'id' => 'next', 'div' => 'input submit')); ?>
             </div>
             <?php echo $this->Form->end(); ?>
         </div>
@@ -160,7 +201,7 @@
 
 <div class="page-content">
     <div class="container-fluid">
-        
+
     </div><!--.box-typical-->
 </div><!--.container-fluid-->
 </div>
