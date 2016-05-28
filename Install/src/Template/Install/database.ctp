@@ -63,10 +63,10 @@
                                     <span class="glyphicon glyphicon-list-alt"></span>
                                 </div>
                                 <select name="datasource" placeholder="Database" id="datasource" class="form-control">
-                                    <option value="Database/Mysql" selected="selected">mysql</option>
-                                    <option value="Database/Sqlite">sqlite</option>
-                                    <option value="Database/Postgres">postgres</option>
-                                    <option value="Database/Sqlserver">mssql</option>
+                                    <option value="Mysql" selected="selected">mysql</option>
+                                    <option value="Sqlite">sqlite</option>
+                                    <option value="Postgres">postgres</option>
+                                    <option value="Sqlserver">mssql</option>
                                 </select>
 
                                 </p>
@@ -94,7 +94,7 @@
                     <!--======================================-->
                     <!--======================================-->
                     <div class="form-group row">
-                        <label class="col-sm-2 form-control-label">Login</label>
+                        <label class="col-sm-2 form-control-label">username</label>
 
                         <div class="col-sm-10">
                             <div class="input-group">
@@ -103,8 +103,8 @@
                                 <div class="input-group-addon">
                                     <span class="glyphicon glyphicon-user"></span>
                                 </div>
-                                <input type="text" name="login" class="form-control" id="inputPassword"
-                                       placeholder="Login"
+                                <input type="text" name="username" class="form-control" id="inputPassword"
+                                       placeholder="username"
                                        value="root">
                                 </p>
                             </div>

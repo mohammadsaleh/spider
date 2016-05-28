@@ -7,6 +7,7 @@ use Cake\ORM\RulesChecker;
 use Cake\Validation\Validator;
 use Install\Model\Entity\Install;
 use Spider\Model\Table\SpiderTable;
+use Cake\Core\Configure; 
 
 class InstallTable extends SpiderTable
 {
@@ -20,7 +21,8 @@ class InstallTable extends SpiderTable
      */
     public function initialize(array $config)
     {
-        parent::initialize($config);
+        parent::initialize($config);        
+        $this->table('');
     }
 
 
@@ -56,6 +58,7 @@ class InstallTable extends SpiderTable
     public function setupDatabase()
     {
         $plugins = Configure::read('Core.corePlugins');
+        
         $migrationsSucceed = true;
         foreach ($plugins as $plugin) {
             $migrationsSucceed = $this->runMigrations($plugin);
