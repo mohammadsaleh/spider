@@ -7,11 +7,17 @@ use Cake\ORM\RulesChecker;
 use Cake\Validation\Validator;
 use Install\Model\Entity\Install;
 use Spider\Model\Table\SpiderTable;
-use Cake\Core\Configure; 
+use Cake\Core\Configure;
+use Cake\Core\Plugin;
+use PluginManager\Lib\SpiderPlugin;
 
 class InstallTable extends SpiderTable
 {
-
+    /**
+     *
+     * @var C
+     */
+    protected $_SpiderPlugin = null;
   
     /** 
      * Initialize method
@@ -61,7 +67,11 @@ class InstallTable extends SpiderTable
         
         $migrationsSucceed = true;
         foreach ($plugins as $plugin) {
+            $plugin  = explode('/', $plugin);
+            $plugin  = $plugin[0];
             $migrationsSucceed = $this->runMigrations($plugin);
+            debug($migrationsSucceed);
+            die();
             if (!$migrationsSucceed) {
                 $this->log('Migrations failed for ' . $plugin, LOG_CRIT);
                 break;
@@ -80,25 +90,28 @@ class InstallTable extends SpiderTable
         if (!Plugin::loaded($plugin)) {
             Plugin::load($plugin);
         }
-        $CroogoPlugin = $this->_getCroogoPlugin();
-        $result = $CroogoPlugin->migrate($plugin);
+        $SpiderPlugin = $this->_getSpiderPlugin();        
+        $result = $SpiderPlugin->migrate($plugin);
+        debug($result);
+        die();
         if (!$result) {
-            $this->log($CroogoPlugin->migrationErrors);
+            $this->log($SpiderPlugin->migrationErrors);
         }
         return $result;
     }
 
-    protected function _getCroogoPlugin()
+    protected function _getSpiderPlugin()
     {
-        if (!($this->_CroogoPlugin instanceof CroogoPlugin)) {
-            $this->_setCroogoPlugin(new CroogoPlugin());
+        if (!($this->_SpiderPlugin instanceof SpiderPlugin)) {
+            $this->_SpiderPlugin(new SpiderPlugin());
         }
-        return $this->_CroogoPlugin;
+        return $this->_SpiderPlugin;
     }
 
-    protected function _setCroogoPlugin($croogoPlugin)
+    protected function _SpiderPlugin($spiderPlugin)
     {
-        unset($this->_CroogoPlugin);
-        $this->_CroogoPlugin = $croogoPlugin;
+        unset($this->_SpiderPlugin);
+        $this->_SpiderPlugin = $spiderPlugin;
     }
+    
 }
