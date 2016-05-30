@@ -346,7 +346,11 @@ class AclComponent extends Component
         return $results;
     }
 
-    public function getResources(){
+    /**
+     * @param string $type: flaten or array
+     * @return array
+     */
+    public function getResources($type = 'flatten'){
         $controllers = $this->findControllers();
         foreach(Configure::read('Hook.plugins') as $plugin){
             $pluginName = Inflector::camelize($plugin);
@@ -373,15 +377,16 @@ class AclComponent extends Component
             }else{
                 foreach($controller as $controllerName){
                     $cname = str_replace(['Controller\\', 'Controller', DS], ['','','/'], $controllerName);
-                    $cname = strtolower($cname);
-                    $pName = Inflector::underscore($pluginName);
+                    $pName = $pluginName;
                     $className = $pluginName . '\\' . $controllerName;
                     $actions = $this->getActions($className);
                     $resources['plugin'][$pName][$cname] = $actions;
                 }
             }
         }
-        debug(Hash::flatten($resources, '/'));die;
+        if($type == 'flatten'){
+            return Hash::flatten($resources, '/');
+        }
         return $resources;
     }
 }

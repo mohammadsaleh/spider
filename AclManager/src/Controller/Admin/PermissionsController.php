@@ -4,6 +4,7 @@ namespace AclManager\Controller\Admin;
 use AclManager\Controller\AppController;
 use Cake\Core\Configure;
 use Cake\ORM\TableRegistry;
+use Cake\Utility\Hash;
 
 
 /**
@@ -27,6 +28,31 @@ class PermissionsController extends AppController
             'spacer' => '|-'
         ]);
         $this->set(compact('roles'));
+    }
+
+    /**
+     * Sync controller actions with aco table
+     */
+    public function sync()
+    {
+        $resources = $this->Acl->getResources();
+        //campare records with table records and diff, if exist in table and not exist in array so remove from table.
+        $pluginAcos = $this->Aco->startWith('plugin/');
+        $pluginAcos = Hash::combine($pluginAcos, '{n}.id', '{n}.name');
+
+        //Find table actions which deleted from it's controller, so we must delete those from aco table too
+        $deleteAcos = array_diff($pluginAcos, array_keys($resources));
+        foreach($deleteAcos as $id => $aco){
+            $this->Aco->remove($id);
+        }
+
+        //Find resources which not exist in aco table so must be add
+        $resources = array_diff(array_keys($resources), $pluginAcos);
+        foreach($resources as $acoPath){
+            if(!$this->Aco->check($acoPath)){
+                $this->Aco->add(['name' => $acoPath]);
+            }
+        }
     }
 
     public function acoList($id = null)

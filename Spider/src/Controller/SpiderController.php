@@ -7,6 +7,7 @@ use Cake\Core\Plugin;
 use Cake\Event\Event;
 use Cake\Network\Request;
 use Cake\Network\Response;
+use Cake\Utility\Inflector;
 use Users\Lib\UserLib;
 
 /**
@@ -43,12 +44,7 @@ class SpiderController extends Controller
         parent::initialize();
         $this->set('title', '');
         $this->loadComponent('Flash');
-        $this->loadComponent('Cookie', [
-            'expires' => '+3 days',
-            'httpOnly' => true
-        ]);
-        $this->_setupAuthComponent();
-        $this->_setupAuthAccess();
+
         /** This below event trigger Before "SpiderController.afterConstruct" event.*/
         $this->eventManager()->dispatch(new Event('SpiderController.afterInitialize', $this));
     }
@@ -66,56 +62,13 @@ class SpiderController extends Controller
         /** This below event trigger After "SpiderController.afterInitialize" event.*/
         $this->eventManager()->dispatch(new Event('SpiderController.afterConstruct', $this));
     }
-
-    protected function _setupAuthComponent(){
-        //todo::  this settings should be better to set by setting project ui, not in code.
-        $this->loadComponent('Auth', [
-            'className' => 'Users.CustomAuth',
-            'loginAction' => '/login',
-            'loginRedirect' => '/tour/search',
-            'logoutRedirect' => '/login',
-            'checkAuthIn' => 'Controller.initialize',
-            'authenticate' => [
-                AuthComponent::ALL => ['userModel' => 'Users.Users'],
-                'Form'
-            ],
-            'unauthorizedRedirect' => '/login',
-            'authorize' => ['Controller'],
-            'storage' => 'Session'
-        ]);
-    }
-    protected function _setupAuthAccess(){
-        $this->Auth->allow();
-        if($this->request->prefix === 'admin'){
-            $this->Auth->deny();
-            $this->Auth->config('loginAction', '/admin/login');
-            $this->Auth->config('loginRedirect', '/admin');
-        }
-        if(!$this->Auth->user()){
-            $this->_tryLoginUserWithCookie();
-        }
-    }
     
-    protected function _tryLoginUserWithCookie()
-    {
-        if($this->Cookie->check('remember_me')){
-            $cookie = $this->Cookie->read('remember_me');
-            $this->Auth->setUser($cookie);
-        }
-    }
-
     public function beforeFilter(Event $event)
     {
         parent::beforeFilter($event);
         if(!$this->request->is('post')){
             $this->loadComponent('Search.Prg');
         }
-//        if($this->request->prefix === 'admin'){
-//            //Search filtering for all admin controllers::index()
-//            if($this->request->action === 'index'){
-//                $this->loadComponent('Search.Prg');
-//            }
-//        }
     }
 
     /**
@@ -125,20 +78,13 @@ class SpiderController extends Controller
      */
     public function isAuthorized($user = null)
     {
-        // Any registered user can access public functions
-        if (empty($this->request->params['prefix'])) {
-            return true;
-        }
-
-        // Only admins can access admin functions
-        if ($this->request->params['prefix'] === 'admin') {
-            return true;
-            //check this user can access admin section or not
-//            return (bool)($user['role'] === 'admin');
-        }
-
-        // Default deny
-        return false;
+        $request = $this->request;
+        $prefix = $request->param('prefix') ? $request->param('prefix') . '/' : '';
+        $plugin = $request->param('plugin') ? 'plugin/' . $request->param('plugin') . '/' : '';
+        $controller = $request->param('controller') . '/';
+        $action = $request->param('action');
+        $aco = $plugin . $prefix . $controller . $action;
+        return $this->Acl->checkUser($user['id'], $aco);
     }
 
     public function beforeRender(Event $event)

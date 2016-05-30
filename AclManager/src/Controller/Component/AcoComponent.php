@@ -56,9 +56,28 @@ class AcoComponent extends Component
         return false;
     }
 
+    /**
+     * Removing an aco and it's aros_acos relation from database
+     * @param $aco
+     * @return bool
+     */
     public function remove($aco)
     {
-
+        $query = $this->Acos;
+        if(is_integer($aco)){
+            $acoId = $aco;
+            $conditions = ['id' => $aco];
+        }else{
+            $acoId = $this->check($aco);
+            $conditions = ['name' => $aco];
+        }
+        if($acoId && $query->deleteAll($conditions)){
+            $ArosAcos = TableRegistry::get('AclManager.ArosAcos');
+            if($ArosAcos->deleteAll(['aco_id' => $acoId])){
+                return true;
+            }
+        }
+        return false;
     }
 
     /**
@@ -80,6 +99,6 @@ class AcoComponent extends Component
      */
     public function startWith($acoName = 'plugin/ for example')
     {
-
+        return $this->Acos->find()->where(['name LIKE' => $acoName . '%'])->order('name')->toArray();
     }
 }

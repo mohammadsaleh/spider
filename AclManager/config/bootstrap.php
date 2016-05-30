@@ -1,4 +1,5 @@
 <?php
+\Cake\Core\Configure::load('AclManager.auth');
 
 \Spider\Lib\SpiderNav::add('sidebar', 'Users.children.permissions' , [
 	'title' => __d('users', 'Permissions'),

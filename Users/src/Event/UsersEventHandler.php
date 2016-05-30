@@ -49,26 +49,6 @@ class UsersEventHandler implements EventListenerInterface
     }
     
     /**
-     * Get given/auth user capabilities
-     * @param null $userInfo
-     * @return array
-     */
-    private function __getUserCapabilities($userInfo){
-        $userId = $userInfo['id'];
-        $UserCapabilities = TableRegistry::get('Users.UsersCapabilities');
-        $query = $UserCapabilities->find('all')
-            ->select(['Capabilities.title'])
-            ->contain(['Capabilities'])
-            ->where(['user_id' => $userId]);
-        $capabilities = (new Collection($query))->extract('Capabilities.title')->filter()->toArray();
-        if(empty($capabilities)){
-            $Roles = TableRegistry::get('Users.Roles');
-            $capabilities = $Roles->getAllParentCapabilities($userInfo['role_id'], ['valueField' => 'title']);
-        }
-        return $capabilities;
-    }
-
-    /**
      * Send Auth object to UserLib to accessible anywhere when using UserLib::check($cap, $userId)
      * @param Event $event
      */
