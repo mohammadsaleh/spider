@@ -84,7 +84,10 @@ class SpiderController extends Controller
         $controller = $request->param('controller') . '/';
         $action = $request->param('action');
         $aco = $plugin . $prefix . $controller . $action;
-        return $this->Acl->checkUser($user['id'], $aco);
+        if(!$this->Acl->checkRole('public', $aco)){
+            return $this->Acl->checkUser($user['id'], $aco);
+        }
+        return true;
     }
 
     public function beforeRender(Event $event)
