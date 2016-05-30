@@ -199,7 +199,7 @@ class AclComponent extends Component
                         }
                         foreach($acos as $aco){
                             if($this->checkRole($roleId, $aco->name, false)){
-                                $this->denyRole($acoName, $roleId);
+                                $this->denyRole($aco->name, $roleId);
                             }
                         }
                     }
@@ -259,8 +259,7 @@ class AclComponent extends Component
         $aro = $this->controller->Aro->Aros->find()
             ->where(['model' => 'users'])
             ->where(['foreign_key' => $userId])->first();
-        $acos = $this->controller->Aco->Acos->find()
-            ->where(['name LIKE' => $acoName . '%'])->toArray();
+        $acos = $this->controller->Aco->startWith($acoName);
         if(!empty($acos) && !empty($aro)){
             return $this->__deny($aro, $acos);
         }
