@@ -32,6 +32,17 @@ class AclManagerEventHandler implements EventListenerInterface
 		]);
 		$this->_setupAuthComponent();
 		$this->_setupAuthAccess();
+		$this->_checkPublicAccess();
+	}
+
+	/**
+	 * Check access control
+	 */
+	protected function _checkPublicAccess()
+	{
+		if($this->controller->Acl->checkRole('public', $this->controller->Acl->request())){
+			$this->controller->Auth->allow();
+		}
 	}
 
 	/**

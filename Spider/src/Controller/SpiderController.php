@@ -69,18 +69,8 @@ class SpiderController extends Controller
         if(!$this->request->is('post')){
             $this->loadComponent('Search.Prg');
         }
-        $this->_checkPublicAccess();
     }
-
-    /**
-     * Check access control
-     */
-    protected function _checkPublicAccess()
-    {
-        if($this->Acl->checkRole('public', $this->Acl->request())){
-            $this->Auth->allow();
-        }
-    }
+    
     /**
      * Callback method that will be call ever if user logged in
      * @param null $user
