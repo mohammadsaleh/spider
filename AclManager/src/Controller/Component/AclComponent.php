@@ -103,7 +103,7 @@ class AclComponent extends Component
         }
         $ArosAcos = TableRegistry::get('AclManager.ArosAcos');
         $permissions = $ArosAcos->find()
-            ->where(['aco_id IN' => $aco->id])
+            ->where(['aco_id' => $aco->id])
             ->where(['aro_id IN' => Hash::extract($aros, '{n}.id')])
             ->toArray();
 //            $permissions = Hash::extract($permissions, '{n}._matchingData.Acos');
@@ -164,14 +164,13 @@ class AclComponent extends Component
             if(!$this->controller->Aro->check($conditions)){
                 $this->controller->Aro->add($conditions);
             }
-            if($this->checkRole($roleId, $acoName)){
-                return true;
-            }
+//            if($this->checkRole($roleId, $acoName)){
+//                return true;
+//            }
             $aro = $this->controller->Aro->Aros->find()
                 ->where(['model' => 'roles'])
                 ->where(['foreign_key' => $roleId])->toArray();
-            $acos = $this->controller->Aco->Acos->find()
-                ->where(['name LIKE' => $acoName . '%'])->toArray();
+            $acos = $this->controller->Aco->startWith($acoName);
             if(!empty($acos) && !empty($aro)){
                 if($this->__allow($aro, $acos)){
                     //find all users with this roles and allow thairs
@@ -219,12 +218,14 @@ class AclComponent extends Component
         $ArosAcos = TableRegistry::get('AclManager.ArosAcos');
         foreach($aros as $aro){
             foreach($acos as $aco){
-                $data = [
-                    'aro_id' => $aro->id,
-                    'aco_id' => $aco->id
-                ];
-                $arosAcosEntity = $ArosAcos->newEntity($data);
-                $ArosAcos->save($arosAcosEntity);
+                if(!$this->__check($aro, $aco)){
+                    $data = [
+                        'aro_id' => $aro->id,
+                        'aco_id' => $aco->id
+                    ];
+                    $arosAcosEntity = $ArosAcos->newEntity($data);
+                    $ArosAcos->save($arosAcosEntity);
+                }
             }
         }
         return true;

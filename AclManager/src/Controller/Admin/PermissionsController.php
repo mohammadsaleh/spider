@@ -14,7 +14,6 @@ use Cake\Utility\Hash;
  */
 class PermissionsController extends AppController
 {
-
     /**
      * Index method
      *
