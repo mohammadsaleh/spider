@@ -173,30 +173,38 @@ class AclComponent extends Component
             if(!$this->controller->Aro->check($conditions)){
                 $this->controller->Aro->add($conditions);
             }
-//            if($this->checkRole($roleId, $acoName)){
-//                return true;
-//            }
             $aro = $this->controller->Aro->Aros->find()
                 ->where(['model' => 'roles'])
                 ->where(['foreign_key' => $roleId])->toArray();
             $acos = $this->controller->Aco->startWith($acoName);
             if(!empty($acos) && !empty($aro)){
-                if($this->__allow($aro, $acos)){
+                foreach($acos as $index => $aco){
+                    if($this->checkRole($roleId, $aco->name, true)){
+                        unset($acos[$index]);
+                    }
+                }
+                if(!empty($acos) && $this->__allow($aro, $acos)){
                     //find all users with this roles and allow thairs
                     $UsersRoles = TableRegistry::get('Users.UsersRoles');
-                    //get all parent roles
+                    //get all child roles
                     $childrenRoles = Hash::extract(
                         $Roles->find('children', ['for' => $roleId])->toArray(),
                         '{n}.id'
                     );
                     $roles = array_unique(array_filter($childrenRoles));
-                    array_push($roles, $roleId);
                     foreach($roles as $roleId){
                         $conditions = ['model' => 'roles', 'foreign_key' => $roleId];
                         if(!$this->controller->Aro->check($conditions)){
                             $this->controller->Aro->add($conditions);
                         }
+                        foreach($acos as $aco){
+                            if($this->checkRole($roleId, $aco->name, false)){
+                                $this->denyRole($acoName, $roleId);
+                            }
+                        }
                     }
+
+                    array_push($roles, $roleId);
                     //find all users having this roles
                     $users = $UsersRoles->find()->where(['role_id IN' => $roles])->toArray();
                     //allow all users
@@ -267,13 +275,15 @@ class AclComponent extends Component
     public function denyRole($acoName, $roleName)
     {
         $Roles = TableRegistry::get('Users.Roles');
-        $roleId = $Roles->find()->where(['name' => $roleName])->extract('id')->first();
+        $roleId = $roleName;
+        if(!is_integer($roleName)){
+            $roleId = $Roles->find()->where(['name' => $roleName])->extract('id')->first();
+        }
         if(!empty($roleId)){
             $aros = $this->controller->Aro->Aros->find()
                 ->where(['model' => 'roles'])
                 ->where(['foreign_key' => $roleId])->toArray();
-            $acos = $this->controller->Aco->Acos->find()
-                ->where(['name LIKE' => $acoName . '%'])->toArray();
+            $acos = $this->controller->Aco->startWith($acoName);
             if(!empty($acos) && !empty($aros)){
                 if($this->__deny($aros, $acos)){
                     $UsersRoles = TableRegistry::get('Users.UsersRoles');
