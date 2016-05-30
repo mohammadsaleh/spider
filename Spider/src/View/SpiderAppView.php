@@ -1,6 +1,7 @@
 <?php
 namespace Spider\View;
 
+use Cake\Event\Event;
 use Cake\View\View;
 
 /**
@@ -20,12 +21,11 @@ class SpiderAppView extends View
     public function initialize()
     {
         parent::initialize();
+        $this->loadHelper('Spider.Spider');
         $this->loadHelper('Html', ['className' => 'BootstrapUI.Html']);
         $this->loadHelper('Form', ['className' => 'BootstrapUI.Form']);
         $this->loadHelper('Flash', ['className' => 'BootstrapUI.Flash']);
         $this->loadHelper('Paginator', ['className' => 'BootstrapUI.Paginator']);
-
-        $this->loadHelper('Spider.Spider');
-        $this->loadHelper('Users.Users');
+        $this->eventManager()->dispatch(new Event('Spider.SpiderAppView.initialize', $this));
     }
 }

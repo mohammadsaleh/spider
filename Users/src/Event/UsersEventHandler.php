@@ -17,6 +17,7 @@ class UsersEventHandler implements EventListenerInterface
                 'callable' => 'onSuccessRegister', // create and send activation key to user's email
                 'priority' => -1
             ],
+            'Spider.SpiderAppView.initialize' => 'onSpiderViewInitialize',
             'Users.Users.login.success' => [
                 'callable' => 'onSuccessLogin',
                 'priority' => -1
@@ -41,6 +42,12 @@ class UsersEventHandler implements EventListenerInterface
         return $userInfo;
     }
 
+    public function onSpiderViewInitialize(Event $event)
+    {
+        $view = $event->subject();
+        $view->loadHelper('Users.Users');
+    }
+    
     /**
      * Get given/auth user capabilities
      * @param null $userInfo
