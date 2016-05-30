@@ -69,8 +69,18 @@ class SpiderController extends Controller
         if(!$this->request->is('post')){
             $this->loadComponent('Search.Prg');
         }
+        $this->_checkPublicAccess();
     }
 
+    /**
+     * Check access control
+     */
+    protected function _checkPublicAccess()
+    {
+        if($this->Acl->checkRole('public', $this->Acl->request())){
+            $this->Auth->allow();
+        }
+    }
     /**
      * Callback method that will be call ever if user logged in
      * @param null $user
@@ -78,16 +88,7 @@ class SpiderController extends Controller
      */
     public function isAuthorized($user = null)
     {
-        $request = $this->request;
-        $prefix = $request->param('prefix') ? $request->param('prefix') . '/' : '';
-        $plugin = $request->param('plugin') ? 'plugin/' . $request->param('plugin') . '/' : '';
-        $controller = $request->param('controller') . '/';
-        $action = $request->param('action');
-        $aco = $plugin . $prefix . $controller . $action;
-        if(!$this->Acl->checkRole('public', $aco)){
-            return $this->Acl->checkUser($user['id'], $aco);
-        }
-        return true;
+        return $this->Acl->checkUser($user['id'], $this->Acl->request());
     }
 
     public function beforeRender(Event $event)

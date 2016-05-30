@@ -34,6 +34,15 @@ class AclComponent extends Component
         $this->controller = $this->_registry->getController();
     }
 
+    public function request()
+    {
+        $request = $this->controller->request;
+        $prefix = $request->param('prefix') ? $request->param('prefix') . '/' : '';
+        $plugin = $request->param('plugin') ? 'plugin/' . $request->param('plugin') . '/' : '';
+        $controller = $request->param('controller') . '/';
+        $action = $request->param('action');
+        return $plugin . $prefix . $controller . $action;
+    }
 
     /**
      * Checking if userId has access to given aco name or not
