@@ -10,10 +10,10 @@ Request::addDetector(
 );
 
 
-SpiderNav::add('sidebar', 'Dashboard' ,[
-    'title' => __d('spider', 'Dashboard'),
-    'url' => SpiderNav::getDashboardUrl(),
-    'icon' => 'fa fa-home',
+SpiderNav::add('sidebar', 'Dashboard', [
+    'title'  => __d('spider', 'Dashboard'),
+    'url'    => SpiderNav::getDashboardUrl(),
+    'icon'   => 'fa fa-home',
     'weight' => -10
 ]);
 
@@ -21,3 +21,9 @@ I18n::locale('fa_IR');
 Plugin::load('BootstrapUI');
 
 require_once 'spider_bootstrap.php';
+
+
+//if (!Configure::read('Croogo.installed') || !Configure::read('Install.secured')) {
+if (1) {
+    plugin::load('Install', array('routes' => true));
+}
