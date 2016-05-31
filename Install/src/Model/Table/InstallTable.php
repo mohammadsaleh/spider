@@ -10,6 +10,7 @@ use Spider\Model\Table\SpiderTable;
 use Cake\Core\Configure;
 use Cake\Core\Plugin;
 use PluginManager\Lib\SpiderPlugin;
+use Migrations\Migrations;
 
 class InstallTable extends SpiderTable
 {
@@ -70,18 +71,16 @@ class InstallTable extends SpiderTable
             $plugin  = explode('/', $plugin);
             $plugin  = $plugin[0];
             $migrationsSucceed = $this->runMigrations($plugin);
-            debug($migrationsSucceed);
-            die();
             if (!$migrationsSucceed) {
                 $this->log('Migrations failed for ' . $plugin, LOG_CRIT);
                 break;
             }
         }
-        if ($migrationsSucceed) {
-            $DataMigration = new DataMigration();
-            $path = App::pluginPath('Install') . DS . 'config' . DS . 'Data' . DS;
-            $DataMigration->load($path);
-        }
+//        if ($migrationsSucceed) {
+//            $DataMigration = new DataMigration();
+//            $path = App::pluginPath('Install') . DS . 'config' . DS . 'Data' . DS;
+//            $DataMigration->load($path);
+//        }
         return $migrationsSucceed;
     }
 
@@ -90,13 +89,15 @@ class InstallTable extends SpiderTable
         if (!Plugin::loaded($plugin)) {
             Plugin::load($plugin);
         }
-        $SpiderPlugin = $this->_getSpiderPlugin();        
-        $result = $SpiderPlugin->migrate($plugin);
-        debug($result);
-        die();
-        if (!$result) {
-            $this->log($SpiderPlugin->migrationErrors);
-        }
+//        $SpiderPlugin = $this->_getSpiderPlugin();        
+//        $result = $SpiderPlugin->migrate($plugin);
+//        if (!$result) {
+//            $this->log($SpiderPlugin->migrationErrors);
+//        }
+        
+        $migrations = new Migrations();
+        $result = $migrations->migrate();
+        
         return $result;
     }
 

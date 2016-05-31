@@ -6,7 +6,9 @@ use Cake\Controller\Controller;
 use Cake\Core\Configure;
 use Install\Lib\InstallManager;
 use Cake\Datasource\ConnectionManager;
-
+use Cake\Core\Plugin;
+use Cake\ORM\TableRegistry;
+use Cake\Routing\Router;
 /**
  * Install Controller
  *
@@ -71,6 +73,7 @@ class InstallController extends AppController
 
     public function data()
     {
+        
         $this->_check();
         $this->set('title_for_layout', __d('spider', 'Step 2: Build database'));
 
@@ -80,7 +83,7 @@ class InstallController extends AppController
         $tables = $ds->schemaCollection()->listTables();
         
 
-        if (!empty($sources)) {
+        if (!empty($tables)) {
             $this->Flash->warning(
                 __d('spider', 'Warning: Database "%s" is not empty.', $database),
                 'default', array('class' => 'error')
@@ -90,19 +93,74 @@ class InstallController extends AppController
         if ($this->request->query('run')) {
             set_time_limit(10 * MINUTE);
             $this->Install->setupDatabase();
-            debug('d');
-            die();
 
-            $InstallManager = new InstallManager();
-            $result = $InstallManager->createCroogoFile();
-            if ($result !== true) {
-                return $this->Session->setFlash($result, 'flash', array('class' => 'error'));
-            }
+//            $InstallManager = new InstallManager();
+//            $result = $InstallManager->createCroogoFile();
+//            if ($result !== true) {
+//                return $this->Session->setFlash($result, 'flash', array('class' => 'error'));
+//            }
 
             return $this->redirect(array('action' => 'adminuser'));
         }
     }
 
+    
+    public function adminuser(){
+        $this->set('title_for_layout', __d('spider', 'Step 3: Set Admin User'));
+
+        if ($this->request->is('post')) {
+            if (!Plugin::loaded('Users')) {
+                Plugin::load('Users');
+            }
+//            $this->loadModel('Users.User');
+//            $this->set($this->request->data);
+//
+//            $user = $this->User->newEntity($this->request->data);
+//            $user = $user->save();
+
+
+
+            $users = TableRegistry::get('Users');
+            $user = $users->newEntity($this->request->data,['validate' => true]);
+            if ($users->save($user)) {
+             return $this->redirect(['action'=>'finish']);   
+            }
+            
+            
+            if ($this->User->validates()) {
+                $user = $this->Install->addAdminUser($this->request->data);
+                if ($user) {
+                    $this->Session->write('Install.user', $user);
+                    return $this->redirect(['action' => 'finish']);
+                }
+            }
+        }
+        
+        
+    }
+    
+    
+    public function finish(){
+        $this->set('title_for_layout','finished');
+        $urlBlogAdd = Router::url(array(
+            'plugin' => 'nodes',
+            'admin' => true,
+            'controller' => 'nodes',
+            'action' => 'add',
+            'blog',
+        ));
+        $urlSettings = Router::url(array(
+            'plugin' => 'settings',
+            'admin' => true,
+            'controller' => 'settings',
+            'action' => 'prefix',
+            'Site',
+        ));
+        
+    }
+    
+    
+    
     /**
      * If settings.json exists, app is already installed
      *
