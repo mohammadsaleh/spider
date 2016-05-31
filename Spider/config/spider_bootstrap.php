@@ -7,6 +7,14 @@ use Cake\Utility\Inflector;
 use Spider\Event\SpiderEventManager;
 use Spider\Lib\SpiderPlugin;
 use Spider\Lib\Spider;
+use Cake\Core\Plugin;
+
+//(new EventManager())->dispatch('Spider.bootstrap.start');
+//
+//if (!Configure::check('Spider.installed')) {
+//    return Plugin::load('Install', ['bootstrap' => true, 'routes' => true, 'autoload' => true]);
+//}
+
 /**
  * List of core plugins
  */
@@ -54,4 +62,4 @@ foreach ($plugins as $plugin) {
     SpiderPlugin::load($option);
 }
 SpiderEventManager::loadListeners();
-(new EventManager())->dispatch('Spider.bootstrap.Complete');
+(new EventManager())->dispatch('Spider.bootstrap.complete');
