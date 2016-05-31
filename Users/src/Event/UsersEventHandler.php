@@ -2,6 +2,7 @@
 namespace Users\Event;
 
 use Cake\Collection\Collection;
+use Cake\Core\Plugin;
 use Cake\Event\Event;
 use Cake\Event\EventListenerInterface;
 use Cake\ORM\TableRegistry;
@@ -45,7 +46,9 @@ class UsersEventHandler implements EventListenerInterface
     public function onSpiderViewInitialize(Event $event)
     {
         $view = $event->subject();
-        $view->loadHelper('Users.Users');
+        if(Plugin::loaded('Users')){
+            $view->loadHelper('Users.Users');
+        }
     }
     
     /**
