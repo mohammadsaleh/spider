@@ -30,7 +30,7 @@ class ArosTable extends SpiderTable
         $this->belongsToMany('Acos', [
             'foreignKey' => 'aro_id',
             'targetForeignKey' => 'aco_id',
-            'joinTable' => 'aclmanager_aros_acos',
+            'joinTable' => 'spider_aclmanager_aros_acos',
             'className' => 'AclManager.Acos'
         ]);
     }

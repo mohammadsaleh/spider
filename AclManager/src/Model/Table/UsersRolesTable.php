@@ -1,11 +1,13 @@
 <?php
-namespace Users\Model\Table;
+namespace AclManager\Model\Table;
 
+use Cake\Event\Event;
+use Cake\ORM\Entity;
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\Validation\Validator;
 use Spider\Model\Table\SpiderTable;
-use Users\Model\Entity\UsersRole;
+use AclManager\Model\Entity\UsersRole;
 
 /**
  * UsersRoles Model
@@ -24,14 +26,14 @@ class UsersRolesTable extends SpiderTable
     {
         parent::initialize($config);
 
-        $this->table('spider_users_users_roles');
+        $this->table('spider_aclmanager_users_roles');
         $this->primaryKey('id');
         $this->belongsTo('Users', [
             'className' => 'Users.Users',
             'foreignKey' => 'user_id'
         ]);
         $this->hasMany('Roles', [
-            'className' => 'Users.Roles',
+            'className' => 'AclManager.Roles',
             'foreignKey' => 'role_id'
         ]);
     }
@@ -60,5 +62,11 @@ class UsersRolesTable extends SpiderTable
     public function buildRules(RulesChecker $rules)
     {
         return $rules;
+    }
+
+    public function afterSave(Event $event, Entity $entity, $options = [])
+    {
+//        debug($options);
+//        debug($entity);die;
     }
 }

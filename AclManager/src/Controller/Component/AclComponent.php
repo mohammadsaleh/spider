@@ -34,6 +34,26 @@ class AclComponent extends Component
         $this->controller = $this->_registry->getController();
     }
 
+    /**
+     * Set all role & parents permissions to user
+     * @param $userId
+     * @param $roleId
+     */
+    public function setUserRole($userId, $roleId)
+    {
+        $userAro = $this->controller->Aro->getUser($userId);
+        $ArosAcos = TableRegistry::get('AclManager.ArosAcos');
+        $ArosAcos->deleteAll(['aro_id' => $userAro['id']]);
+
+        $roleAros = $this->controller->Aro->getRole($roleId, true, true);
+        $rolePermissions = $this->controller->Aro->getPermissions($roleAros);
+        $this->__allow($userAro, $rolePermissions);
+    }
+
+    /**
+     * Get request as AcoName
+     * @return string
+     */
     public function request()
     {
         $request = $this->controller->request;
@@ -76,13 +96,13 @@ class AclComponent extends Component
         $roleId = &$role;
         if(!is_integer($role)){
             //get it's id.
-            $Roles = TableRegistry::get('Users.Roles');
+            $Roles = TableRegistry::get('AclManager.Roles');
             $role = $Roles->find()->where(['name' => $role])->extract('id')->first();
         }
         if(!empty($role)){
             $roles = [$roleId];
             if($inParentToo){
-                $Roles = TableRegistry::get('Users.Roles');
+                $Roles = TableRegistry::get('AclManager.Roles');
                 $parentRoles = Hash::extract($Roles->find('path', ['for' => $roleId])->toArray(),'{n}.id');
                 $roles = array_unique(array_filter($parentRoles));
             }
@@ -112,7 +132,7 @@ class AclComponent extends Component
         }
         $ArosAcos = TableRegistry::get('AclManager.ArosAcos');
         $permissions = $ArosAcos->find()
-            ->where(['aco_id' => $aco->id])
+            ->where(['aco_id' => $aco['id']])
             ->where(['aro_id IN' => Hash::extract($aros, '{n}.id')])
             ->toArray();
 //            $permissions = Hash::extract($permissions, '{n}._matchingData.Acos');
@@ -166,7 +186,7 @@ class AclComponent extends Component
         if(!$this->controller->Aco->check($acoName)){
             $this->controller->Aco->add(['name' => $acoName]);
         }
-        $Roles = TableRegistry::get('Users.Roles');
+        $Roles = TableRegistry::get('AclManager.Roles');
         $roleId = $Roles->find()->where(['name' => $roleName])->extract('id')->first();
         if(!empty($roleId)){
             $conditions = ['model' => 'roles', 'foreign_key' => $roleId];
@@ -237,8 +257,8 @@ class AclComponent extends Component
             foreach($acos as $aco){
                 if(!$this->__check($aro, $aco)){
                     $data = [
-                        'aro_id' => $aro->id,
-                        'aco_id' => $aco->id
+                        'aro_id' => $aro['id'],
+                        'aco_id' => $aco['id']
                     ];
                     $arosAcosEntity = $ArosAcos->newEntity($data);
                     $ArosAcos->save($arosAcosEntity);
@@ -273,7 +293,7 @@ class AclComponent extends Component
      */
     public function denyRole($acoName, $roleName)
     {
-        $Roles = TableRegistry::get('Users.Roles');
+        $Roles = TableRegistry::get('AclManager.Roles');
         $roleId = $roleName;
         if(!is_integer($roleName)){
             $roleId = $Roles->find()->where(['name' => $roleName])->extract('id')->first();
@@ -325,8 +345,8 @@ class AclComponent extends Component
         foreach($aros as $aro){
             foreach($acos as $aco){
                 $condition = [
-                    'aro_id' => $aro->id,
-                    'aco_id' => $aco->id
+                    'aro_id' => $aro['id'],
+                    'aco_id' => $aco['id']
                 ];
                 $ArosAcos->deleteAll($condition);
             }

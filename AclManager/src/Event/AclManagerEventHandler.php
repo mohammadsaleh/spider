@@ -2,8 +2,10 @@
 namespace AclManager\Event;
 
 use Cake\Core\Configure;
+use Cake\Core\Exception\Exception;
 use Cake\Event\Event;
 use Cake\Event\EventListenerInterface;
+use Cake\ORM\Entity;
 
 class AclManagerEventHandler implements EventListenerInterface
 {
@@ -11,12 +13,89 @@ class AclManagerEventHandler implements EventListenerInterface
 	 * @var \Cake\Controller\Controller
 	 */
 	public $controller = null;
+	public $table = null;
 
 	public function implementedEvents()
 	{
 	    return [
-		    'SpiderController.afterInitialize' => 'onAfterSpiderInitialized'
+		    'Model.beforeMarshal' => 'onBeforeMarshal',
+		    'Model.afterSave' => 'onAfterSave',
+		    'SpiderController.afterInitialize' => 'onAfterSpiderInitialized',
+		    'SpiderTable.afterConstruct' => 'onAfterSpiderTableConstruct',
+		    'Users.Users.add.success' => 'onUserAddSuccessfully'
 	    ];
+	}
+
+	//process roles = 2 or roles = [2, 10] or roles = ['public', 'superadmin'] or roles = 'public'
+	//convert all to roles = [ ['id' => 2], ['id' => 10] ] standard
+	//then save AclManager.Roles
+	//then set access.
+	public function onBeforeMarshal(Event $event, \ArrayObject $data, \ArrayObject $options)
+	{
+		$this->table = $event->subject();
+		if (($this->table->alias() == 'Users') && isset($data['roles'])) {
+			$roles = $data['roles'];
+			if(!is_array($roles)){
+				$roles = [$roles];
+			}
+			foreach($roles as &$role){
+				if(is_string($role) && (int)$role === 0){
+					//find role_id
+					$result = $this->table->Roles->find()->where(['name' => $role])->first();
+					if(!empty($result)){
+						$role = $result['id'];
+					}else{
+						throw new Exception(__d('acl_manager', 'Role "' . $role . '" Not Found!'));
+					}
+				}
+
+			}
+			$roles = $this->_getInheritedRoles($roles);
+			$data['roles'] = $roles;
+		}
+	}
+
+	public function onAfterSave(Event $event, Entity $entity, $options = [])
+	{
+		$table = $event->subject();
+		if(($table->alias() == 'UsersRoles')){
+			$this->controller->Acl->setUserRole($entity['user_id'], $entity['role_id']);
+		}
+	}
+	protected function _getInheritedRoles($roles)
+	{
+		$roleIds = [];
+		foreach($roles as $key => $roleId){
+			$children = $this->table->Roles->find('children', ['for' => $roleId])->combine('name', 'id')->toArray();
+			if(!empty(array_intersect(array_diff($roles, [$roleId]), $children))){
+				unset($roles[$key]);
+			}else{
+				$roleIds[] = ['id' => $roleId];
+			}
+		}
+		return $roleIds;
+	}
+
+	public function onAfterSpiderTableConstruct(Event $event)
+	{
+	    $table = $event->subject();
+		if($table->alias() == 'Users'){
+			//Associate AclManager.Roles to Users.Users model
+			$table->belongsToMany('AclManager.Roles', [
+				'through' => 'AclManager.UsersRoles',
+				'foreignKey' => 'user_id',
+			]);
+		}
+	}
+
+	public function onUserAddSuccessfully(Event $event)
+	{
+		$controller = $event->subject();
+		$user = $event->data['user'];
+		//set permission for this user base on role id.
+
+		//todo: role_id may has array, then we should save all role_id in users_AclManager.Roles then foreach setUserRole
+		$controller->Acl->setUserRole($user['id'], $user['role_id']);
 	}
 
 	public function onAfterSpiderInitialized(Event $event)
@@ -50,13 +129,13 @@ class AclManagerEventHandler implements EventListenerInterface
 	 */
 	protected function _setupAuthComponent(){
 		$this->controller->loadComponent('Auth', Configure::read('Auth'));
-		$this->controller->Auth->deny();
 	}
 
 	/**
 	 * Setting up auth access
 	 */
 	protected function _setupAuthAccess(){
+		$this->controller->Auth->deny();
 		if($this->controller->request->prefix == $this->controller->Auth->config('admin.prefix')){
 			$this->controller->Auth->config('loginAction', $this->controller->Auth->config('admin.loginAction'));
 			$this->controller->Auth->config('loginRedirect', $this->controller->Auth->config('admin.loginRedirect'));

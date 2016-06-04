@@ -16,7 +16,7 @@ class RolesControllerTest extends IntegrationTestCase
      * @var array
      */
     public $fixtures = [
-        'plugin.users.roles'
+        'plugin.AclManager.Roles'
     ];
 
     /**

@@ -37,7 +37,7 @@ class AroComponent extends Component
     {
         $aroEntity = $this->Aros->newEntity($aroInfo);
         if($this->Aros->save($aroEntity)){
-            return true;
+            return $aroEntity;
         }
         return false;
     }
@@ -45,6 +45,40 @@ class AroComponent extends Component
     public function remove($aro)
     {
 
+    }
+
+    /**
+     * Get aro base on userId
+     * @param $userId
+     * @return mixed
+     */
+    public function getUser($userId)
+    {
+        $aroInfo = ['model' => 'users', 'foreign_key' => $userId];
+        if(!$this->check($aroInfo)){
+            $this->add($aroInfo);
+        }
+        return $this->_getAros(['user_id' => $userId])->first();
+    }
+
+    /**
+     * Get aro base on roleId
+     * @param $roleId
+     * @param bool|true $own : if true return it's own aro too
+     * @param bool|false $parents : if true return it's parents aro too
+     * @return mixed
+     */
+    public function getRole($roleId, $own = true, $parents = false)
+    {
+        $aroInfo = ['model' => 'users', 'foreign_key' => $roleId];
+        if(!$this->check($aroInfo)){
+            $this->add($aroInfo);
+        }
+        $roleAro = $this->_getAros(['role_id' => $roleId, 'own' => $own, 'parents' => $parents]);
+        if($own && !$parents){
+            return $roleAro->first();
+        }
+        return $roleAro->toArray();
     }
 
     /**
@@ -76,7 +110,7 @@ class AroComponent extends Component
      * @param array $options: set parent=false to not return parents aros.
      * @return mixed
      */
-    public function getAros($options = [])
+    protected function _getAros($options = [])
     {
         $options = array_merge([
             'parents' => true,
@@ -91,7 +125,7 @@ class AroComponent extends Component
             $aro->where(['foreign_key IN' => $options['user_id']]);
 
         }elseif($options['role_id']){
-            $roles = TableRegistry::get('Users.roles');
+            $roles = TableRegistry::get('AclManager.Roles');
 
             if($options['parents']){
                 $roleIds = $roles->find('path', ['for' => $options['role_id']])->extract('id')->toArray();
@@ -106,8 +140,7 @@ class AroComponent extends Component
             $aro->where(['model' => 'roles']);
             $aro->where(['foreign_key IN' => $roleIds]);
         }
-        $aros = $aro->toArray();
-        return $aros;
+        return $aro;
     }
 
     /**

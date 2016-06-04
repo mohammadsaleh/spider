@@ -29,7 +29,7 @@ class UsersRolesFixture extends TestFixture
         ],
         '_constraints' => [
             'primary' => ['type' => 'primary', 'columns' => ['id'], 'length' => []],
-            'users_roles_ibfk_1' => ['type' => 'foreign', 'columns' => ['parent_id'], 'references' => ['users_roles', 'id'], 'update' => 'cascade', 'delete' => 'cascade', 'length' => []],
+            'AclManager.Roles_ibfk_1' => ['type' => 'foreign', 'columns' => ['parent_id'], 'references' => ['AclManager.Roles', 'id'], 'update' => 'cascade', 'delete' => 'cascade', 'length' => []],
         ],
         '_options' => [
             'engine' => 'InnoDB',

@@ -20,14 +20,14 @@ class UsersTableTest extends TestCase
         'plugin.users.users',
         'plugin.users.presenters',
         'plugin.users.cities',
-        'plugin.users.roles',
+        'plugin.AclManager.Roles',
         'plugin.users.activation_keys',
         'plugin.users.user_accounts',
         'plugin.users.user_logins',
         'plugin.users.banks',
         'plugin.users.users_banks',
         'plugin.users.capabilities',
-        'plugin.users.roles_capabilities',
+        'plugin.AclManager.Roles_capabilities',
         'plugin.users.users_capabilities'
     ];
 

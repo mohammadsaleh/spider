@@ -33,10 +33,7 @@ class UsersTable extends SpiderTable
         $this->displayField('alias');
         $this->primaryKey('id');
         $this->addBehavior('Timestamp');
-        $this->belongsToMany('Roles', [
-            'through' => 'Users.UsersRoles'
-        ]);
-        $this->hasMany('ActivationKeys', [
+        $this->hasMany('Users.ActivationKeys', [
             'foreignKey' => 'user_id',
             'className' => 'Users.ActivationKeys'
         ]);
@@ -122,11 +119,13 @@ class UsersTable extends SpiderTable
     public function buildRules(RulesChecker $rules)
     {
         $rules->add($rules->isUnique(['username'], 'این ایمیل قبلا در سیستم موجود می باشد.'));
-        $rules->add($rules->existsIn(['role_id'], 'Roles'));
         return $rules;
     }
-    
-//    public function beforeSave(Event $event, Entity $entity, $options = []){
-//
-//    }
+
+    public function beforeSave(Event $event, Entity $entity, $options = [])
+    {
+//        debug($entity);
+//        debug($options);
+//        die;
+    }
 }

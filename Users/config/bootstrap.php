@@ -12,7 +12,7 @@ use Cake\Core\Plugin;
             'url' => ['plugin' => 'Users', 'controller' => 'Users', 'action' => 'index'],
             'weight' => 1
         ],
-        'users_roles' => [
+        'AclManager.Roles' => [
             'title' => __d('users', 'Role Management'),
             'url' => ['plugin' => 'Users', 'controller' => 'Roles', 'action' => 'index'],
             'weight' => 2

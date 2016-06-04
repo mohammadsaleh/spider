@@ -1,12 +1,12 @@
 <?php
-namespace Users\Model\Entity;
+namespace AclManager\Model\Entity;
 
 use Spider\Model\Entity\Spider;
 
 /**
- * Role Entity.
+ * UsersRole Entity.
  */
-class Role extends Spider
+class UsersRole extends Spider
 {
 
     /**
@@ -16,8 +16,6 @@ class Role extends Spider
      */
     protected $_accessible = [
         '*' => true,
-        'lft' => false,
-        'rght' => false,
         'id' => false,
     ];
 }

@@ -3,8 +3,10 @@ namespace AclManager\Controller\Admin;
 
 use AclManager\Controller\AppController;
 use Cake\Core\Configure;
+use Cake\Event\Event;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
+use Cake\Utility\Text;
 
 
 /**
@@ -14,13 +16,18 @@ use Cake\Utility\Hash;
  */
 class PermissionsController extends AppController
 {
+    public function initialize()
+    {
+        parent::initialize();
+        $this->Auth->allow();
+    }
     /**
      * Index method
      *
      */
     public function index()
     {
-        $Roles = TableRegistry::get('Users.Roles');
+        $Roles = TableRegistry::get('AclManager.Roles');
         $roles = $Roles->find('treeList', [
             'keyPath' => 'id',
             'valuePath' => 'title',
@@ -56,7 +63,21 @@ class PermissionsController extends AppController
 
     public function acoList($id = null)
     {
-        $this->Acl->getResources();
+        $Users = TableRegistry::get('Users.Users');
+//        $user = $Users->newEntity([
+//            'username' => 'ali_s'.Text::uuid().'@gmail.com',
+//            'password' => 123456789,
+//            'confirm_password' => 123456789,
+//            'roles' => ['public', 'superadmin', 'agency', 'registered']
+//        ]);
+        $user = $Users->get(36);
+        $Users->patchEntity($user, ['roles' => ['superadmin', 'public', 'agency', 'registered']]);
+//        debug($user);die;
+        $Users->save($user);
+        debug($user);
+        debug($user->errors());
+//        $this->Acl->getResources();
+//        $this->Acl->setUserRole(2, 2);
         die;
 //        debug($this->Acl->denyRole('plugin/b2b', 'registered'));die;
 //        debug($this->Acl->allowUser('plugin/b2b', 1));die;
@@ -67,10 +88,10 @@ class PermissionsController extends AppController
         $Aros = TableRegistry::get('AclManager.Aros');
         $allAcos = $this->Aco->getAll();
         if($id){
-            $ownAro = $this->Aro->getAros(['role_id' => $id, 'parents' => false]);
-            $parentAro = $this->Aro->getAros(['role_id' => $id, 'parents' => true, 'own' => false]);
-            $ownPermissions = $this->Aro->getPermissions($ownAro);
-            $parentsPermissions = $this->Aro->getPermissions($parentAro);
+//            $ownAro = $this->Aro->getAros(['role_id' => $id, 'parents' => false]);
+//            $parentAro = $this->Aro->getAros(['role_id' => $id, 'parents' => true, 'own' => false]);
+//            $ownPermissions = $this->Aro->getPermissions($ownAro);
+//            $parentsPermissions = $this->Aro->getPermissions($parentAro);
         }
 //        $acoNames = array_flip(array_merge(array_keys($ownPermissions), array_keys($parentsPermissions)));
 //        $allAcos = array_diff_key($allAcos, $acoNames);

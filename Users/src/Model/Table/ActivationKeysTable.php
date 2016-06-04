@@ -28,7 +28,7 @@ class ActivationKeysTable extends SpiderTable
         $this->displayField('id');
         $this->primaryKey('id');
         $this->addBehavior('Timestamp');
-        $this->belongsTo('Users', [
+        $this->belongsTo('Users.Users', [
             'foreignKey' => 'user_id',
             'className' => 'Users.Users'
         ]);

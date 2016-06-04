@@ -18,7 +18,7 @@ class CapabilitiesTableTest extends TestCase
      */
     public $fixtures = [
         'plugin.users.capabilities',
-        'plugin.users.roles',
+        'plugin.AclManager.Roles',
         'plugin.users.users',
         'plugin.users.cities',
         'plugin.users.activation_keys',
@@ -26,7 +26,7 @@ class CapabilitiesTableTest extends TestCase
         'plugin.users.user_logins',
         'plugin.users.banks',
         'plugin.users.users_banks',
-        'plugin.users.roles_capabilities',
+        'plugin.AclManager.Roles_capabilities',
         'plugin.users.users_capabilities'
     ];
 

@@ -24,7 +24,7 @@ class UsersRolesTableTest extends TestCase
      * @var array
      */
     public $fixtures = [
-        'plugin.users.users_roles'
+        'plugin.users.AclManager.Roles'
     ];
 
     /**
