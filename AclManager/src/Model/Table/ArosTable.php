@@ -24,7 +24,7 @@ class ArosTable extends SpiderTable
     {
         parent::initialize($config);
 
-        $this->table('aclmanager_aros');
+        $this->table('spider_aclmanager_aros');
         $this->displayField('id');
         $this->primaryKey('id');
         $this->belongsToMany('Acos', [

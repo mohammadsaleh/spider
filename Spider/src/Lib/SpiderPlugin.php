@@ -17,7 +17,7 @@ class SpiderPlugin
         $newQuery = $conn->newQuery();
         $plugins = $newQuery
             ->select('*')
-            ->from('plugins')
+            ->from('spider_plugins_plugins')
             ->where(['status' => 1])
             ->order(['weight ASC'])
             ->execute()

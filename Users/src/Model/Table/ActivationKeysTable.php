@@ -24,7 +24,7 @@ class ActivationKeysTable extends SpiderTable
     {
         parent::initialize($config);
 
-        $this->table('users_activation_keys');
+        $this->table('spider_users_activation_keys');
         $this->displayField('id');
         $this->primaryKey('id');
         $this->addBehavior('Timestamp');

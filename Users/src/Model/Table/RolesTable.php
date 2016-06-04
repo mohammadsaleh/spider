@@ -31,7 +31,7 @@ class RolesTable extends SpiderTable
     {
         parent::initialize($config);
 
-        $this->table('users_roles');
+        $this->table('spider_users_roles');
         $this->displayField('name');
         $this->primaryKey('id');
         $this->addBehavior('Tree');

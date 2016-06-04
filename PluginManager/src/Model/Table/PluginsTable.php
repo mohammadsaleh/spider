@@ -24,7 +24,7 @@ class PluginsTable extends SpiderTable
     {
         parent::initialize($config);
 
-        $this->table('plugins');
+        $this->table('spider_plugins_plugins');
         $this->displayField('name');
         $this->primaryKey('id');
     }

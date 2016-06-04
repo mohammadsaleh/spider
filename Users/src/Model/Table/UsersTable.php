@@ -29,7 +29,7 @@ class UsersTable extends SpiderTable
     {
         parent::initialize($config);
 
-        $this->table('users_users');
+        $this->table('spider_users_users');
         $this->displayField('alias');
         $this->primaryKey('id');
         $this->addBehavior('Timestamp');
