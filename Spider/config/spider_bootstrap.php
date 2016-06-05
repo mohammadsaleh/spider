@@ -28,10 +28,9 @@ $corePlugins = [
 Configure::write('Core.corePlugins', $corePlugins);
 
 if(!Configure::check('Hook.plugins')){
-    Configure::write('Hook.plugins', \Cake\Utility\Hash::extract(SpiderPlugin::getPlugins(), '{n}.name'));
+    Configure::write('Hook.plugins', Configure::read('Core.corePlugins'));
 }
-$plugins = Spider::mergeConfig('Hook.plugins', Configure::read('Core.corePlugins'));
-
+$plugins = Spider::mergeConfig('Hook.plugins', \Cake\Utility\Hash::extract(SpiderPlugin::getPlugins(), '{n}.name'));
 //Configure::read('App.paths.plugins');
 
 foreach ($plugins as $plugin) {
