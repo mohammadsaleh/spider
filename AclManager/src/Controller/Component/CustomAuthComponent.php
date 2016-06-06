@@ -14,10 +14,27 @@ class CustomAuthComponent extends AuthComponent
      */
     public function hasRole($role)
     {
-        $userRoles = Hash::extract($this->user('roles'), '{n}.name');
-        if(is_integer($role)){
-            $userRoles = Hash::extract($this->user('roles'), '{n}.id');
+        $roles = $this->user('roles');
+        if(!empty($roles)){
+            $userRoles = Hash::extract($roles, '{n}.name');
+            if(is_integer($role)){
+                $userRoles = Hash::extract($roles, '{n}.id');
+            }
+            return in_array($role, $userRoles);
         }
-        return in_array($role, $userRoles);
+        return false;
+    }
+
+    /**
+     * Check if current user has allow given acoName or not
+     * @param $acoName
+     * @return bool
+     */
+    public function hasAllow($acoName)
+    {
+        if($this->user('id')){
+            return $this->Acl->checkUser($this->user('id'), $acoName);
+        }
+        return false;
     }
 }
