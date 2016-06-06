@@ -205,7 +205,7 @@ class AclComponent extends Component
                 }
                 if(!empty($acos) && $this->__allow($aro, $acos)){
                     //find all users with this roles and allow thairs
-                    $UsersRoles = TableRegistry::get('AclManager.RolesUsersRoles');
+                    $UsersRoles = TableRegistry::get('AclManager.UsersRoles');
                     //get all child roles
                     $childrenRoles = Hash::extract(
                         $Roles->find('children', ['for' => $roleId])->toArray(),
@@ -305,7 +305,7 @@ class AclComponent extends Component
             $acos = $this->controller->Aco->startWith($acoName);
             if(!empty($acos) && !empty($aros)){
                 if($this->__deny($aros, $acos)){
-                    $UsersRoles = TableRegistry::get('AclManager.RolesUsersRoles');
+                    $UsersRoles = TableRegistry::get('AclManager.UsersRoles');
                     //get all parent roles
                     $childrenRoles = Hash::extract(
                         $Roles->find('children', ['for' => $roleId])->toArray(),
