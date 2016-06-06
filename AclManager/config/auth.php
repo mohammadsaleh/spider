@@ -2,6 +2,7 @@
 return [
     //todo::  this settings should be better to set by setting project ui, not in code.
     'Auth' => [
+        'className' => 'AclManager.CustomAuth',
         'admin' => [
             'prefix' => 'admin',
             'loginAction' => '/admin/login',
