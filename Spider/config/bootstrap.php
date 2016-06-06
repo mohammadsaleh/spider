@@ -3,6 +3,7 @@ use Cake\Core\Plugin;
 use Cake\I18n\I18n;
 use Spider\Lib\SpiderNav;
 use Cake\Network\Request;
+//\Spider\Lib\Hook::behavior('Users.Users', 'Slug');
 
 Request::addDetector(
     'chrome',
