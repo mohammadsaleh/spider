@@ -32,7 +32,7 @@ class UsersRolesTable extends SpiderTable
             'className' => 'Users.Users',
             'foreignKey' => 'user_id'
         ]);
-        $this->hasMany('Roles', [
+        $this->belongsTo('Roles', [
             'className' => 'AclManager.Roles',
             'foreignKey' => 'role_id'
         ]);

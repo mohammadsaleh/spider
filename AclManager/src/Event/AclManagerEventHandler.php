@@ -22,8 +22,20 @@ class AclManagerEventHandler implements EventListenerInterface
 		    'Model.afterSave' => 'onAfterSave',
 		    'SpiderController.afterInitialize' => 'onAfterSpiderInitialized',
 		    'SpiderTable.afterConstruct' => 'onAfterSpiderTableConstruct',
-		    'Users.Users.add.success' => 'onUserAddSuccessfully'
+		    'Users.Users.add.success' => 'onUserAddSuccessfully',
+		    'Users.Users.login.success' => 'onUserLoginSuccessfully'
 	    ];
+	}
+
+	public function onUserLoginSuccessfully(Event $event)
+	{
+		$user = &$event->data['user'];
+		$user['roles'] = [];
+		$UsersRoles = TableRegistry::get('AclManager.UsersRoles');
+		$roles = $UsersRoles->find()->where(['user_id' => $user['id']])->contain(['Roles'])->toArray();
+		if(!empty($roles)){
+			$user['roles'] = Hash::extract($roles, '{n}.role');
+		}
 	}
 
 	//process roles = 2 or roles = [2, 10] or roles = ['public', 'superadmin'] or roles = 'public'
