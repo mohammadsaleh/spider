@@ -21,7 +21,6 @@ class SpiderAppView extends View
     public function initialize()
     {
         parent::initialize();
-        $this->loadHelper('Spider.Spider');
         $this->loadHelper('Html', ['className' => 'BootstrapUI.Html']);
         $this->loadHelper('Form', ['className' => 'BootstrapUI.Form']);
         $this->loadHelper('Flash', ['className' => 'BootstrapUI.Flash']);

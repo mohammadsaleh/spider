@@ -2,6 +2,8 @@
 namespace Spider\Lib;
 
 use Cake\Core\Configure;
+use Cake\ORM\Table;
+use Cake\Routing\Router;
 use Cake\Utility\Hash;
 
 class Hook
@@ -47,33 +49,29 @@ class Hook
 	}
 
 	/**
-	 * Applies properties set from hooks to an object in __construct()
+	 * Applies methods set from hooks to an object in __construct()
 	 *
 	 * @param string $configKey
 	 */
-	public static function applyHookProperties($configKey, &$object = null) {
+	public static function applyHookMethods($configKey, &$object = null) {
 		if (empty($object)) {
 			$object = self;
 		}
-		debug(Configure::read($configKey));die;
-		$objectName = empty($object->name) ? get_class($object) : $object->name;
-		$hookProperties = Configure::read($configKey . '.' . $objectName);
-		if (is_array(Configure::read($configKey . '.*'))) {
-			$hookProperties = Hash::merge(Configure::read($configKey . '.*'), $hookProperties);
+		if($object instanceof Table){
+			$objectName = $object->alias();
+		}else{
+			$objectName = $object->name;
 		}
-		if (is_array($hookProperties)) {
-			foreach ($hookProperties as $property => $value) {
-				if (!isset($object->$property)) {
-					$object->$property = $value;
-				} else {
-					if (is_array($object->$property)) {
-						if (is_array($value)) {
-							$object->$property = Hash::merge($object->$property, $value);
-						} else {
-							$object->$property = $value;
-						}
-					} else {
-						$object->$property = $value;
+		$objectName = ($plugin = Router::getRequest()->param('plugin')) ? ($plugin . '.' . $objectName) : $objectName;
+		$hookMethods = Configure::read($configKey . '.' . $objectName);
+		if (is_array(Configure::read($configKey . '.*'))) {
+			$hookMethods = Hash::merge(Configure::read($configKey . '.*'), $hookMethods);
+		}
+		if (is_array($hookMethods)) {
+			foreach ($hookMethods as $method => $values) {
+				if(is_callable([$object, $method])){
+					foreach($values as $name => $config){
+						$object->$method($name, $config);
 					}
 				}
 			}
@@ -86,48 +84,48 @@ class Hook
 	 * @param string $controllerName
 	 * @param mixed $helperName Helper name or array of Helper and settings
 	 */
-	public static function hookHelper($controllerName, $helperName) {
+	public static function helper($controllerName, $helperName) {
 		if (is_string($helperName)) {
-			$helperName = array($helperName);
+			$helperName =[$helperName => []];
 		}
-		self::hookControllerProperty($controllerName, 'helpers', $helperName);
+		self::hookControllerMethod($controllerName, 'loadHelper', $helperName);
 	}
+
 	/**
-	 * Hook controller property
+	 * Hook controller method
 	 *
 	 * @param string $controllerName Controller name (for e.g., Nodes)
-	 * @param string $property       for e.g., components
+	 * @param string $method       for e.g., components
 	 * @param string $value          array or string
 	 */
-	public static function hookControllerProperty($controllerName, $property, $value) {
-		$configKeyPrefix = 'Hook.controller_properties';
-		self::_hookProperty($configKeyPrefix, $controllerName, $property, $value);
+	public static function hookControllerMethod($controllerName, $method, $value) {
+		$configKeyPrefix = 'Hook.controller_methods';
+		self::_hookMethod($configKeyPrefix, $controllerName, $method, $value);
 	}
+
 	/**
 	 * Loads as a normal component from controller.
 	 *
 	 * @param string $controllerName Controller Name
 	 * @param mixed $componentName  Component name or array of Component and settings
 	 */
-	public static function hookComponent($controllerName, $componentName) {
+	public static function component($controllerName, $componentName) {
 		if (is_string($componentName)) {
-			$componentName = array($componentName);
+			$componentName = [$componentName => []];
 		}
-		self::hookControllerProperty($controllerName, '_appComponents', $componentName);
+		self::hookControllerMethod($controllerName, 'loadComponent', $componentName);
 	}
+
+	/**
+	 * Loads as a normal behavior from table.
+	 *
+	 * @param $modelName Model name
+	 * @param $behaviorName Behavior name
+	 * @param array $config array of Behavior settings
+	 */
 	public static function behavior($modelName, $behaviorName, $config = [])
 	{
 		self::hookTableMethod($modelName, 'addBehavior', [$behaviorName => $config]);
-		debug(Configure::read('Hook.table_methods'));die;
 	}
 	
-	public function component($controllerName, $componentName)
-	{
-	    
-	}
-	
-	public function helper()
-	{
-	    
-	}
 }

@@ -1,7 +1,10 @@
 <?php
-use Cake\Core\Plugin;
+use Spider\Lib\SpiderNav;
+use Spider\Lib\Hook;
 
-\Spider\Lib\SpiderNav::add('sidebar', 'Users' , [
+Hook::helper('*', 'Users.Users');
+
+SpiderNav::add('sidebar', 'Users' , [
     'title' => __d('users', 'Users'),
     'url' => '#',
     'icon' => 'icon-user',

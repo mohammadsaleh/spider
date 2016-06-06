@@ -20,6 +20,7 @@ class UsersController extends AppController
     public function initialize()
     {
         parent::initialize();
+        $this->Auth->allow(['login', 'register', 'logout']);
     }
 
     /**
@@ -27,7 +28,6 @@ class UsersController extends AppController
      * @return \Cake\Network\Response|void
      */
     public function login(){
-        $this->viewBuilder()->layout('login');
         if (!empty($this->request->data)) {
             $user = $this->Auth->identify();
             if ($user && ($user['status'] > 0)) {

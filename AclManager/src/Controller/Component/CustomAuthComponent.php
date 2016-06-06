@@ -7,6 +7,12 @@ use Cake\Utility\Hash;
 class CustomAuthComponent extends AuthComponent
 {
 
+    public function initialize(array $config)
+    {
+        parent::initialize($config);
+        $this->components = array_merge($this->components, ['AclManager.Acl']);
+    }
+
     /**
      * Check if user has given role or not
      * @param String/Integer $role

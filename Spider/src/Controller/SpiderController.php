@@ -8,6 +8,7 @@ use Cake\Event\Event;
 use Cake\Network\Request;
 use Cake\Network\Response;
 use Cake\Utility\Inflector;
+use Spider\Lib\Hook;
 use Users\Lib\UserLib;
 
 /**
@@ -59,6 +60,8 @@ class SpiderController extends Controller
     public function __construct(Request $request = null, Response $response = null, $name = null, $eventManager = null)
     {
         parent::__construct($request, $response, $name, $eventManager);
+        Hook::applyHookMethods('Hook.controller_methods', $this);
+
         /** This below event trigger After "SpiderController.afterInitialize" event.*/
         $this->eventManager()->dispatch(new Event('SpiderController.afterConstruct', $this));
     }
@@ -79,6 +82,17 @@ class SpiderController extends Controller
     public function isAuthorized($user = null)
     {
         return $this->Acl->checkUser($user['id'], $this->Acl->request());
+    }
+
+    /**
+     * Alias for loading helpers with hooks.
+     *
+     * @param $helperName
+     * @param array $config
+     */
+    public function loadHelper($helperName, $config = [])
+    {
+        $this->viewBuilder()->helpers([$helperName => $config]);
     }
 
     public function beforeRender(Event $event)

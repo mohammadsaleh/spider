@@ -11,6 +11,7 @@ use Cake\Event\Event;
 use Cake\ORM\Table;
 use Cake\ORM\Entity;
 use Cake\ORM\TableRegistry;
+use Spider\Lib\Hook;
 
 class SpiderTable extends Table
 {
@@ -23,8 +24,8 @@ class SpiderTable extends Table
     public function __construct(array $config = [])
     {
         parent::__construct($config);
+        Hook::applyHookMethods('Hook.table_methods', $this);
         $this->eventManager()->dispatch(new Event('SpiderTable.afterConstruct', $this));
-//        $this->removeBehavior('Timestamp');
     }
 
     public function setField($conditions, $fieldName, $fieldValue){
