@@ -35,18 +35,15 @@ class SpiderPlugin
      * @param mixed $plugin name of plugin, or array of plugin and its config
      * @return void
      */
-    public static function load($plugin, $config = array()) {
+    public static function load($plugin, $config = []) {
         Plugin::load($plugin, $config);
         if (is_string($plugin)) {
-            $plugin = array($plugin => $config);
+            $plugin = [$plugin => $config];
         }
         Cache::delete('EventHandlers', 'default');
         foreach ($plugin as $name => $conf) {
-            list($name, $conf) = (is_numeric($name)) ? array($conf, $config) : array($name, $conf);
-            $file = Plugin::path($name) . 'config' . DS . 'events.php';
-            if (file_exists($file)) {
-                Configure::load($name . '.events');
-            }
+            list($name, $conf) = (is_numeric($name)) ? [$conf, $config] : [$name, $conf];
+            Hook::applyHookConfigFiles('Hook.config_files', $name);
         }
     }
 }

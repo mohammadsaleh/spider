@@ -2,6 +2,7 @@
 namespace Spider\Lib;
 
 use Cake\Core\Configure;
+use Cake\Core\Plugin;
 use Cake\ORM\Table;
 use Cake\Routing\Router;
 use Cake\Utility\Hash;
@@ -76,6 +77,64 @@ class Hook
 				}
 			}
 		}
+	}
+
+	/**
+	 * Apply load config files for * / particular Plugin
+	 * @param $configKey
+	 * @param $pluginName
+	 */
+	public static function applyHookConfigFiles($configKey, $pluginName)
+	{
+		$hookConfigs = Configure::read($configKey . '.' . $pluginName);
+		if (is_array(Configure::read($configKey . '.*'))) {
+			$hookConfigs = Hash::merge(Configure::read($configKey . '.*'), $hookConfigs);
+		}
+		if(!empty($hookConfigs)){
+			$hookConfigs = array_unique($hookConfigs);
+			foreach($hookConfigs as $configName){
+				$file = Plugin::path($pluginName) . 'config' . DS . $configName . '.php';
+				if (file_exists($file)) {
+					Configure::load($pluginName . '.' . $configName);
+				}
+			}
+		}
+	}
+
+	/**
+	 * Hook config
+	 *
+	 * @param string $configKeyPrefix
+	 * @param string $value
+	 */
+	protected static function _hookConfig($configKeyPrefix, $value) {
+		$propertyValue = Configure::read($configKeyPrefix);
+		if (!is_array($propertyValue)) {
+			$propertyValue = null;
+		}
+		if (is_array($value)) {
+			if (is_array($propertyValue)) {
+				$propertyValue = Hash::merge($propertyValue, $value);
+			} else {
+				$propertyValue = $value;
+			}
+		} else {
+			$propertyValue = $value;
+		}
+		Configure::write($configKeyPrefix, $propertyValue);
+	}
+
+	/**
+	 * Load as a normal Configure::load() config file for given plugin or *
+	 * @param $pluginName
+	 * @param $configName
+	 */
+	public static function configFile($pluginName, $configName)
+	{
+		if(!is_array($configName)){
+			$configName = [$configName];
+		}
+		self::_hookConfig('Hook.config_files', [$pluginName => $configName]);
 	}
 
 	/**

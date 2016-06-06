@@ -7,6 +7,7 @@ use Spider\Lib\Hook;
 
 Hook::component('*', 'Spider.Spider');
 Hook::helper('*', 'Spider.Spider');
+Hook::configFile('*', 'events');
 
 Request::addDetector(
     'chrome',
