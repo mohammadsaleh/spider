@@ -6,6 +6,8 @@ use Cake\Core\Exception\Exception;
 use Cake\Event\Event;
 use Cake\Event\EventListenerInterface;
 use Cake\ORM\Entity;
+use Cake\ORM\TableRegistry;
+use Cake\Utility\Hash;
 
 class AclManagerEventHandler implements EventListenerInterface
 {
