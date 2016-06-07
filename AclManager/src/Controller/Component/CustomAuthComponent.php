@@ -2,15 +2,16 @@
 namespace AclManager\Controller\Component;
 
 use Cake\Controller\Component\AuthComponent;
+use Cake\Controller\ComponentRegistry;
 use Cake\Utility\Hash;
 
 class CustomAuthComponent extends AuthComponent
 {
 
-    public function initialize(array $config)
+    public function __construct(ComponentRegistry $registry, array $config = [])
     {
-        parent::initialize($config);
         $this->components = array_merge($this->components, ['AclManager.Acl']);
+        parent::__construct($registry, $config);
     }
 
     /**
