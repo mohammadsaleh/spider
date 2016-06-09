@@ -28,4 +28,26 @@ class Spider
         Configure::write($key, $values);
         return $values;
     }
+
+    /**
+     * Extract array values starting with given prefix.
+     * @param $collections
+     * @param string $prefix
+     * @param bool|false $originalKeys
+     * @return array
+     */
+    public function extractByPrefix($collections, $prefix = '', $originalKeys = false)
+    {
+        $items = [];
+        if(empty($prefix)){
+            return $collections;
+        }
+        foreach($collections as $key => $value){
+            if(preg_match("/^$prefix(.*?)/si", $key, $match)){
+                $key = $originalKeys ? $key : $match[1];
+                $items[$key] = $value;
+            }
+        }
+        return $items;
+    }
 }
