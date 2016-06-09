@@ -43,7 +43,7 @@ class Spider
             return $collections;
         }
         foreach($collections as $key => $value){
-            if(preg_match("/^$prefix(.*?)/si", $key, $match)){
+            if(preg_match("/^$prefix(.*?)$/is", $key, $match)){
                 $key = $originalKeys ? $key : $match[1];
                 $items[$key] = $value;
             }
