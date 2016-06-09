@@ -36,7 +36,7 @@ class Spider
      * @param bool|false $originalKeys
      * @return array
      */
-    public function extractByPrefix($collections, $prefix = '', $originalKeys = false)
+    public static function extractByPrefix($collections, $prefix = '', $originalKeys = false)
     {
         $items = [];
         if(empty($prefix)){
