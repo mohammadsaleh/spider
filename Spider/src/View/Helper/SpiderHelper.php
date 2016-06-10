@@ -6,6 +6,7 @@ use Cake\Routing\Router;
 use Cake\Utility\Hash;
 use Cake\View\Helper;
 use Cake\View\View;
+use Spider\Lib\Date\Persian;
 
 /**
  * Spider helper
@@ -34,7 +35,7 @@ class SpiderHelper extends Helper
         $time = new Time($date);
 //        $unix = $time->i18nFormat(\IntlDateFormatter::FULL, 'Asia/Tehran', 'en_US')->toUnixString();
 //        debug($unix);die;
-        return jdate($format, $time->toUnixString(), '', 'Asia/Tehran', 'en');
+        return Persian::date($format, $time->toUnixString(), '', 'Asia/Tehran', 'en');
     }
 
     /**
