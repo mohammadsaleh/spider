@@ -42,7 +42,7 @@ class SpiderTable extends Table
                     $entity->{$fieldName} = !$entity->{$fieldName};
                 }
                 if($this->save($entity)){
-                    return true;
+                    return $entity->{$fieldName};
                 }
             }
         }
