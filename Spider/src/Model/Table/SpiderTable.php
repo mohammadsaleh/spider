@@ -28,7 +28,7 @@ class SpiderTable extends Table
         $this->eventManager()->dispatch(new Event('SpiderTable.afterConstruct', $this));
     }
 
-    public function setField($conditions, $fieldName, $fieldValue){
+    public function setField($conditions, $fieldName, $fieldValue = null){
         if(!is_array($conditions)){
             $entity = $this->get($conditions);
         }else{
@@ -38,6 +38,9 @@ class SpiderTable extends Table
         if($entity){
             if(in_array($fieldName, $this->schema()->columns())) {
                 $entity->{$fieldName} = $fieldValue;
+                if(!isset($fieldValue)){
+                    $entity->{$fieldName} = !$entity->{$fieldName};
+                }
                 if($this->save($entity)){
                     return true;
                 }
@@ -47,10 +50,10 @@ class SpiderTable extends Table
     }
 
     public function __call($method, $args){
-        if (preg_match('/^set(?:[A-Z][a-z_]*)+$/', $method) > 0){
-            $method = ltrim($method, 'set');
+        if (preg_match('/^(set|toggle)(?:[A-Z][a-z_]*)+$/', $method, $match) > 0){
+            $method = ltrim($method, $match[1]);
             $fieldName = strtolower(preg_replace('/(?<=\w)(?=[A-Z])/', '_$1', $method));
-                return $this->setField($args[0], $fieldName, $args[1]);
+            return $this->setField($args[0], $fieldName, (!empty($args[1]) ? $args[1] : null));
         }else{
             return parent::__call($method, $args);
         }
