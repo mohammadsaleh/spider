@@ -37,9 +37,10 @@ class SpiderTable extends Table
         /** @var Entity $entity */
         if($entity){
             if(in_array($fieldName, $this->schema()->columns())) {
-                $entity->{$fieldName} = $fieldValue;
                 if(!isset($fieldValue)){
                     $entity->{$fieldName} = (int)!$entity->{$fieldName};
+                }else{
+                    $entity->{$fieldName} = $fieldValue;
                 }
                 if($this->save($entity)){
                     return $entity->{$fieldName};
