@@ -25,7 +25,8 @@ class AclManagerEventHandler implements EventListenerInterface
 		    'SpiderController.afterInitialize' => 'onAfterSpiderInitialized',
 		    'SpiderTable.afterConstruct' => 'onAfterSpiderTableConstruct',
 		    'Users.Users.add.success' => 'onUserAddSuccessfully',
-		    'Users.Users.login.success' => 'onUserLoginSuccessfully'
+		    'Users.Users.login.success' => 'onUserLoginSuccessfully',
+			'Users.Admin.Users.login.success' => 'onUserLoginSuccessfully',
 	    ];
 	}
 

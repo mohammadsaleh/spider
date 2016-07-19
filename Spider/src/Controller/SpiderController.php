@@ -81,6 +81,9 @@ class SpiderController extends Controller
      */
     public function isAuthorized($user = null)
     {
+        if($this->Auth->hasRole('superadmin')){
+            return true;
+        }
         return $this->Acl->checkUser($user['id'], $this->Acl->request());
     }
 

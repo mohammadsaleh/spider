@@ -14,6 +14,12 @@ use Users\Controller\AppController;
 class UsersController extends AppController
 {
 
+    public function initialize()
+    {
+        parent::initialize();
+        $this->Auth->allow(['login']);
+    }
+
     /**
      * Login admin users
      * @return \Cake\Network\Response|void
