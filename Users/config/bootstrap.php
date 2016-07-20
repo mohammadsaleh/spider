@@ -7,7 +7,7 @@ Hook::helper('*', 'Users.Users');
 SpiderNav::add('sidebar', 'Users' , [
     'title' => __d('users', 'Users'),
     'url' => '#',
-    'icon' => 'icon-user',
+    'icon' => 'fa fa-users',
     'weight' => 10,
     'children' => [
         'users_list' => [

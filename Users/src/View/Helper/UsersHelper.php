@@ -22,10 +22,10 @@ class UsersHelper extends Helper
         return 'بدون نام';
     }
 
-    public function showAvatar($sessionAvatarAddress = 'Auth.User.avatar', $defaultAvatar = '/assets/images/default-avatar.jpg')
+    public function showAvatar($sessionAvatarAddress = 'Auth.User.avatar', $defaultAvatar = '/assets/images/default-avatar.jpg', $options = [])
     {
         $session = $this->request->session();
         $avatar = $session->check($sessionAvatarAddress) ? $session->read($sessionAvatarAddress) : $defaultAvatar;
-        return $this->Html->image($avatar);
+        return $this->Html->image($avatar, $options);
     }
 }
