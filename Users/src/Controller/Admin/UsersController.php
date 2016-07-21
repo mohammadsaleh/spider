@@ -103,9 +103,7 @@ class UsersController extends AppController
      */
     public function edit($id = null)
     {
-        $user = $this->Users->get($id, [
-            'contain' => ['Banks']
-        ]);
+        $user = $this->Users->get($id);
         if ($this->request->is(['patch', 'post', 'put'])) {
             $user = $this->Users->patchEntity($user, $this->request->data);
             if ($this->Users->save($user)) {
@@ -115,11 +113,8 @@ class UsersController extends AppController
                 $this->Flash->error(__('The user could not be saved. Please, try again.'));
             }
         }
-        $users = $this->Users->Users->find('list', ['limit' => 200]);
-        $cities = $this->Users->Cities->find('list', ['limit' => 200]);
         $roles = $this->Users->Roles->find('list', ['limit' => 200]);
-        $banks = $this->Users->Banks->find('list', ['limit' => 200]);
-        $this->set(compact('user', 'users', 'cities', 'roles', 'banks'));
+        $this->set(compact('user', 'roles'));
         $this->set('_serialize', ['user']);
     }
 

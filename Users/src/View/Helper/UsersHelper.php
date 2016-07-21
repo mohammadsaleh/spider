@@ -25,7 +25,7 @@ class UsersHelper extends Helper
     public function showAvatar($sessionAvatarAddress = 'Auth.User.avatar', $defaultAvatar = '/assets/images/default-avatar.jpg', $options = [])
     {
         $session = $this->request->session();
-        $avatar = $session->check($sessionAvatarAddress) ? $session->read($sessionAvatarAddress) : $defaultAvatar;
+        $avatar = ($session->check($sessionAvatarAddress) && !empty($session->read($sessionAvatarAddress))) ? $session->read($sessionAvatarAddress) : $defaultAvatar;
         return $this->Html->image($avatar, $options);
     }
 }
