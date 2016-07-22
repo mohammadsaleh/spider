@@ -7,7 +7,14 @@ class Persian
 {
     public static function date()
     {
-        return call_user_func_array('jdate', func_get_args());
+        $args = func_get_args();
+        if(isset($args[1])){
+            $date = $args[1];
+            if(is_string($date)){
+                $args[1] = strtotime($date);
+            }
+        }
+        return call_user_func_array('jdate', $args);
     }
 
     /**

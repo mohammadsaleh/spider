@@ -3,6 +3,7 @@ namespace AclManager\Controller\Component;
 
 use Cake\Controller\Component\AuthComponent;
 use Cake\Controller\ComponentRegistry;
+use Cake\Event\Event;
 use Cake\Utility\Hash;
 
 class CustomAuthComponent extends AuthComponent
@@ -43,5 +44,16 @@ class CustomAuthComponent extends AuthComponent
             return $this->Acl->checkUser($this->user('id'), $acoName);
         }
         return false;
+    }
+
+    /**
+     * Overwrite setUser to implement an event after set user.
+     *
+     * @param array $user
+     */
+    public function setUser(array $user)
+    {
+        parent::setUser($user);
+        $this->eventManager()->dispatch(new Event('Auth.after.setUser', $this->_registry->getController(), ['user' => $user]));
     }
 }

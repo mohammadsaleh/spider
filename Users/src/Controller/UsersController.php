@@ -242,6 +242,7 @@ class UsersController extends AppController
         if($this->Cookie->check('remember_me')){
             $this->Cookie->delete('remember_me');
         }
+        $this->eventManager()->dispatch(new Event('Users.Users.logout', $this));
         return $logoutRedirect;
     }
     
