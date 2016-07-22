@@ -39,7 +39,7 @@ class PluginManagerEventHandler implements EventListenerInterface
     public function onBeforeViewRender(Event $event)
     {
         $view = $event->subject();
-        $actions = Configure::read('Hook.admin_actions');
+        $actions = Configure::read('Hook.admin_actions') ?: [];
         $plugin = $view->request->param('plugin');
         $controller = $view->request->param('controller');
         $action = $view->request->param('action');
