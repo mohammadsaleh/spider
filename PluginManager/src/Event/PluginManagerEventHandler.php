@@ -1,5 +1,6 @@
 <?php
 namespace PluginManager\Event;
+use Cake\Core\Configure;
 use Cake\Event\Event;
 use Cake\Event\EventListenerInterface;
 use Cake\ORM\TableRegistry;
