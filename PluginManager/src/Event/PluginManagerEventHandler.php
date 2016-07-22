@@ -8,7 +8,8 @@ class PluginManagerEventHandler implements EventListenerInterface
 {
     public function implementedEvents(){
         return [
-            'SpiderController.afterConstruct' => 'onAfterSpiderControllerConstruct'
+            'SpiderController.afterConstruct' => 'onAfterSpiderControllerConstruct',
+            'View.beforeRender' => 'onBeforeViewRender',
         ];
     }
     
@@ -27,6 +28,34 @@ class PluginManagerEventHandler implements EventListenerInterface
             ->first();
         if(!empty($theme)){
             $controller->viewBuilder()->theme($theme->name);
+        }
+    }
+
+    /**
+     * Hook admin actions
+     * @param Event $event
+     */
+    public function onBeforeViewRender(Event $event)
+    {
+        $view = $event->subject();
+        $actions = Configure::read('Hook.admin_actions');
+        $plugin = $view->request->param('plugin');
+        $controller = $view->request->param('controller');
+        $action = $view->request->param('action');
+        $targetPaths = [
+            $action,
+            $controller . '/' . $action,
+            $plugin . '/' . $controller . '/' . $action
+        ];
+
+        $blockType = 'append';
+        foreach($actions as $path => $action){
+            if(($path == '*') || in_array($path, $targetPaths)){
+                if($action['prepend']){
+                    $blockType = 'prepend';
+                }
+                $view->{$blockType}('actions', $view->element($action['element']));
+            }
         }
     }
 

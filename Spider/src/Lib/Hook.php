@@ -186,5 +186,17 @@ class Hook
 	{
 		self::hookTableMethod($modelName, 'addBehavior', [$behaviorName => $config]);
 	}
-	
+
+	/**
+	 * Hook admin actions
+	 *
+	 * @param $viewPath
+	 * @param $element
+	 * @param bool $prepend : not working good still. it's because beforeRender run soon and it means always append.
+	 */
+	public static function adminActions($viewPath, $element, $prepend = false)
+	{
+		$configKeyPrefix = 'Hook.admin_actions';
+		self::_hookConfig($configKeyPrefix, [$viewPath => ['element' => $element, 'prepend' => $prepend]]);
+	}
 }
