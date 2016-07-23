@@ -199,4 +199,17 @@ class Hook
 		$configKeyPrefix = 'Hook.admin_actions';
 		self::_hookConfig($configKeyPrefix, [$viewPath => ['element' => $element, 'prepend' => $prepend]]);
 	}
+
+	/**
+	 * Hook admin actions
+	 *
+	 * @param $viewPath
+	 * @param $element
+	 * @param bool $prepend : not working good still. it's because beforeRender run soon and it means always append.
+	 */
+	public static function adminBox($viewPath, $element, $prepend = false)
+	{
+		$configKeyPrefix = 'Hook.admin_box';
+		self::_hookConfig($configKeyPrefix, [$viewPath => ['element' => $element, 'prepend' => $prepend]]);
+	}
 }

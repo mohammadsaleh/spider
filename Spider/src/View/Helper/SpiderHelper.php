@@ -50,6 +50,61 @@ class SpiderHelper extends Helper
     public function adminMenus($items, $options = [], $depth = 0)
     {
         $options += [
+//            'a-' . $depth => [],
+//            'a-*' => [],
+//            'li-*' => [
+//                'active' => ['class' => 'active'],
+//                'open' => ['class' => 'open']
+//            ],
+            'type' => 'sidebar',
+            'children' => true,
+            'title' => ['class' => 'title'],
+            'arrow' => ['class' => 'arrow'],
+            'child_ul' => [
+                'class' => 'sub-menu'
+            ]
+        ];
+        $output = '';
+        $items = Hash::sort($items, '{s}.weight', 'ASC');
+        foreach($items as $item){
+            $liClass = [];
+            if($this->request->here == Router::url($item['url'])){
+                $liClass[] = 'active';
+                if($depth > 0){
+                    $this->_hasActiveMenuItem = true;
+                }
+            }
+            $childrenBody = '';
+            if(!empty($item['children'])){
+                $childrenBody .= $this->Html->tag('ul', null, $options['child_ul']);
+                $childrenBody .= $this->adminMenus($item['children'], $options, ($depth+1));
+                $childrenBody .= $this->tagend('ul');
+            }
+
+            //If first item and has current url is in sub child then active&open menu
+            //Then reset activeMenu flag
+//            $listOptions = (isset($options['li-' . $depth]) ? $options['li-' . $depth] : (isset($options['li-*']) ? $options['li-*'] : []));
+//            debug($listOptions);die;
+            if($this->_hasActiveMenuItem && $depth == 0){
+                $liClass[] = 'active';
+                $liClass[] = 'open';
+                $this->_hasActiveMenuItem = false;
+            }
+            $output .= $this->Html->tag('li', null, ['class' => $liClass]);
+            $linkOptions = (isset($options['a-' . $depth]) ? $options['a-' . $depth] : (isset($options['a-*']) ? $options['a-*'] : []));
+            $output .= $this->Html->link(
+                $this->__buildMenuLinkBody($item, $depth, $options),
+                $item['url'],
+                array_merge(['escape' => false], $linkOptions)
+            );
+            $output .= $childrenBody;
+            $output .= $this->tagend('li');
+        }
+        return $output;
+    }
+    /*public function adminMenus($items, $options = [], $depth = 0)
+    {
+        $options += [
             'type' => 'sidebar',
             'children' => true,
             'title' => ['class' => 'title'],
@@ -92,7 +147,7 @@ class SpiderHelper extends Helper
             $output .= $this->tagend('li');
         }
         return $output;
-    }
+    }*/
     
     private function __buildMenuLinkBody($item, $depth, $options = [])
     {
