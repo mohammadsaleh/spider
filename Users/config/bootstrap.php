@@ -15,10 +15,5 @@ SpiderNav::add('sidebar', 'Users' , [
             'url' => ['plugin' => 'Users', 'controller' => 'Users', 'action' => 'index'],
             'weight' => 1
         ],
-        'AclManager.Roles' => [
-            'title' => __d('users', 'Role Management'),
-            'url' => ['plugin' => 'Users', 'controller' => 'Roles', 'action' => 'index'],
-            'weight' => 2
-        ]
     ]
 ]);

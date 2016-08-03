@@ -63,16 +63,18 @@ class Hook
 		}else{
 			$objectName = $object->name;
 		}
-		$objectName = ($plugin = Router::getRequest()->param('plugin')) ? ($plugin . '.' . $objectName) : $objectName;
-		$hookMethods = Configure::read($configKey . '.' . $objectName);
-		if (is_array(Configure::read($configKey . '.*'))) {
-			$hookMethods = Hash::merge(Configure::read($configKey . '.*'), $hookMethods);
-		}
-		if (is_array($hookMethods)) {
-			foreach ($hookMethods as $method => $values) {
-				if(is_callable([$object, $method])){
-					foreach($values as $name => $config){
-						$object->$method($name, $config);
+		if(php_sapi_name() !== 'cli'){
+			$objectName = ($plugin = Router::getRequest()->param('plugin')) ? ($plugin . '.' . $objectName) : $objectName;
+			$hookMethods = Configure::read($configKey . '.' . $objectName);
+			if (is_array(Configure::read($configKey . '.*'))) {
+				$hookMethods = Hash::merge(Configure::read($configKey . '.*'), $hookMethods);
+			}
+			if (is_array($hookMethods)) {
+				foreach ($hookMethods as $method => $values) {
+					if(is_callable([$object, $method])){
+						foreach($values as $name => $config){
+							$object->$method($name, $config);
+						}
 					}
 				}
 			}
