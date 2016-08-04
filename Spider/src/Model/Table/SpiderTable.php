@@ -12,9 +12,11 @@ use Cake\ORM\Table;
 use Cake\ORM\Entity;
 use Cake\ORM\TableRegistry;
 use Spider\Lib\Hook;
+use Spider\Model\Validation\ValidatorAwareTrait;
 
 class SpiderTable extends Table
 {
+    use ValidatorAwareTrait;
 
     public function initialize(array $config){
         parent::initialize($config);
@@ -28,6 +30,7 @@ class SpiderTable extends Table
         $this->eventManager()->dispatch(new Event('SpiderTable.afterConstruct', $this));
     }
 
+    //todo: below two funcs is would be better to placed in a trait class and use it.
     public function setField($conditions, $fieldName, $fieldValue = null){
         if(!is_array($conditions)){
             $entity = $this->get($conditions);
@@ -49,7 +52,6 @@ class SpiderTable extends Table
         }
         return false;
     }
-
     public function __call($method, $args){
         if (preg_match('/^(set|toggle)(?:[A-Z][a-z_]*)+$/', $method, $match) > 0){
             $method = ltrim($method, $match[1]);

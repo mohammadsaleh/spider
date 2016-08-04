@@ -35,7 +35,7 @@ class SpiderHelper extends Helper
         $time = new Time($date);
 //        $unix = $time->i18nFormat(\IntlDateFormatter::FULL, 'Asia/Tehran', 'en_US')->toUnixString();
 //        debug($unix);die;
-        return Persian::date($format, $time->toUnixString(), '', 'Asia/Tehran', 'en');
+        return Persian::date($format, (int)$time->toUnixString(), '', 'Asia/Tehran', 'en');
     }
 
     /**
