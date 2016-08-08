@@ -14,11 +14,12 @@ use Cake\Validation\Validation as CakeValidation;
 class Validation extends CakeValidation
 {
 
-	public static function saleh($check)
+	public static function persianAlpha($check)
 	{
 		if (empty($check) && $check !== '0') {
 			return false;
 		}
-		return self::_check($check, '/^[saleh]$/');
+		$reg = '[ آ-ی]+';
+		return self::_check($check, '/^' . $reg . '$/');
 	}
 }
