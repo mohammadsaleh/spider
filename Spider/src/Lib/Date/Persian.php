@@ -10,7 +10,9 @@ class Persian
         $args = func_get_args();
         if(isset($args[1])){
             $date = $args[1];
-            if(is_string($date)){
+            if($date instanceof FrozenDate){
+                $args[1] = (int)$date->toUnixString();
+            }elseif(is_string($date)){
                 $args[1] = strtotime($date);
             }
         }
