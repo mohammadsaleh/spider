@@ -42,6 +42,13 @@ class Spider
         if(empty($prefix)){
             return $collections;
         }
+        if(!is_array($collections)){
+            if($collections instanceof Entity){
+                $collections = $collections->toArray();
+            }else{
+                $collections = (array)$collections;
+            }
+        }
         foreach($collections as $key => $value){
             if(preg_match("/^$prefix(.*?)$/is", $key, $match)){
                 $key = $originalKeys ? $key : $match[1];
