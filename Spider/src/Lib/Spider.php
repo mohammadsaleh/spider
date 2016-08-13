@@ -1,6 +1,7 @@
 <?php
 namespace Spider\Lib;
 use Cake\Core\Configure;
+use Cake\ORM\Entity;
 use Cake\Utility\Hash;
 
 class Spider
