@@ -62,4 +62,15 @@ class SpiderTime
         date_default_timezone_set($defaultTimezone);
         return $time->setTimezone('UTC')->format($format);
     }
+
+    /**
+     * Convert cakephp date/time object to string
+     *
+     * @param $dateTimeObject
+     * @return string
+     */
+    public function convertObjectToString($dateTimeObject)
+    {
+        return (new Time($dateTimeObject))->format('Y-m-d H:i:s');
+    }
 }
