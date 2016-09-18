@@ -69,7 +69,7 @@ class SpiderTime
      * @param $dateTimeObject
      * @return string
      */
-    public function convertObjectToString($dateTimeObject)
+    public static function convertObjectToString($dateTimeObject)
     {
         return (new Time($dateTimeObject))->format('Y-m-d H:i:s');
     }

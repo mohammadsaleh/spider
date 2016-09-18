@@ -3,7 +3,7 @@ namespace PluginManager\Event;
 use Cake\Core\Configure;
 use Cake\Event\Event;
 use Cake\Event\EventListenerInterface;
-use Cake\ORM\TableRegistry;
+use PluginManager\Lib\PluginManager;
 
 class PluginManagerEventHandler implements EventListenerInterface
 {
@@ -22,18 +22,10 @@ class PluginManagerEventHandler implements EventListenerInterface
     public function onAfterSpiderControllerConstruct(Event $event)
     {
         $controller = $event->subject();
-        $themeType = 'front';
-        if($controller->request->prefix === 'admin') {
-            $themeType = 'admin';
-        }
-        $Plugins = TableRegistry::get('PluginManager.Plugins');
-        $theme = $Plugins->find('all')
-            ->where(['theme' => $themeType])
-            ->where(['`status`' => 1])
-            ->where(['`default`' => 1])
-            ->first();
-        if(!empty($theme)){
-            $controller->viewBuilder()->theme($theme->name);
+        $themeType = ($controller->request->prefix === 'admin') ? 'admin' : 'front';
+        $theme = PluginManager::getDefaultTheme($themeType);
+        if($theme){
+            $controller->viewBuilder()->theme($theme);
         }
     }
 
