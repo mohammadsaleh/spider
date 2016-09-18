@@ -1,5 +1,6 @@
 <?php
 namespace PluginManager\Event;
+use Cake\Controller\ErrorController;
 use Cake\Core\Configure;
 use Cake\Event\Event;
 use Cake\Event\EventListenerInterface;
@@ -11,22 +12,37 @@ class PluginManagerEventHandler implements EventListenerInterface
      * @var \Cake\View\View
      */
     protected $_View = null;
+    private $__controller = null;
 
     public function implementedEvents(){
         return [
             'SpiderController.afterConstruct' => 'onAfterSpiderControllerConstruct',
             'Template.Element.before.admin.structure' => 'onBeforeAdminTemplateStructure',
+            'Controller.initialize' => 'beforeFilter',
         ];
     }
-    
+
+    private function __setDefaultTheme()
+    {
+        $themeType = ($this->__controller->request->prefix === 'admin') ? 'admin' : 'front';
+        $theme = PluginManager::getDefaultTheme($themeType);
+        if($theme) {
+            $this->__controller->viewBuilder()->theme($theme);
+        }
+    }
+
+    public function beforeFilter(Event $event)
+    {
+        $this->__controller = $event->subject();
+        if($this->__controller instanceof ErrorController){
+            $this->__setDefaultTheme();
+        }
+    }
+
     public function onAfterSpiderControllerConstruct(Event $event)
     {
-        $controller = $event->subject();
-        $themeType = ($controller->request->prefix === 'admin') ? 'admin' : 'front';
-        $theme = PluginManager::getDefaultTheme($themeType);
-        if($theme){
-            $controller->viewBuilder()->theme($theme);
-        }
+        $this->__controller = $event->subject();
+        $this->__setDefaultTheme();
     }
 
     /**
