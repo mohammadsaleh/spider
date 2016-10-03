@@ -42,6 +42,7 @@ class SpiderController extends Controller
      */
     public function initialize()
     {
+        $this->eventManager()->dispatch(new Event('SpiderController.beforeInitialize', $this));
         parent::initialize();
         $this->set('title', '');
         $this->loadComponent('Flash');
