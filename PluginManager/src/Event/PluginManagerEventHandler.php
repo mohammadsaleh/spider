@@ -28,6 +28,7 @@ class PluginManagerEventHandler implements EventListenerInterface
         $theme = PluginManager::getDefaultTheme($themeType);
         if($theme) {
             $this->__controller->viewBuilder()->theme($theme);
+            $this->__controller->Flash->config('plugin', $theme);
         }
     }
 

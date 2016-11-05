@@ -31,6 +31,9 @@ class SpiderController extends Controller
         if($controller->request->is('ajax')){
             $controller->viewBuilder()->autoLayout(false);
         }
+        if($this->request->query('debug')){
+            Configure::write('debug', true);
+        }
     }
 
     /**
