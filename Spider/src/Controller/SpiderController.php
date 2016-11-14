@@ -7,6 +7,7 @@ use Cake\Core\Plugin;
 use Cake\Event\Event;
 use Cake\Network\Request;
 use Cake\Network\Response;
+use Cake\Routing\Router;
 use Cake\Utility\Inflector;
 use Spider\Lib\Hook;
 use Users\Lib\UserLib;
@@ -76,6 +77,24 @@ class SpiderController extends Controller
         if(!$this->request->is('post')){
             $this->loadComponent('Search.Prg');
         }
+    }
+
+    /**
+     * Manage redirect for specific buttons that posted.
+     *
+     * @param Event $event
+     * @param array|string $url
+     * @param Response $response
+     * @return bool
+     */
+    public function beforeRedirect(Event $event, $url, Response $response)
+    {
+        if($this->request->param('prefix') == 'admin'){
+            if(isset($this->request->data['apply'])){
+                $response->location(Router::url($this->request->here(false), true));
+            }
+        }
+        return true;
     }
     
     /**
