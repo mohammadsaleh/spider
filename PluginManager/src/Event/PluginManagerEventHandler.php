@@ -28,7 +28,9 @@ class PluginManagerEventHandler implements EventListenerInterface
         $theme = PluginManager::getDefaultTheme($themeType);
         if($theme) {
             $this->__controller->viewBuilder()->theme($theme);
-            $this->__controller->Flash->config('plugin', $theme);
+            if($this->__controller->Flash){
+                $this->__controller->Flash->config('plugin', $theme);
+            }
         }
     }
 
@@ -55,6 +57,7 @@ class PluginManagerEventHandler implements EventListenerInterface
         $this->_View = $view = $event->subject();
         $this->__hookAdminActions();
         $this->__hookAdminBoxes();
+        $this->__hookAdminForms();
     }
 
     /**
@@ -64,6 +67,15 @@ class PluginManagerEventHandler implements EventListenerInterface
     {
         $actions = Configure::read('Hook.admin_actions') ?: [];
         $this->_addBlock('actions', $actions);
+    }
+
+    /**
+     * Hook admin Actions in admin Index/Add/Edit pages
+     */
+    private function __hookAdminForms()
+    {
+        $actions = Configure::read('Hook.admin_form') ?: [];
+        $this->_addBlock('form', $actions);
     }
 
     /**

@@ -6,6 +6,7 @@ use Cake\Core\Plugin;
 use Cake\ORM\Table;
 use Cake\Routing\Router;
 use Cake\Utility\Hash;
+use Cake\Utility\Inflector;
 
 class Hook
 {
@@ -64,7 +65,9 @@ class Hook
 			$objectName = $object->name;
 		}
 		if(php_sapi_name() !== 'cli'){
-			$objectName = ($plugin = Router::getRequest()->param('plugin')) ? ($plugin . '.' . $objectName) : $objectName;
+			$prefix = ($prefix = Router::getRequest()->param('prefix')) ? (Inflector::camelize($prefix) . '.') : '';
+			$plugin = ($plugin = Router::getRequest()->param('plugin')) ? ($plugin . '.') : '';
+			$objectName = $prefix . $plugin . $objectName;
 			$hookMethods = Configure::read($configKey . '.' . $objectName);
 			if (is_array(Configure::read($configKey . '.*'))) {
 				$hookMethods = Hash::merge(Configure::read($configKey . '.*'), $hookMethods);
@@ -199,7 +202,12 @@ class Hook
 	public static function adminActions($viewPath, $element, $prepend = false)
 	{
 		$configKeyPrefix = 'Hook.admin_actions';
-		self::_hookConfig($configKeyPrefix, [$viewPath => ['element' => $element, 'prepend' => $prepend]]);
+		if(!is_array($viewPath)){
+			$viewPath = [$viewPath];
+		}
+		foreach ($viewPath as $path) {
+			self::_hookConfig($configKeyPrefix, [$path => ['element' => $element, 'prepend' => $prepend]]);
+		}
 	}
 
 	/**
@@ -212,6 +220,31 @@ class Hook
 	public static function adminBox($viewPath, $element, $prepend = false)
 	{
 		$configKeyPrefix = 'Hook.admin_box';
-		self::_hookConfig($configKeyPrefix, [$viewPath => ['element' => $element, 'prepend' => $prepend]]);
+		if(!is_array($viewPath)){
+			$viewPath = [$viewPath];
+		}
+		foreach ($viewPath as $path) {
+			self::_hookConfig($configKeyPrefix, [$path => ['element' => $element, 'prepend' => $prepend]]);
+		}
 	}
+
+	/**
+	 * Hook admin form
+	 *
+	 * @param $viewPath
+	 * @param $element
+	 * @param bool $prepend : not working good still. it's because beforeRender run soon and it means always append.
+	 */
+	public static function adminForm($viewPath, $element, $prepend = false)
+	{
+		$configKeyPrefix = 'Hook.admin_form';
+		if(!is_array($viewPath)){
+			$viewPath = [$viewPath];
+		}
+		foreach ($viewPath as $path) {
+			self::_hookConfig($configKeyPrefix, [$path=> ['element' => $element, 'prepend' => $prepend]]);
+		}
+	}
+
+
 }
