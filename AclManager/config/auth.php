@@ -13,10 +13,10 @@ return [
         'loginAction' => '/login',
         'loginRedirect' => '/tour/search',
         'logoutRedirect' => '/login',
-//        'checkAuthIn' => 'Controller.startup', // Controller.initialize
+        'checkAuthIn' => 'Controller.initialize',
         'authenticate' => [
-            'Form' => ['userModel' => 'Users.Users'],
-            'OAuthServer.OAuth'
+            \Cake\Controller\Component\AuthComponent::ALL => ['userModel' => 'Users.Users'],
+            'Form'
         ],
         'unauthorizedRedirect' => '/login',
         'authorize' => ['Controller'],

@@ -6,6 +6,7 @@ use Cake\Core\Exception\Exception;
 use Cake\Event\Event;
 use Cake\Event\EventListenerInterface;
 use Cake\ORM\Entity;
+use Cake\ORM\Query;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 
@@ -21,10 +22,10 @@ class AclManagerEventHandler implements EventListenerInterface
 	{
 	    return [
 		    'Model.beforeMarshal' => 'onBeforeMarshal',
+		    'Model.beforeFind' => 'onBeforeFind',
 		    'Model.afterSave' => 'onAfterSave',
 		    'SpiderController.afterInitialize' => 'onAfterSpiderInitialized',
 		    'SpiderTable.afterConstruct' => 'onAfterSpiderTableConstruct',
-		    'Users.Users.add.success' => 'onUserAddSuccessfully',
 		    'Users.Users.login.success' => 'onUserLoginSuccessfully',
 			'Users.Admin.Users.login.success' => 'onUserLoginSuccessfully',
 	    ];
@@ -41,10 +42,34 @@ class AclManagerEventHandler implements EventListenerInterface
 		}
 	}
 
-	//process roles = 2 or roles = [2, 10] or roles = ['public', 'superadmin'] or roles = 'public'
-	//convert all to roles = [ ['id' => 2], ['id' => 10] ] standard
-	//then save AclManager.Roles
-	//then set access.
+	/**
+	 * Before find any users, set contain to get user roles too.
+	 *
+	 * @param Event $event
+	 * @param Query $query
+	 * @param \ArrayObject $options
+	 * @param $primary
+	 */
+	public function onBeforeFind(Event $event, Query $query, \ArrayObject $options, $primary)
+	{
+		$table = $event->subject();
+		if($table->alias() == 'Users'){
+			$query->contain(['Roles']);
+		}
+	}
+
+	/**
+	 * Ready roles to save for user. ( If set $data['roles'] )
+	 *
+	 * process roles = 2 or roles = [2, 10] or roles = ['public', 'superadmin'] or roles = 'public'
+	 * convert all to roles = [ ['id' => 2], ['id' => 10] ] standard
+	 * then save AclManager.Roles
+	 * then set access.
+	 *
+	 * @param Event $event
+	 * @param \ArrayObject $data
+	 * @param \ArrayObject $options
+	 */
 	public function onBeforeMarshal(Event $event, \ArrayObject $data, \ArrayObject $options)
 	{
 		$this->table = $event->subject();
@@ -70,13 +95,33 @@ class AclManagerEventHandler implements EventListenerInterface
 		}
 	}
 
+	/**
+	 * After save User entity then set it's private permissions
+	 *
+	 * @param Event $event
+	 * @param Entity $entity
+	 * @param array $options
+	 */
 	public function onAfterSave(Event $event, Entity $entity, $options = [])
 	{
 		$table = $event->subject();
-		if(($table->alias() == 'UsersRoles')){
-			$this->controller->Acl->setUserRole($entity['user_id'], $entity['role_id']);
+		if(($table->alias() == 'Users')){
+			$userId = $entity['id'];
+			if(!isset($entity['permissions'])){
+				$entity['permissions'] = [];
+			}
+			$oldPermissions = $this->controller->Aro->getPermissions($this->controller->Aro->getUser($userId));
+			$oldPermissions = array_keys($oldPermissions);
+			$willDeletePermissions = array_diff($oldPermissions, $entity['permissions']);
+			foreach($willDeletePermissions as $permission){
+				$this->controller->Acl->clearUserAccess($permission, $userId);
+			}
+			foreach($entity['permissions'] as $permission){
+				$this->controller->Acl->setUserAccess($permission, $userId);
+			}
 		}
 	}
+
 	protected function _getInheritedRoles($roles)
 	{
 		$roleIds = [];
@@ -103,16 +148,6 @@ class AclManagerEventHandler implements EventListenerInterface
 		}
 	}
 
-	public function onUserAddSuccessfully(Event $event)
-	{
-		$controller = $event->subject();
-		$user = $event->data['user'];
-		//set permission for this user base on role id.
-
-		//todo: role_id may has array, then we should save all role_id in users_AclManager.Roles then foreach setUserRole
-		$controller->Acl->setUserRole($user['id'], $user['role_id']);
-	}
-
 	public function onAfterSpiderInitialized(Event $event)
 	{
 	    $this->controller = $event->subject();
@@ -134,7 +169,7 @@ class AclManagerEventHandler implements EventListenerInterface
 	 */
 	protected function _checkPublicAccess()
 	{
-		if($this->controller->Acl->checkRole('public', $this->controller->Acl->request())){
+		if($this->controller->Acl->checkRoleAllow('public', $this->controller->Acl->request())){
 			$this->controller->Auth->allow();
 		}
 	}

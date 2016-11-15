@@ -41,7 +41,8 @@ class CustomAuthComponent extends AuthComponent
     public function hasAllow($acoName)
     {
         if($this->user('id')){
-            return $this->Acl->checkUser($this->user('id'), $acoName);
+            $userAllowed = $this->Acl->checkUserAllow($this->user('id'), $acoName);
+            return !is_null($userAllowed) ? $userAllowed : $this->Acl->checkRoleAllow(Hash::extract($this->user('roles'), '{n}.id'), $acoName);
         }
         return false;
     }
