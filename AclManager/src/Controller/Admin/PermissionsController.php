@@ -16,11 +16,6 @@ use Cake\Utility\Text;
  */
 class PermissionsController extends AppController
 {
-    public function initialize()
-    {
-        parent::initialize();
-        $this->Auth->allow();
-    }
     /**
      * Index method
      *
