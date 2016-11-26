@@ -651,15 +651,17 @@ class AclComponent extends Component
         $resources = [];
         foreach($controllers as $pluginName => $controller){
             if(is_integer($pluginName)){
-                $className = 'App\\' . $controller;
-                $cname = str_replace(['Controller\\', 'Controller', DS], ['','','/'], $controller);
+                $className = 'App' . DS . $controller;
+                $cname = str_replace(['Controller' . DS, 'Controller', DS], ['','','/'], $controller);
+                $className = str_replace('/', '\\', $className);
                 $actions = $this->getActions($className);
                 $resources[$cname]= $actions;
             }else{
                 foreach($controller as $controllerName){
-                    $cname = str_replace(['Controller\\', 'Controller', DS], ['','','/'], $controllerName);
+                    $cname = str_replace(['Controller' . DS, 'Controller', DS], ['','','/'], $controllerName);
                     $pName = $pluginName;
-                    $className = $pluginName . '\\' . $controllerName;
+                    $className = $pluginName . DS . $controllerName;
+                    $className = str_replace('/', '\\', $className);
                     $actions = $this->getActions($className);
                     $resources['plugin'][$pName][$cname] = $actions;
                 }

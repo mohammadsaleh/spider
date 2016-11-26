@@ -50,7 +50,7 @@ class AclManagerEventHandler implements EventListenerInterface
 	 * @param \ArrayObject $options
 	 * @param $primary
 	 */
-	public function onBeforeFind(Event $event, Query $query, \ArrayObject $options, $primary)
+	public function onBeforeFind(Event $event, /*Query*/ $query, \ArrayObject $options, $primary)
 	{
 		$table = $event->subject();
 		if($table->alias() == 'Users'){

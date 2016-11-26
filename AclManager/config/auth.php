@@ -13,7 +13,7 @@ return [
         'loginAction' => '/login',
         'loginRedirect' => '/tour/search',
         'logoutRedirect' => '/login',
-        'checkAuthIn' => 'Controller.initialize',
+//        'checkAuthIn' => 'Controller.initialize',
         'authenticate' => [
             \Cake\Controller\Component\AuthComponent::ALL => ['userModel' => 'Users.Users'],
             'Form'

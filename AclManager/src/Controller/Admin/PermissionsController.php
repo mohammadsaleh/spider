@@ -16,6 +16,10 @@ use Cake\Utility\Text;
  */
 class PermissionsController extends AppController
 {
+    public function initialize()
+    {
+        parent::initialize();
+    }
     /**
      * Index method
      *
