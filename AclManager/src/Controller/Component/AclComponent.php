@@ -71,7 +71,7 @@ class AclComponent extends Component
         $plugin = $request->param('plugin') ? 'plugin/' . $request->param('plugin') . '/' : '';
         $controller = $request->param('controller') . '/';
         $action = $request->param('action');
-        return $plugin . $prefix . $controller . $action;
+        return $plugin . $prefix . $controller . $action . '/';
     }
 
     /**
@@ -602,7 +602,7 @@ class AclComponent extends Component
         $dir = new Folder($controllerDir . 'Controller');
         $files = $dir->findRecursive('^.*Controller\.php$', true);
         $ignoreList = [
-            'Controller\AppController.php',
+            'Controller' . DS . 'AppController.php',
         ];
         foreach($files as &$file){
             $file = str_replace($controllerDir, '', $file);
@@ -618,10 +618,10 @@ class AclComponent extends Component
         $class = new ReflectionClass($className);
         $actions = $class->getMethods(ReflectionMethod::IS_PUBLIC);
         $results = [];
-        $ignoreList = ['beforeFilter', 'afterFilter', 'initialize'];
+        $ignoreList = ['beforeFilter', 'afterFilter', 'initialize', 'beforeRender'];
         foreach($actions as $action){
             if($action->class == $className && !in_array($action->name, $ignoreList)){
-                $results[$action->name] = $action->name;
+                $results[$action->name . '/'] = $action->name;
             }
         }
         return $results;
