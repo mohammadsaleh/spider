@@ -1,39 +1,74 @@
-<!-- BEGIN LOGIN FORM -->
-<?= $this->Form->create(null, ['class' => 'login-form']);?>
-    <h3 class="form-title"><?= __d('users', 'Login To Administrator')?></h3>
-    <div class="alert alert-danger display-hide">
-        <a class="close" data-close="alert"></a>
-        <span>Enter any username and password. </span>
+<?= $this->Html->script('forms/uniform.min', ['block' => true])?>
+
+<div class="page-container login-container">
+    <!-- Page content -->
+    <div class="page-content">
+        <!-- Main content -->
+        <div class="content-wrapper">
+            <!-- Content area -->
+            <div class="content">
+                <!-- Simple login form -->
+                <?= $this->Form->create(null);?>
+                    <div class="panel panel-body login-form">
+                        <div class="text-center mb-20">
+                            <div class="icon-object border-slate-300 text-slate-300"><i class="fa fa-user"></i></div>
+                            <h5 class="content-group"><?= __d('users', 'Login to your account')?>
+                                <small class="display-block">
+                                    <?= $this->request->session()->check('Flash.Auth') ? $this->Flash->render('Auth') : __d('users', 'Please put your credentials')?>
+                                </small>
+                            </h5>
+                        </div>
+
+                        <div class="form-group has-feedback has-feedback-left">
+                            <?= $this->Form->input('username', ['class' => 'form-control', 'label' => false, 'placeholder' => __d('users', 'username')]);?>
+                            <div class="form-control-feedback">
+                                <i class="fa fa-user text-muted"></i>
+                            </div>
+                        </div>
+
+                        <div class="form-group has-feedback has-feedback-left">
+                            <?= $this->Form->input('password', ['class' => 'form-control', 'label' => false, 'placeholder' => __d('users', 'password')]);?>
+                            <div class="form-control-feedback">
+                                <i class="fa fa-lock text-muted"></i>
+                            </div>
+                        </div>
+
+                        <div class="login-options">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <div class="checkbox ml-5">
+                                        <label>
+                                            <?= $this->Form->checkbox('remember_me', ['class' => 'styled'])?>
+                                            <?= __d('users', 'Remember me')?>
+                                        </label>
+                                    </div>
+                                </div>
+
+                                <div class="hide col-sm-6 text-right mt-10">
+                                    <a href="http://localhost/templates/bird/theme/login_password_recover.html"><?= __d('users', 'Forgot password?')?></a>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-info btn-lg btn-labeled btn-labeled-right btn-block"><b><i class="fa fa-sign-in"></i></b> Sign in</button>
+                        </div>
+                    </div>
+                <?= $this->Form->end();?>
+                <!-- /simple login form -->
+                <?= $this->element('Global/footer')?>
+            </div>
+            <!-- /content area -->
+        </div>
+        <!-- /main content -->
     </div>
-    <div class="form-group">
-        <?= $this->Form->label('username', __d('users', 'username'), ['class' => 'control-label visible-ie8 visible-ie9']);?>
-        <?= $this->Form->input('username', ['class' => 'form-control form-control-solid placeholder-no-fix']);?>
-    </div>
-    <div class="form-group">
-        <?= $this->Form->label('password', __d('users', 'Password'), ['class' => 'control-label visible-ie8 visible-ie9']);?>
-        <?= $this->Form->input('password', ['class' => 'form-control form-control-solid placeholder-no-fix']);?>
-    </div>
-    <div class="form-actions">
-        <button type="submit" class="btn btn-success uppercase"><?= __d('users', 'Login');?></button>
-        <label class="rememberme check">
-            <input type="checkbox" name="remember" value="1"/>Remember
-        </label>
-        <a href="javascript:;" id="forget-password" class="forget-password">Forgot Password?</a>
-    </div>
-<?= $this->Form->end();?>
-<!-- END LOGIN FORM -->
-<!-- BEGIN FORGOT PASSWORD FORM -->
-<form class="forget-form" action="index.html" method="post">
-    <h3>Forget Password ?</h3>
-    <p>
-        Enter your e-mail address below to reset your password.
-    </p>
-    <div class="form-group">
-        <input class="form-control placeholder-no-fix" type="text" autocomplete="off" placeholder="Email" name="email"/>
-    </div>
-    <div class="form-actions">
-        <button type="button" id="back-btn" class="btn btn-default">Back</button>
-        <button type="submit" class="btn btn-success uppercase pull-right">Submit</button>
-    </div>
-</form>
-<!-- END FORGOT PASSWORD FORM -->
+<!-- /page content -->
+</div>
+
+<script>
+$(function() {
+    $(".styled, .multiselect-container input").uniform({
+        radioClass: 'choice'
+    });
+});
+</script>

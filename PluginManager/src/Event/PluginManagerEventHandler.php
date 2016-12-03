@@ -78,6 +78,7 @@ class PluginManagerEventHandler implements EventListenerInterface
         $this->_addBlock('form', $actions);
     }
 
+
     /**
      * Hook admin box in admin Add/Edit pages
      */
@@ -91,7 +92,7 @@ class PluginManagerEventHandler implements EventListenerInterface
     /**
      * Adding Hooked element to given target.
      *
-     * @param $type
+     * @param $type: box, actions, form
      * @param $blocks : Example:
      * [
      *  'Users/Users/index' => ['prepend' => false, 'element' => 'Bird.Actions/box1']

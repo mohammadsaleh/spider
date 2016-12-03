@@ -58,4 +58,19 @@ class Spider
         }
         return $items;
     }
+
+
+    public static function convertTimesToTwoDigits($timeString = '00:00:00')
+    {
+        $timeString = array_map(function($val) {
+            return sprintf('%02d', $val);
+        }, explode(':', $timeString));
+        $timeString = implode(':', $timeString);
+        return $timeString;
+    }
+
+    public static function purgeAmount($amount)
+    {
+        return preg_replace('/[,?]/', '', $amount);
+    }
 }

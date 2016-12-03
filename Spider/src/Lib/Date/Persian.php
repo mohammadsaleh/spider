@@ -1,6 +1,10 @@
 <?php
 namespace Spider\Lib\Date;
 
+use Cake\I18n\FrozenDate;
+use Cake\I18n\FrozenTime;
+use Cake\I18n\Time;
+
 require_once 'jdf.php';
 
 class Persian
@@ -15,6 +19,15 @@ class Persian
             }elseif(is_string($date)){
                 $args[1] = strtotime($date);
             }
+        }
+        if(!isset($args[2])){
+            $args[2] = '';
+        }
+        if(!isset($args[3])){
+            $args[3] = 'Asia/Tehran';
+        }
+        if(!isset($args[4])){
+            $args[4] = 'en';
         }
         return call_user_func_array('jdate', $args);
     }
