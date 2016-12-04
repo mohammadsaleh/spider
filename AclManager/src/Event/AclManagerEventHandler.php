@@ -122,6 +122,14 @@ class AclManagerEventHandler implements EventListenerInterface
 		}
 	}
 
+	/**
+	 * Remove parent roles and get the latest children of given roles
+	 * So we sure that a powerful role will be selected.
+	 * Suppose given roles is: public, registered, admin. so we just return registered as candidate, because has all of public and registered permissions.
+	 *
+	 * @param $roles
+	 * @return array
+	 */
 	protected function _getInheritedRoles($roles)
 	{
 		$roleIds = [];

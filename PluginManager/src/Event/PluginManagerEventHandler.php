@@ -93,7 +93,7 @@ class PluginManagerEventHandler implements EventListenerInterface
      * Adding Hooked element to given target.
      *
      * @param $type: box, actions, form
-     * @param $blocks : Example:
+     * @param $blocksArr : Example:
      * [
      *  'Users/Users/index' => ['prepend' => false, 'element' => 'Bird.Actions/box1']
      *  'Users/index' => ['prepend' => false, 'element' => 'Bird.Actions/box1']
@@ -101,7 +101,7 @@ class PluginManagerEventHandler implements EventListenerInterface
      *  '*' => ['prepend' => false, 'element' => 'Bird.Actions/box1']
      * ]
      */
-    protected function _addBlock($type, $blocks)
+    protected function _addBlock($type, $blocksArr)
     {
         $plugin = $this->_View->request->param('plugin');
         $controller = $this->_View->request->param('controller');
@@ -112,12 +112,17 @@ class PluginManagerEventHandler implements EventListenerInterface
             $plugin . '/' . $controller . '/' . $action
         ];
         $blockType = 'append';
-        foreach($blocks as $path => $block){
-            if(($path == '*') || in_array($path, $target)){
-                if($block['prepend']){
-                    $blockType = 'prepend';
+        foreach($blocksArr as $path => $blocks){
+            if(!array_key_exists(0, $blocks)){
+                $blocks = [$blocks];
+            }
+            foreach($blocks as $block){
+                if(($path == '*') || in_array($path, $target)){
+                    if($block['prepend']){
+                        $blockType = 'prepend';
+                    }
+                    $this->_View->{$blockType}($type, $this->_View->element($block['element']));
                 }
-                $this->_View->{$blockType}($type, $this->_View->element($block['element']));
             }
         }
     }

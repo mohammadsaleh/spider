@@ -16,7 +16,7 @@ $this->set('form', $this->Form->create($role, ['class' => 'form-horizontal']));
     <div class="form-group">
         <label class="control-label col-lg-3"><?= __('parent_id')?></label>
         <div class="col-lg-9">
-        <?= $this->Form->input('parent_id', ['class' => 'form-control', 'label' => false]);?>
+        <?= $this->Form->select('parent_id', $parentRoles, ['class' => 'form-control', 'label' => false]);?>
         </div>
     </div>
     <div class="form-group">

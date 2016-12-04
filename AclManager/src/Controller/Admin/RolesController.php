@@ -62,7 +62,7 @@ class RolesController extends AppController
                 $this->Flash->error(__('The role could not be saved. Please, try again.'));
             }
         }
-        $parentRoles = $this->Roles->ParentRoles->find('list', ['limit' => 200]);
+        $parentRoles = $this->Roles->ParentRoles->find('treeList')->toArray();
         $users = $this->Roles->Users->find('list', ['limit' => 200]);
         $this->set(compact('role', 'parentRoles', 'users'));
         $this->set('_serialize', ['role']);

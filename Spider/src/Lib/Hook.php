@@ -119,7 +119,7 @@ class Hook
 		}
 		if (is_array($value)) {
 			if (is_array($propertyValue)) {
-				$propertyValue = Hash::merge($propertyValue, $value);
+				$propertyValue = array_merge_recursive($propertyValue, $value);
 			} else {
 				$propertyValue = $value;
 			}
