@@ -1,18 +1,18 @@
 <?php
 use Cake\Routing\Router;
+use Spider\Lib\SpiderNav;
 
 Router::plugin('Users', function ($routes) {
     $routes->fallbacks('InflectedRoute');
 });
 
-Router::prefix('admin', function ($routes) {
+Router::scope(SpiderNav::getAdminScope(), ['prefix' => 'admin'], function($routes){
     $routes->scope('/login', function($routes){
         $routes->connect('/', ['plugin' => 'Users', 'controller' => 'Users', 'action' => 'login']);
     });
-    $routes->plugin('Users', function ($routes){
+    $routes->plugin('Users', function ($routes) {
         $routes->fallbacks('InflectedRoute');
     });
-    $routes->fallbacks('InflectedRoute');
 });
 
 Router::scope('/', ['plugin' => 'Users', 'controller' => 'Users'], function($routes){

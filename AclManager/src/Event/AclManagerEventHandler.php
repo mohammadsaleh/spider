@@ -194,7 +194,9 @@ class AclManagerEventHandler implements EventListenerInterface
 	 */
 	protected function _setupAuthAccess(){
 		$this->controller->Auth->deny();
-		if($this->controller->request->prefix == $this->controller->Auth->config('admin.prefix')){
+		$currentUrl = $this->controller->request->url;
+		$adminScope = trim($this->controller->Auth->config('admin.scope'), '/');
+		if(strpos($currentUrl, $adminScope) === 0){
 			$this->controller->Auth->config('loginAction', $this->controller->Auth->config('admin.loginAction'));
 			$this->controller->Auth->config('loginRedirect', $this->controller->Auth->config('admin.loginRedirect'));
 		}

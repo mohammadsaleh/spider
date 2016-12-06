@@ -20,6 +20,12 @@ class SpiderNav
     protected static $_activeMenu = 'sidebar';
 
     /**
+     * Admin prefix in routing url
+     * @var string
+     */
+    protected static $_adminScope = 'admin';
+
+    /**
      * Dashboard url
      * @var string
      */
@@ -73,10 +79,20 @@ class SpiderNav
         return $activeMenu;
     }
 
+    public static function getAdminScope()
+    {
+        return '/' . self::$_adminScope;
+    }
+
+    public static function setAdminScope($prefix)
+    {
+        self::$_adminScope = $prefix;
+    }
+
     public static function getDashboardUrl(){
         return self::$_dashboardUrl;
     }
-    
+
     public static function setDashboardUrl(array $url = []){
         self::$_dashboardUrl = $url;
     }
