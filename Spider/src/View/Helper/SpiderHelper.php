@@ -195,4 +195,38 @@ class SpiderHelper extends Helper
         }
         return '';
     }
+
+    public function script($blockName = null, $scripts = [])
+    {
+        if(is_array($blockName)){
+            $scripts = $blockName;
+            $blockName = 'script';
+        }elseif(!empty($scripts)){
+            $blockName = $blockName ?: 'script';
+        }
+        //Write and cache script items to given blockName.
+        foreach($scripts as &$scriptItem){
+            if(!is_array($scriptItem)){
+                $scriptItem = ['url' => $scriptItem, 'weight' => 10];
+            }elseif(count($scriptItem) == 1){
+                $scriptItem = ['url' => array_shift($scriptItem), 'weight' => 10];
+            }else{
+                $scriptItem = ['url' => array_shift($scriptItem), 'weight' => array_shift($scriptItem)];
+            }
+        }
+        $scripts = Hash::combine($scripts, '{n}.url', '{n}');
+        Spider::mergeConfig('Spider.' . $blockName, $scripts);
+    }
+
+    public function fetch($blockName)
+    {
+        //Read script block items.
+        $output = '';
+        $scripts = Configure::consume('Spider.' . $blockName);
+        $scripts = Hash::sort($scripts, '{s}.weight', 'asc');
+        foreach($scripts as $script){
+            $output .= $this->Html->script($script['url']) . "\n";
+        }
+        return $output;
+    }
 }
