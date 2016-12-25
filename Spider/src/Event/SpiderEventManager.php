@@ -17,6 +17,7 @@ class SpiderEventManager
 {
 
     public static function loadListeners() {
+        Configure::load('Spider.events');
         $eventManager = EventManager::instance();
 
         $cached = Cache::read('EventHandlers', 'default');
