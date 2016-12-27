@@ -9,7 +9,7 @@
             <div class="content">
                 <!-- Simple login form -->
                 <?= $this->Form->create(null);?>
-                    <div class="panel panel-body login-form">
+                <div class="panel panel-body login-form">
                         <div class="text-center mb-20">
                             <div class="icon-object border-slate-300 text-slate-300"><i class="fa fa-user"></i></div>
                             <h5 class="content-group"><?= __d('users', 'Login to your account')?>
@@ -32,7 +32,18 @@
                                 <i class="fa fa-lock text-muted"></i>
                             </div>
                         </div>
-
+                        <br>
+                        <div class="form-group">
+                            <?= $this->Captcha->create('captcha', ['input' => false, 'mlabel' => false])?>
+                        </div>
+                        <div class="form-group has-feedback has-feedback-left">
+                            <div class="input text">
+                                <input type="text" name="captcha" autocomplete="off" class="form-control" id="captcha">
+                            </div>
+                            <div class="form-control-feedback">
+                                <i class="fa fa-user-secret text-muted"></i>
+                            </div>
+                        </div>
                         <div class="login-options">
                             <div class="row">
                                 <div class="col-sm-6">
@@ -62,7 +73,7 @@
         </div>
         <!-- /main content -->
     </div>
-<!-- /page content -->
+    <!-- /page content -->
 </div>
 
 <script>

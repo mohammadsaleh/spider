@@ -27,16 +27,18 @@ class UsersController extends AppController
     public function login(){
         $this->viewBuilder()->layout('login');
         if ($this->request->is('post')) {
-            $user = $this->Auth->identify();
-            if ($user) {
-                $this->eventManager()->dispatch(new Event('Users.Admin.Users.login.success', $this, ['user' => &$user]));
-                $this->Auth->setUser($user);
-                return $this->redirect($this->Auth->redirectUrl());
-            } else {
-                $this->Flash->error(
-                    __d('users', 'Username or password is incorrect'), ['key' => 'Auth']
-                );
-                $this->eventManager()->dispatch(new Event('Users.Admin.Users.login.failed', $this));
+            if(!$this->Captcha->validate('captcha', $this->request->data('captcha'))){
+                $this->Flash->error(__d('users', 'Captcha is incorrect'), ['key' => 'Auth']);
+            }else{
+                $user = $this->Auth->identify();
+                if ($user) {
+                    $this->eventManager()->dispatch(new Event('Users.Admin.Users.login.success', $this, ['user' => &$user]));
+                    $this->Auth->setUser($user);
+                    return $this->redirect($this->Auth->redirectUrl());
+                } else {
+                    $this->Flash->error(__d('users', 'Username or password is incorrect'), ['key' => 'Auth']);
+                    $this->eventManager()->dispatch(new Event('Users.Admin.Users.login.failed', $this));
+                }
             }
         }
     }

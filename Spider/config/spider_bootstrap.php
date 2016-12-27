@@ -20,6 +20,7 @@ use Cake\Core\Plugin;
  */
 $corePlugins = [
     'Spider/Settings',
+    'Spider/Captcha',
     'Spider/AclManager',
     'Spider/PluginManager',
     'Spider/Users',
