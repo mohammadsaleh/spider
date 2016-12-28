@@ -34,11 +34,23 @@ class UsersController extends AppController
                 if ($user) {
                     $this->eventManager()->dispatch(new Event('Users.Admin.Users.login.success', $this, ['user' => &$user]));
                     $this->Auth->setUser($user);
+                    $this->__setCookie();
                     return $this->redirect($this->Auth->redirectUrl());
                 } else {
                     $this->Flash->error(__d('users', 'Username or password is incorrect'), ['key' => 'Auth']);
                     $this->eventManager()->dispatch(new Event('Users.Admin.Users.login.failed', $this));
                 }
+            }
+        }
+    }
+
+    private function __setCookie()
+    {
+        if($this->request->data('remember_me')){
+            $this->Cookie->write('remember_me', $this->Auth->user());
+        }else{
+            if($this->Cookie->check('remember_me')){
+                $this->Cookie->delete('remember_me');
             }
         }
     }
