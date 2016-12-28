@@ -10,3 +10,4 @@ Router::scope(SpiderNav::getAdminScope(), ['prefix' => 'admin'], function($route
         $routes->fallbacks('InflectedRoute');
     });
 });
+

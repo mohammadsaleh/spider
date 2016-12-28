@@ -1,97 +1,65 @@
-<div class="page-content">
-    <h3 class="page-title">
-    <?= __d('settings','Index Settings') ?>
-    <small></small>
-</h3>
-    <div class="page-bar">
-        <ul class="page-breadcrumb">
-    <li>
-        <i class="fa fa-home"></i>
-        <?= $this->Html->link(__('Home'), ['action' => 'dashboard']);?>
-        <i class="fa fa-angle-right"></i>
-    </li>
-    <li>
-        <?= $this->Html->link(__d('settings', 'Settings'), ['action' => 'index']);?>
-        <i class="fa fa-angle-right"></i>
-    </li>
-    <li>
-        <span><?= __d('settings', 'List Settings') ?></span>
-    </li>
-</ul>
-    </div>
-    <div class="row">
-        <div class="col-md-12">
-            <div class="portlet blue box">
-                <div class="portlet-title">
-                    <div class="caption">
-                        <i class="fa fa-cogs"></i>Basic Bootstrap 3.0 Responsive Table
-                    </div>
-                    <div class="actions">
-                        <?=
-                        $this->Html->link(
-                            '<i class="fa fa-plus"></i> '.__d('settings', 'Add New Settings'),
-                            ['action' => 'add'],
-                            ['class' => 'btn btn-circle btn-info', 'escape' => false]
-                        );
-                        ?>
-                    </div>
-                </div>
-                <div class="portlet-body">
-                    <div class="table-responsive">
-                        <table class="table">
-                            <thead>
-                            <tr>
-                                <th><?= $this->Paginator->sort('id') ?></th>
-                                <th><?= $this->Paginator->sort('key') ?></th>
-                                <th><?= $this->Paginator->sort('value') ?></th>
-                                <th><?= $this->Paginator->sort('title') ?></th>
-                                <th><?= $this->Paginator->sort('weight') ?></th>
-                                <th><?= $this->Paginator->sort('editable') ?></th>
-                                <th><?= $this->Paginator->sort('created_by') ?></th>
-                                <th class="actions"><?= __('Actions') ?></th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            <?php foreach ($settings as $setting): ?>
-                            <tr>
-                                <td><?= $this->Number->format($setting->id) ?></td>
-                                <td><?= h($setting->key) ?></td>
-                                <td><?= h($setting->value) ?></td>
-                                <td><?= h($setting->title) ?></td>
-                                <td><?= $this->Number->format($setting->weight) ?></td>
-                                <td><?= $this->Number->format($setting->editable) ?></td>
-                                <td><?= $this->Number->format($setting->created_by) ?></td>
-                                <td class="actions">
-                                    <?= $this->Html->link('<i class="fa fa-eye text-info"></i>', ['action' => 'view', $setting->id], ['escape' => false]) ?>
-                                    <?= $this->Html->link('<i class="fa fa-pencil text-info"></i>', ['action' => 'edit', $setting->id], ['escape' => false]) ?>
-                                    <?= $this->Form->postLink('<i class="fa fa-trash text-danger"></i>',
-                                        ['action' => 'delete', $setting->id],
-                                        [
-                                            'confirm' => __('Are you sure you want to delete # {0}?', $setting->id),
-                                            'escape' => false
-                                        ]
-                                    );
-                                    ?>
-                                </td>
-                            </tr>
-                            <?php endforeach; ?>
-                            </tbody>
-                        </table>
-                    </div>
-                    <div class="clearfix">
-                        <div class="paginator pull-left">
-                            <ul class="pagination">
-                                <?= $this->Paginator->prev('< ' . __('previous')) ?>
-                                <?= $this->Paginator->numbers() ?>
-                                <?= $this->Paginator->next(__('next') . ' >') ?>
-                            </ul>
-                        </div>
-                        <div class="pull-right">
-                            <p><?= $this->Paginator->counter() ?></p>
-                        </div>
+<?php
+$this->Html->script('ckeditor_4.6.1/ckeditor', ['block' => true]);
+$this->extend('/Common/content_form');
+$this->element('form_scripts');
+$this->assign('content_title', !empty($title) ? $title : __('Add Setting'));
+$this->Html->addCrumb(!empty($title) ? $title : __('Site Setting'));
+$this->set('form', $this->Form->create(null, ['class' => 'form-horizontal']));
+?>
+
+
+<?php $this->append('form');?>
+<div class="panel-heading">
+    <h4 class="panel-title"><?= __('Add Setting') ?></h4>
+</div>
+<div class="panel-body">
+    <div class="tabbable">
+        <ul class="nav nav-tabs nav-tabs-highlight">
+            <li class="active">
+                <a href="#site-settings" data-toggle="tab">Site</a>
+            </li>
+            <li>
+                <a href="#other-settings" data-toggle="tab">Other</a>
+            </li>
+        </ul>
+
+        <div class="tab-content">
+            <div class="tab-pane active" id="site-settings">
+                <?php
+                foreach($settings as $setting) {
+                    if(!$setting['editable']){
+                        continue;
+                    }
+                    $options = ['type' => $setting['type'], 'label' => false, 'class' => 'form-control'];
+                    $options['id'] = 'settings-' . str_replace('.', '-', $setting['name']);
+                    if($setting['params']){
+                        $options = array_merge($options, json_decode($setting['params'], true));
+                    }
+                    if($options['type'] == 'radio'){
+                        $options['templates'] = [
+                            'nestingLabel' => '{{hidden}}<label{{attrs}} class="radio-inline radio-left">{{input}}{{text}}</label>'
+                        ];
+                    }
+                    if(isset($options['ckeditor'])){
+                        $this->Html->scriptBlock('CKEDITOR.replace("' . $options['id'] . '");', ['block' => true]);
+                        unset($options['ckeditor']);
+                    }
+//                    debug($options);die;
+                ?>
+                <div class="form-group">
+                    <label class="control-label col-lg-3"><?= $setting['title'] ?></label>
+                    <div class="col-lg-9">
+                    <?= $this->Form->input('settings.' . $setting['name'], $options); ?>
                     </div>
                 </div>
+                <?php
+                }
+                ?>
+            </div>
+            <div class="tab-pane" id="other-settings">
+                Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim.
             </div>
         </div>
     </div>
 </div>
+<?php $this->end();?>

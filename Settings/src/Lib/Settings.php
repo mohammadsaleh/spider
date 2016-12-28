@@ -28,6 +28,7 @@ class Settings
             $query->where(['created_by' => $userId]);
         }
         $settings = $query->where(['name LIKE' => $key . '%'])
+            ->orderDesc('weight')
             ->toArray();
         if(!empty($settings)){
             $settings = Hash::expand($settings);
@@ -55,14 +56,15 @@ class Settings
      * Save setting data.
      * @param $key
      * @param $data
+     * @param $userId: if == false, ignore checking key for the user
      * @return bool|\Cake\Datasource\EntityInterface|\Cake\ORM\Entity
      */
-    public static function save($key, $data)
+    public static function save($key, $data, $userId = false)
     {
         $Settings = TableRegistry::get('Settings.Settings');
         $data['created_by'] = Router::getRequest()->session()->read('Auth.User.id') ?: null;
         $data['name'] = $key;
-        if($exist = self::find($key)){
+        if($exist = self::find($key, $userId)){
             $setting = $Settings->patchEntity(array_shift($exist), $data);
         }else{
             $setting = $Settings->newEntity($data);
