@@ -6,6 +6,7 @@ Hook::adminForm(['Users/Users/add', 'Users/Users/edit'], 'AclManager.AdminForms/
 Hook::adminBox(['Users/Users/add', 'Users/Users/edit'], 'AclManager.AdminBoxes/add_edit_user_permissions', true);
 Hook::adminActions('AclManager/Permissions/index', 'AclManager.AdminActions/permissions_sync');
 Hook::helper('AclManager.Permissions', 'AclManager.Tree');
+Hook::helper('*', 'AclManager.Acl');
 Hook::component('Admin.Users.Users', 'AclManager.UserPermission');
 
 Configure::load('AclManager.auth');

@@ -1,12 +1,18 @@
 <?php
 namespace Spider\View\Helper;
 
+use Cake\Core\Configure;
+use Cake\Core\Plugin;
 use Cake\I18n\Time;
 use Cake\Routing\Router;
 use Cake\Utility\Hash;
+use Cake\Utility\Inflector;
 use Cake\View\Helper;
 use Cake\View\View;
 use Spider\Lib\Date\Persian;
+use Spider\Lib\Spider;
+use Spider\Lib\SpiderNav;
+use Users\Lib\UserLib;
 
 /**
  * Spider helper
@@ -14,7 +20,7 @@ use Spider\Lib\Date\Persian;
 class SpiderHelper extends Helper
 {
 
-    public $helpers = ['Html', 'Time'];
+    public $helpers = ['Html', 'Time', 'Acl'];
 
     /**
      * Default configuration.
@@ -49,6 +55,11 @@ class SpiderHelper extends Helper
 
     public function adminMenus($items, $options = [], $depth = 0)
     {
+        if($depth == 0){
+            if($this->Acl){
+                $this->Acl->checkMenuPermissions($items);
+            }
+        }
         $options += [
 //            'a-' . $depth => [],
 //            'a-*' => [],
@@ -148,7 +159,7 @@ class SpiderHelper extends Helper
         }
         return $output;
     }*/
-    
+
     private function __buildMenuLinkBody($item, $depth, $options = [])
     {
         $linkBody = [
@@ -194,6 +205,17 @@ class SpiderHelper extends Helper
             return $weekDays[$dayNumber];
         }
         return '';
+    }
+
+    public function status($status, $options = [], $url = null)
+    {
+        $options = [
+            'icons' => [
+                0 => 'published',
+                1 => 'unpublished',
+            ],
+            'ajax_url' => null,
+        ];
     }
 
     public function script($blockName = null, $scripts = [])
