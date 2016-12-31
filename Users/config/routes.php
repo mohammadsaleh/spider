@@ -7,6 +7,7 @@ Router::plugin('Users', function ($routes) {
 });
 
 Router::scope(SpiderNav::getAdminScope(), ['prefix' => 'admin'], function($routes){
+    $routes->connect('/profile', ['plugin' => 'Users', 'controller' => 'Users', 'action' => 'profile']);
     $routes->scope('/login', function($routes){
         $routes->connect('/', ['plugin' => 'Users', 'controller' => 'Users', 'action' => 'login']);
     });

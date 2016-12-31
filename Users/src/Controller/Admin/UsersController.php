@@ -18,6 +18,9 @@ class UsersController extends AppController
     {
         parent::initialize();
         $this->Auth->allow(['login']);
+        if($this->Auth->user()){
+            $this->Auth->allow(['profile']);
+        }
     }
 
     /**
@@ -62,11 +65,11 @@ class UsersController extends AppController
      */
     public function index()
     {
-//        debug($this->Auth->user());die;
-//        $this->Auth->check($capabilities, $userId);
         $query = $this->Users->find('search', $this->Users->filterParams($this->request->query))
+            ->where(['id <>' => $this->Auth->user('id')])
             ->contain(['Roles']);
-        $this->set('users', $this->paginate($query));
+        $this->set('users', $query->toArray()/*$this->paginate($query)*/);
+        $this->set('title', 'Users List');
         $this->set('_serialize', ['users']);
     }
 
@@ -103,8 +106,7 @@ class UsersController extends AppController
                 $this->Flash->error(__('The user could not be saved. Please, try again.'));
             }
         }
-//        $roles = $this->Users->Roles->find('list', ['limit' => 200]);
-        $this->set(compact('user', 'roles'));
+        $this->set(compact('user', 'users', 'cities', 'roles', 'banks'));
         $this->set('_serialize', ['user']);
     }
 
@@ -117,6 +119,10 @@ class UsersController extends AppController
      */
     public function edit($id = null)
     {
+        if($id == $this->Auth->user('id')){
+            $this->Flash->error(__('The user was not found.'));
+            return $this->redirect(['action' => 'index']);
+        }
         $user = $this->Users->get($id);
         if ($this->request->is(['patch', 'post', 'put'])) {
             unset($this->request->data['password']);
@@ -128,7 +134,7 @@ class UsersController extends AppController
                 $this->Flash->error(__('The user could not be saved. Please, try again.'));
             }
         }
-        $roles = $this->Users->Roles->find('list', ['limit' => 200]);
+//        $roles = $this->Users->Roles->find('list', ['limit' => 200]);
         $this->set(compact('user', 'roles'));
         $this->set('_serialize', ['user']);
     }
@@ -150,5 +156,28 @@ class UsersController extends AppController
             $this->Flash->error(__('The user could not be deleted. Please, try again.'));
         }
         return $this->redirect(['action' => 'index']);
+    }
+
+    /**
+     * Edit current admin profile
+     */
+    public function profile()
+    {
+        $user = $this->Users->get($this->Auth->user('id'));
+        if ($this->request->is(['patch', 'post', 'put'])) {
+            if((new DefaultPasswordHasher())->check($this->request->data('old_password'), $user->password)){
+                $user = $this->Users->patchEntity($user, $this->request->data);
+                if ($this->Users->save($user)) {
+                    $this->Flash->success(__('The user has been saved.'));
+                    return $this->redirect(['action' => 'index']);
+                } else {
+                    $this->Flash->error(__('The user could not be saved. Please, try again.'));
+                }
+            }else{
+                $this->Flash->error(__d('users', 'The old password does not match the current password!'));
+            }
+        }
+        unset($user['password']);
+        $this->set(compact('user'));
     }
 }
