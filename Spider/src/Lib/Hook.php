@@ -268,5 +268,22 @@ class Hook
         }
     }
 
+    /**
+     * Hook admin navbar
+     *
+     * @param $viewPath
+     * @param $element
+     * @param bool $prepend
+     */
+    public static function adminNavbar($viewPath, $element, $prepend = false)
+    {
+        $configKeyPrefix = 'Hook.admin_navbar';
+        if(!is_array($viewPath)){
+            $viewPath = [$viewPath];
+        }
+        foreach ($viewPath as $path) {
+            self::_hookConfig($configKeyPrefix, [$path => [['element' => $element, 'prepend' => $prepend]]]);
+        }
+    }
 
 }

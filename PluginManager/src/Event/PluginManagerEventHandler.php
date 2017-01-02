@@ -17,9 +17,18 @@ class PluginManagerEventHandler implements EventListenerInterface
     public function implementedEvents(){
         return [
             'SpiderController.afterConstruct' => 'onAfterSpiderControllerConstruct',
-            'Template.Element.before.admin.structure' => 'onBeforeAdminTemplateStructure',
             'Controller.initialize' => 'beforeFilter',
+            'Spider.SpiderAppView.initialize' => 'onSpiderAppView'
         ];
+    }
+
+    public function onSpiderAppView(Event $event)
+    {
+        $this->_View = $event->subject();
+        $this->__hookAdminActions();
+        $this->__hookAdminBoxes();
+        $this->__hookAdminForms();
+        $this->__hookAdminNavbar();
     }
 
     private function __setDefaultTheme()
@@ -49,18 +58,6 @@ class PluginManagerEventHandler implements EventListenerInterface
     }
 
     /**
-     * Hook admin actions
-     * @param Event $event
-     */
-    public function onBeforeAdminTemplateStructure(Event $event)
-    {
-        $this->_View = $view = $event->subject();
-        $this->__hookAdminActions();
-        $this->__hookAdminBoxes();
-        $this->__hookAdminForms();
-    }
-
-    /**
      * Hook admin Actions in admin Index/Add/Edit pages
      */
     private function __hookAdminActions()
@@ -86,6 +83,15 @@ class PluginManagerEventHandler implements EventListenerInterface
     {
         $boxes = Configure::read('Hook.admin_box') ?: [];
         $this->_addBlock('box', $boxes);
+    }
+
+    /**
+     * Hook admin navbar in admin head navbar
+     */
+    private function __hookAdminNavbar()
+    {
+        $navbars = Configure::consume('Hook.admin_navbar') ?: [];
+        $this->_addBlock('navbar', $navbars);
     }
 
 

@@ -73,4 +73,25 @@ class Spider
     {
         return preg_replace('/[,?]/', '', $amount);
     }
+
+    /**
+     * Get [count] word from string
+     * @param $sentence
+     * @param int $count
+     * @return mixed
+     */
+    public static function getWords($sentence, $count = 10) {
+        $string = preg_replace('/\s+/', ' ', trim($sentence));
+        $words = explode(" ", $string); // an array
+        // if number of words you want to get is greater than number of words in the string
+        if ($count > count($words)) {
+            // then use number of words in the string
+            $count = count($words);
+        }
+        $new_string = "";
+        for ($i = 0; $i < $count; $i++) {
+            $new_string .= $words[$i] . " ";
+        }
+        return trim($new_string);
+    }
 }
