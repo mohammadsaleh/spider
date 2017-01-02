@@ -17,6 +17,7 @@ class PluginManagerEventHandler implements EventListenerInterface
     public function implementedEvents(){
         return [
             'SpiderController.afterConstruct' => 'onAfterSpiderControllerConstruct',
+            'Template.Element.before.admin.structure' => 'onBeforeAdminTemplateStructure',
             'Controller.initialize' => 'beforeFilter',
             'Spider.SpiderAppView.initialize' => 'onSpiderAppView'
         ];
@@ -25,9 +26,6 @@ class PluginManagerEventHandler implements EventListenerInterface
     public function onSpiderAppView(Event $event)
     {
         $this->_View = $event->subject();
-        $this->__hookAdminActions();
-        $this->__hookAdminBoxes();
-        $this->__hookAdminForms();
         $this->__hookAdminNavbar();
     }
 
@@ -55,6 +53,18 @@ class PluginManagerEventHandler implements EventListenerInterface
     {
         $this->__controller = $event->subject();
         $this->__setDefaultTheme();
+    }
+
+    /**
+     * Hook admin actions
+     * @param Event $event
+     */
+    public function onBeforeAdminTemplateStructure(Event $event)
+    {
+        $this->_View = $view = $event->subject();
+        $this->__hookAdminActions();
+        $this->__hookAdminBoxes();
+        $this->__hookAdminForms();
     }
 
     /**
