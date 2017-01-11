@@ -66,7 +66,10 @@ class UsersController extends AppController
     public function index()
     {
         $query = $this->Users->find('search', $this->Users->filterParams($this->request->query))
-            ->where(['id <>' => $this->Auth->user('id')])
+            ->where(['Users.id <>' => $this->Auth->user('id')])
+            ->matching('Roles', function($q){
+                return $q->where(['name <>' => 'superadmin']);
+            })
             ->contain(['Roles']);
         $this->set('users', $query->toArray()/*$this->paginate($query)*/);
         $this->set('title', 'Users List');
