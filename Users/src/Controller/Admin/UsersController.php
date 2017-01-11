@@ -99,10 +99,13 @@ class UsersController extends AppController
         $user = $this->Users->newEntity();
         if ($this->request->is('post')) {
             $user = $this->Users->patchEntity($user, $this->request->data);
+            $this->eventManager()->dispatch(new Event('Users.Admin.Users.add.before.save', $this, ['user' => &$user]));
             if ($this->Users->save($user)) {
                 $this->Flash->success(__('The user has been saved.'));
+                $this->eventManager()->dispatch(new Event('Users.Admin.Users.add.after.save.success', $this, ['user' => &$user]));
                 return $this->redirect(['action' => 'index']);
             } else {
+                $this->eventManager()->dispatch(new Event('Users.Admin.Users.add.after.save.error', $this, ['user' => &$user]));
                 $this->Flash->error(__('The user could not be saved. Please, try again.'));
             }
         }
@@ -125,13 +128,33 @@ class UsersController extends AppController
         }
         $user = $this->Users->get($id);
         if ($this->request->is(['patch', 'post', 'put'])) {
-            unset($this->request->data['password']);
+            if(!($isResetPassword = $this->request->data('reset_password'))){
+                unset($this->request->data['password'], $this->request->data['confirm_password']);
+            }else{
+                $this->request->data = [
+                    'reset_password' => true,
+                    'password' => $this->request->data('password'),
+                    'confirm_password' => $this->request->data('confirm_password'),
+                    'apply' => true
+                ];
+            }
             $user = $this->Users->patchEntity($user, $this->request->data);
+            $this->eventManager()->dispatch(new Event('Users.Admin.Users.edit.before.save', $this, ['user' => &$user]));
             if ($this->Users->save($user)) {
-                $this->Flash->success(__('The user has been saved.'));
+                if($isResetPassword){
+                    $this->Flash->success(__('Password Successfully Changed.'), ['key' => 'reset']);
+                }else{
+                    $this->Flash->success(__('The user has been saved.'));
+                }
+                $this->eventManager()->dispatch(new Event('Users.Admin.Users.edit.after.save.success', $this, ['user' => &$user]));
                 return $this->redirect(['action' => 'index']);
             } else {
-                $this->Flash->error(__('The user could not be saved. Please, try again.'));
+                if($isResetPassword){
+                    $this->Flash->error(__('Reset Password Failed!'), ['key' => 'reset']);
+                }else{
+                    $this->Flash->error(__('The user could not be saved. Please, try again.'));
+                }
+                $this->eventManager()->dispatch(new Event('Users.Admin.Users.edit.after.save.error', $this, ['user' => &$user]));
             }
         }
 //        $roles = $this->Users->Roles->find('list', ['limit' => 200]);

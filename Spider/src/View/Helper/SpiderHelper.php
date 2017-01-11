@@ -207,15 +207,16 @@ class SpiderHelper extends Helper
         return '';
     }
 
-    public function status($status, $options = [], $url = null)
+    public function status($status, $options = [], $url = null, $ajax = true)
     {
-        $options = [
-            'icons' => [
-                0 => 'published',
-                1 => 'unpublished',
-            ],
-            'ajax_url' => null,
-        ];
+        $text = isset($options[$status]['text']) ? $options[$status]['text'] : $status;
+        if($url){
+            if($ajax){
+                return;
+            }
+            return;
+        }
+        return $this->Html->tag('span', $text, $options[$status]);
     }
 
     public function script($blockName = null, $scripts = [])

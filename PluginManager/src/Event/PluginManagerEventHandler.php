@@ -137,7 +137,13 @@ class PluginManagerEventHandler implements EventListenerInterface
                     if($block['prepend']){
                         $blockType = 'prepend';
                     }
-                    $this->_View->{$blockType}($type, $this->_View->element($block['element']));
+                    if(is_array($block['element'])){
+                        foreach($block['element'] as $element){
+                            $this->_View->{$blockType}($type, $this->_View->element($element));
+                        }
+                    }else{
+                        $this->_View->{$blockType}($type, $this->_View->element($block['element']));
+                    }
                 }
             }
         }
