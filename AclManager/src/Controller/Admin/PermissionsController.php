@@ -73,8 +73,10 @@ class PermissionsController extends AppController
 
         //Find resources which not exist in aco table so must be add
         $resources = array_diff(array_keys($resources), $pluginAcos);
-        foreach(Configure::read('acos') as $aco){
-            $resources[$aco['name']] = $aco['name'];
+        if(Configure::check('acos')){
+            foreach(Configure::read('acos') as $aco){
+                $resources[$aco['name']] = $aco['name'];
+            }
         }
         foreach($resources as $acoPath){
             if(!$this->Aco->check($acoPath)){
