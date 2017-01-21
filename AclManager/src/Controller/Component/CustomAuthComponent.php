@@ -55,7 +55,7 @@ class CustomAuthComponent extends AuthComponent
      *
      * @param array $user
      */
-    public function setUser(array $user)
+    public function setUser($user)
     {
         parent::setUser($user);
         $this->eventManager()->dispatch(new Event('Auth.after.setUser', $this->_registry->getController(), ['user' => $user]));
