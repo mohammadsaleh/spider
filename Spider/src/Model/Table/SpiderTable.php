@@ -62,4 +62,18 @@ class SpiderTable extends Table
         }
     }
 
+    public function getTreeForest()
+    {
+        if(!$this->hasBehavior('Tree')){
+            $this->addBehavior('Tree');
+        }
+        $nodes = $this->find()->where(['parent_id IS' => null])->toArray();
+        foreach($nodes as $key => $node){
+            if($this->childCount($node) > 0){
+                $nodes[$key]['children'] = $this->find('children', ['for' => $node->id])
+                    ->find('threaded')->toArray();
+            }
+        }
+        return $nodes;
+    }
 }

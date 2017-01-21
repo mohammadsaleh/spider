@@ -212,7 +212,11 @@ class AclManagerEventHandler implements EventListenerInterface
 	{
 		if($this->controller->Cookie->check('remember_me')){
 			$cookie = $this->controller->Cookie->read('remember_me');
-			$this->controller->Auth->setUser($cookie);
+			$Users = TableRegistry::get('Users.Users');
+			$user = $Users->find()->where(['Users.username' => $cookie['username']])->first();
+			if(!empty($user)){
+				$this->controller->Auth->setUser($cookie);
+			}
 		}
 	}
 }
