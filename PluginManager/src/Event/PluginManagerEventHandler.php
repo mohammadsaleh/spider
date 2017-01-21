@@ -26,7 +26,9 @@ class PluginManagerEventHandler implements EventListenerInterface
     public function onSpiderAppView(Event $event)
     {
         $this->_View = $event->subject();
-        $this->__hookAdminNavbar();
+        if(($this->__controller->request->prefix === 'admin')){
+            $this->__hookAdminNavbar();
+        }
     }
 
     private function __setDefaultTheme()
