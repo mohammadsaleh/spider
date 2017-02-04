@@ -3,6 +3,7 @@ namespace Spider\Controller;
 
 use Cake\Controller\Component\AuthComponent;
 use Cake\Controller\Controller;
+use Cake\Core\Configure;
 use Cake\Core\Plugin;
 use Cake\Event\Event;
 use Cake\Network\Request;

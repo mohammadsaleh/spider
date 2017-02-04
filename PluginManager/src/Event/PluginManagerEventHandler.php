@@ -4,7 +4,9 @@ use Cake\Controller\ErrorController;
 use Cake\Core\Configure;
 use Cake\Event\Event;
 use Cake\Event\EventListenerInterface;
+use Cake\Routing\Router;
 use PluginManager\Lib\PluginManager;
+use Spider\Lib\SpiderNav;
 
 class PluginManagerEventHandler implements EventListenerInterface
 {
@@ -25,9 +27,14 @@ class PluginManagerEventHandler implements EventListenerInterface
 
     public function onSpiderAppView(Event $event)
     {
-        $this->_View = $event->subject();
-        if(($this->__controller->request->prefix === 'admin')){
-            $this->__hookAdminNavbar();
+        if(!$this->_View){
+            $this->_View = $event->subject();
+            if(($this->__controller->request->prefix === 'admin')){
+                $this->__hookAdminNavbar();
+                if($this->_View->request->here() == (Router::url(SpiderNav::getDashboardUrl()))){
+                    $this->__hookAdminDashboard();
+                }
+            }
         }
     }
 
@@ -87,6 +94,22 @@ class PluginManagerEventHandler implements EventListenerInterface
         $this->_addBlock('form', $actions);
     }
 
+
+    /**
+     * Hook admin boxes in dashboard page
+     */
+    private function __hookAdminDashboard()
+    {
+        $dashboardBoxes = Configure::read('Hook.admin_dashboard') ?: [];
+        $target = SpiderNav::getDashboardUrl();
+        $plugin = $target['plugin'];
+        $controller = $target['controller'];
+        $action = $target['action'];
+        $target = $plugin . '/' . $controller . '/' . $action;
+
+        $dashboardBoxes = [$target => $dashboardBoxes];
+        $this->_addBlock('dashboard', $dashboardBoxes);
+    }
 
     /**
      * Hook admin box in admin Add/Edit pages

@@ -185,10 +185,13 @@ class UsersController extends AppController
         if($this->request->is('post')) {
             $postData = $this->request->data();
             if (!empty($postData['mailUserForgot'])) {
-                $user = $this->Users->find()->where(['username' => $postData['mailUserForgot']])->first();
+                $user = $this->Users->find()
+                    ->where(['username' => $postData['mailUserForgot']])
+                    ->where(['status' => 1])
+                    ->first();
                 if ($user) {
                     $this->_sendActivationEmail($user, '/forgetpass?activation=')
-                        ->template('Bazibartar.forget_pass')
+                        ->template($this->viewBuilder()->theme() . '.forget_pass')
                         ->subject('بازیابی رمز عبور شما در بازی برتر')
                         ->send();
                     $this->set('successSendActivation', true);

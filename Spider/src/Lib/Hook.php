@@ -233,6 +233,18 @@ class Hook
     }
 
     /**
+     * Hook admin dashboard boxes
+     *
+     * @param $element
+     * @param bool $prepend
+     */
+    public static function adminDashboard($element, $prepend = false)
+    {
+        $configKeyPrefix = 'Hook.admin_dashboard';
+        self::_hookConfig($configKeyPrefix, [['element' => $element, 'prepend' => $prepend]]);
+    }
+
+    /**
      * Hook admin actions
      *
      * @param $viewPath
