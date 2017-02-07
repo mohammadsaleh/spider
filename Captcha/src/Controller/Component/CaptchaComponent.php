@@ -130,6 +130,7 @@ class CaptchaComponent extends Component
      * @var array
      */
     protected $_defaultConfig = [
+        'timeout' => 1440,
         'width' => 120,
         'height' => 40,
         'length' => 6,
@@ -152,6 +153,8 @@ class CaptchaComponent extends Component
 
     public function initialize(array $config)
     {
+//        $maxlifetime = ini_get("session.gc_maxlifetime");
+//        debug($maxlifetime);die;
         $this->Session = $this->request->session();
         $this->Controller = $this->_registry->getController();
         $passData = $this->Controller->request->param('pass');
