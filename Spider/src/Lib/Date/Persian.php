@@ -38,11 +38,23 @@ class Persian
      * @param string $format : DateInterval::format http://php.net/manual/en/dateinterval.format.php
      * @return string
      */
-    public static function diff($date1, $date2, $format = 'd')
+    public static function diff($date1, $date2, $format = 'a')
     {
         $dStart = new \DateTime($date1);
         $dEnd  = new \DateTime($date2);
         $dDiff = $dStart->diff($dEnd);
         return $dDiff->format('%' . $format); // use for point out relation: smaller/greater
+    }
+
+    /**
+     * @param $jalaliDateTime
+     * @return \DateTime
+     */
+    public static function toGregorian($jalaliDateTime)
+    {
+        $gregorianDateTime = call_user_func_array('formated_to_gregorian', [$jalaliDateTime]);
+        $asiaTime = new \DateTime($gregorianDateTime, new \DateTimeZone('Asia/Tehran'));
+        $utcTime = $asiaTime->setTimezone(new \DateTimeZone('UTC'));
+        return $utcTime;
     }
 }
