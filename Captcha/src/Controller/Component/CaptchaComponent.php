@@ -135,6 +135,8 @@ class CaptchaComponent extends Component
         'height' => 40,
         'length' => 6,
         'theme' => 'default',
+        'sensitive' => false,
+        'characters' => '23456789bcdfghjkmnpqrstvwxyz', // list all possible characters ; similar looking characters and vowels have been ommitted
         'fontAdjustment' => 0.50,
         'type' => 'image',
         'field' => 'captcha',
@@ -162,7 +164,27 @@ class CaptchaComponent extends Component
             parse_str(base64_decode(array_shift($passData)), $passData);
         }
         $this->config(array_merge($this->config(), $passData));
+        $this->Controller->eventManager()->dispatch(new Event('Captcha.beforeInit', $this));
         $this->__init();
+    }
+
+    /**
+     * Set/Get theme config
+     *
+     * @param $theme
+     * @param null $config
+     * @return array
+     */
+    public function theme($theme, $config = null)
+    {
+        if($config){
+            if(isset($this->themes[$theme])){
+                $this->themes[$theme] = array_merge($this->themes[$theme], $config);
+            }else{
+                $this->themes[$theme] = $config;
+            }
+        }
+        return $this->themes[$theme];
     }
 
     /**
@@ -228,8 +250,7 @@ class CaptchaComponent extends Component
      */
     private function __AlphaNumeric()
     {
-        /* list all possible characters ; similar looking characters and vowels have been ommitted */
-        $possible = '23456789bcdfghjkmnpqrstvwxyz';//ABCDFGHJKMNPRSTVWXYZ
+        $possible = $this->config('characters');
 
         $code = '';
         $i = 0;
@@ -470,6 +491,9 @@ class CaptchaComponent extends Component
 
     public function validate($field, $value)
     {
+        if(!$this->config('sensitive')){
+            return strtolower($this->get($field)) == strtolower($value);
+        }
         return $this->get($field) == $value;
     }
 }
