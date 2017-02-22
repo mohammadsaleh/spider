@@ -9,6 +9,7 @@ use Cake\ORM\Entity;
 use Cake\ORM\Query;
 use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
+use Spider\Lib\SpiderNav;
 
 class AclManagerEventHandler implements EventListenerInterface
 {
@@ -205,18 +206,28 @@ class AclManagerEventHandler implements EventListenerInterface
 		}
 	}
 
-	/**
-	 * Check remember me and if set login user with it's cookie.
-	 */
-	protected function _tryLoginUserWithCookie()
-	{
-		if($this->controller->Cookie->check('remember_me')){
-			$cookie = $this->controller->Cookie->read('remember_me');
-			$Users = TableRegistry::get('Users.Users');
-			$user = $Users->find()->where(['Users.username' => $cookie['username']])->first();
-			if(!empty($user)){
-				$this->controller->Auth->setUser($cookie);
-			}
-		}
-	}
+    /**
+     * Check remember me and login user with it's cookie, if set
+     */
+    protected function _tryLoginUserWithCookie()
+    {
+        if($this->controller->Cookie->check('remember_me')){
+            $cookie = $this->controller->Cookie->read('remember_me');
+            $Users = TableRegistry::get('Users.Users');
+            $user = $Users->find()->where(['Users.username' => $cookie['username']])->first();
+            if(!empty($user) && $user['status'] > 0){
+                $currentUrl = $this->controller->request->url;
+                $adminScope = trim($this->controller->Auth->config('admin.scope'), '/');
+                if(strpos($currentUrl, $adminScope) === 0){
+                    //go to unlock page to get password to login
+                    Configure::write('unlock', $user);
+                    $unlockUrl = SpiderNav::getAdminScope() . '/unlock';
+                    if($this->controller->request->url != trim($unlockUrl, '/')){
+                        return $this->controller->redirect($unlockUrl);
+                    }
+                }
+                $this->controller->Auth->setUser($cookie);
+            }
+        }
+    }
 }

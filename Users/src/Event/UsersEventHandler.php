@@ -29,6 +29,10 @@ class UsersEventHandler implements EventListenerInterface
             'Users.Admin.Users.login.success' => [
                 'callable' => 'onSuccessLogin',
                 'priority' => -1
+            ],
+            'Users.Admin.Users.unlock.success' => [
+                'callable' => 'onSuccessLogin',
+                'priority' => -1
             ]
         ];
     }

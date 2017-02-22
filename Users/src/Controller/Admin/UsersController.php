@@ -3,6 +3,7 @@ namespace Users\Controller\Admin;
 
 use Cake\Auth\DefaultPasswordHasher;
 use Cake\Auth\PasswordHasherFactory;
+use Cake\Core\Configure;
 use Cake\Event\Event;
 use Users\Controller\AppController;
 
@@ -204,6 +205,41 @@ class UsersController extends AppController
             }
         }
         unset($user['password']);
+        $this->set(compact('user'));
+    }
+
+    public function unlock()
+    {
+        $this->viewBuilder()->layout('login');
+        if($this->request->is('post') && !empty($this->request->data)){
+            $cookie = $this->Cookie->read('remember_me');
+            $this->request->data['username'] = $cookie['username'];
+            $user = $this->Auth->identify();
+            if ($user) {
+                $this->eventManager()->dispatch(new Event('Users.Admin.Users.unlock.success', $this, ['user' => &$user]));
+                $this->Auth->setUser($user);
+                $this->__setCookie();
+                return $this->redirect($this->Auth->redirectUrl());
+            } else {
+                $user = $this->Users->find()->where(['Users.username' => $cookie['username']])->first();
+                $this->Flash->error(__d('users', 'password is incorrect or your account may be disabled'), ['key' => 'Auth']);
+                $this->eventManager()->dispatch(new Event('Users.Admin.Users.unlock.failed', $this));
+            }
+        }else{
+            if(Configure::check('unlock')){
+                $user = Configure::consume('unlock');
+                $user = $this->Users->find()->where(['Users.username' => $user['username']])->first();
+            }else{
+                $cookie = $this->Cookie->read('remember_me');
+                $user = null;
+                if(!empty($cookie)){
+                    $user = $this->Users->find()->where(['Users.username' => $cookie['username']])->first();
+                }
+            }
+            if(empty($user)){
+                return $this->redirect($this->Auth->redirectUrl());
+            }
+        }
         $this->set(compact('user'));
     }
 }
