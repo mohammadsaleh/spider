@@ -19,6 +19,7 @@ class UsersController extends AppController
     {
         parent::initialize();
         $this->Auth->allow(['login']);
+        $this->Auth->allow(['unlock']);
         if($this->Auth->user()){
             $this->Auth->allow(['profile']);
         }
