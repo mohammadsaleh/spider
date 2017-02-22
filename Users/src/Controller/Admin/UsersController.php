@@ -30,6 +30,9 @@ class UsersController extends AppController
      * @return \Cake\Network\Response|void
      */
     public function login(){
+        if(!empty($this->Auth->user())){
+            return $this->redirect($this->Auth->redirectUrl());
+        }
         $this->viewBuilder()->layout('login');
         if ($this->request->is('post')) {
             if(!$this->Captcha->validate('captcha', $this->request->data('captcha'))){
