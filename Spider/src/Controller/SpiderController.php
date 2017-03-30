@@ -6,6 +6,7 @@ use Cake\Controller\Controller;
 use Cake\Core\Configure;
 use Cake\Core\Plugin;
 use Cake\Event\Event;
+use Cake\I18n\I18n;
 use Cake\Network\Request;
 use Cake\Network\Response;
 use Cake\Routing\Router;
@@ -51,6 +52,23 @@ class SpiderController extends Controller
         parent::initialize();
         $this->set('title', '');
         $this->loadComponent('Flash');
+
+        $this->request->session()->write('Config.language', ($this->request->query('lang') ?: ($this->request->session()->read('Config.language') ?: 'fa')));
+        $lang = $this->request->session()->read('Config.language');
+        switch($lang) {
+            case "du":
+                I18n::locale('du_DU');
+                break;
+            case "en":
+                I18n::locale('en_US');
+                break;
+            case "fa":
+                I18n::locale('fa_IR');
+                break;
+            default:
+                I18n::locale('fa_IR');
+                break;
+        }
 
         /** This below event trigger Before "SpiderController.afterConstruct" event.*/
         $this->eventManager()->dispatch(new Event('SpiderController.afterInitialize', $this));

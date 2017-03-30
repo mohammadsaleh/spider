@@ -9,11 +9,15 @@ class Spider
     /**
      * Generate unique string
      * @param int $length
+     * @param bool $letter todo:: 32 length is not enough for letter = false, because just return 19 characters.
      * @return string
      */
-    public static function uniqueString($length = 32)
+    public static function uniqueString($length = 32, $letter = true)
     {
-        return substr(str_shuffle(md5(microtime())), 0, $length);
+        if($letter){
+            return substr(str_shuffle(md5(microtime())), 0, $length);
+        }
+        return substr(str_replace(['.', ' '], '', str_shuffle(microtime())), 0, $length);
     }
 
     /**

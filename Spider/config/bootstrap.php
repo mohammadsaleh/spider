@@ -13,7 +13,6 @@ Request::addDetector(
     ['env' => 'HTTP_USER_AGENT', 'pattern' => '/Chrome/i']
 );
 
-I18n::locale('fa_IR');
 Plugin::load('BootstrapUI');
 
 require_once 'spider_bootstrap.php';
