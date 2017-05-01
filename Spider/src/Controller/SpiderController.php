@@ -55,20 +55,32 @@ class SpiderController extends Controller
 
         $this->request->session()->write('Config.language', ($this->request->query('lang') ?: ($this->request->session()->read('Config.language') ?: 'fa')));
         $lang = $this->request->session()->read('Config.language');
+        $languageSetting = ['lang' => $lang];
         switch($lang) {
             case "du":
                 I18n::locale('du_DU');
+                $languageSetting['direction'] = 'ltr';
                 break;
             case "en":
                 I18n::locale('en_US');
+                $languageSetting['direction'] = 'ltr';
                 break;
             case "fa":
                 I18n::locale('fa_IR');
+                $languageSetting['direction'] = 'rtl';
                 break;
+            case "ru":
+                I18n::locale('ru');
+                $languageSetting['direction'] = 'ltr';
+                break;
+
             default:
                 I18n::locale('fa_IR');
+                $languageSetting['direction'] = 'rtl';
                 break;
         }
+        Configure::write('Spider.language', $languageSetting);
+        unset($this->request->query['lang']);
 
         /** This below event trigger Before "SpiderController.afterConstruct" event.*/
         $this->eventManager()->dispatch(new Event('SpiderController.afterInitialize', $this));

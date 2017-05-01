@@ -5,6 +5,7 @@ use Cake\Auth\DefaultPasswordHasher;
 use Cake\Auth\PasswordHasherFactory;
 use Cake\Core\Configure;
 use Cake\Event\Event;
+use Spider\Lib\SpiderNav;
 use Users\Controller\AppController;
 
 /**
@@ -30,7 +31,7 @@ class UsersController extends AppController
      * @return \Cake\Network\Response|void
      */
     public function login(){
-        if(!empty($this->Auth->user())){
+        if(!empty($this->Auth->user()) && ($this->Auth->redirectUrl() !== ('/' . SpiderNav::getAdminScope()))){
             return $this->redirect($this->Auth->redirectUrl());
         }
         $this->viewBuilder()->layout('login');
