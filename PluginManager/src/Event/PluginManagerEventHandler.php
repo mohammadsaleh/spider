@@ -154,6 +154,9 @@ class PluginManagerEventHandler implements EventListenerInterface
         ];
         $blockType = 'append';
         foreach($blocksArr as $path => $blocks){
+            if(empty($blocks)){
+                continue;
+            }
             if(!array_key_exists(0, $blocks)){
                 $blocks = [$blocks];
             }

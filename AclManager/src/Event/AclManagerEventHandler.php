@@ -34,13 +34,14 @@ class AclManagerEventHandler implements EventListenerInterface
 
 	public function onUserLoginSuccessfully(Event $event)
 	{
-		$user = &$event->data['user'];
+		$user = $event->data['user'];
 		$user['roles'] = [];
 		$UsersRoles = TableRegistry::get('AclManager.UsersRoles');
 		$roles = $UsersRoles->find()->where(['user_id' => $user['id']])->contain(['Roles'])->toArray();
 		if(!empty($roles)){
 			$user['roles'] = Hash::extract($roles, '{n}.role');
 		}
+		$event->setData('user', $user);
 	}
 
 	/**
