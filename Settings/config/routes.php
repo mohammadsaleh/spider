@@ -11,3 +11,4 @@ Router::scope(SpiderNav::getAdminScope(), ['prefix' => 'admin'], function($route
     });
 });
 
+Router::connect('/maintenance.html', ['plugin' => 'Settings', 'controller' => 'Settings', 'action' => 'maintenance']);

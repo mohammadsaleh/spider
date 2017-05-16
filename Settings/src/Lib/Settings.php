@@ -33,6 +33,7 @@ class Settings
         if(!empty($settings)){
             $settings = Hash::expand($settings);
         }
+
         return $settings;
     }
 
