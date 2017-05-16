@@ -8,10 +8,14 @@ namespace Settings\Event;
  */
 
 use Cake\Core\Configure;
+use Cake\Datasource\ConnectionManager;
 use Cake\Event\Event;
 use Cake\Event\EventListenerInterface;
+use Cake\Http\ServerRequestFactory;
 use Cake\Routing\Router;
+use Settings\Lib\Settings;
 use Settings\Middleware\MaintenanceMiddleware;
+use Spider\Lib\SpiderNav;
 
 
 class SettingsEventHandler implements EventListenerInterface
@@ -25,13 +29,18 @@ class SettingsEventHandler implements EventListenerInterface
 
     public function onMiddleware(Event $event)
     {
-        $status = false;
-        Configure::write('Site.enable', $status);
-        $middleware = $event->getData('middleware');
-        $redirectUrl = Router::url('/maintenance.html', true);
-        $hereUrl = 'http://' . $_SERVER['HTTP_HOST'] . $_SERVER['REQUEST_URI'];
+        $request = ServerRequestFactory::fromGlobals();
+        $currentUrl = $request->url;
+        $adminScope = trim(SpiderNav::getAdminScope(), '/');
+        if(strpos($currentUrl, $adminScope) === 0){
+            return true;
+        }
 
-        if($redirectUrl != $hereUrl ){
+        Configure::write('Site.enable', $this->__getSiteStatus());
+        $middleware = $event->getData('middleware');
+        $redirectUrl = Router::url('/maintenance.html');
+
+        if($redirectUrl != Router::url($request->getRequestTarget())){
             $middleware->add(new MaintenanceMiddleware([
                     'config' => [
                         'url' => Router::url('/maintenance.html', true),
@@ -40,5 +49,18 @@ class SettingsEventHandler implements EventListenerInterface
 
             ]));
         }
+    }
+
+    private function __getSiteStatus()
+    {
+        $conn = ConnectionManager::get('default');
+        $newQuery = $conn->newQuery();
+        $siteStatus = $newQuery
+            ->select('value')
+            ->from('spider_settings_settings')
+            ->where(['name' => 'site.status'])
+            ->execute()
+            ->fetch('assoc');
+        return (!empty($siteStatus) && ($siteStatus['value'] == 'offline')) ? false : true;
     }
 }
