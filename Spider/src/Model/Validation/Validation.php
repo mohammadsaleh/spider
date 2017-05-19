@@ -13,6 +13,10 @@ use Cake\Validation\Validation as CakeValidation;
 
 class Validation extends CakeValidation
 {
+    public function integer($value)
+    {
+        return parent::isInteger($value);
+    }
 
 	public static function persianAlpha($check)
 	{

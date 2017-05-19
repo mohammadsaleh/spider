@@ -54,11 +54,19 @@ class RolesController extends AppController
         $role = $this->Roles->newEntity();
         if ($this->request->is('post')) {
             $role = $this->Roles->patchEntity($role, $this->request->data);
+
             if ($this->Roles->save($role)) {
                 $this->Flash->success(__('The role has been saved.'));
-
+                $roleId = $role->id;
+                $parentId = $role->parent_id;
+                $parentPermissions = $this->Aro->getPermissions($this->Aro->getRole($parentId));
+                foreach($parentPermissions as $parentAllowAco){
+                    $acoName = $parentAllowAco['name'];
+                    $this->Acl->setRoleAccess($acoName, (int)$roleId);
+                }
                 return $this->redirect(['action' => 'index']);
-            } else {
+            }
+            else {
                 $this->Flash->error(__('The role could not be saved. Please, try again.'));
             }
         }
@@ -79,6 +87,7 @@ class RolesController extends AppController
     {
         $role = $this->Roles->get($id);
         if ($this->request->is(['patch', 'post', 'put'])) {
+            debug($role);
             $role = $this->Roles->patchEntity($role, $this->request->data);
             if ($this->Roles->save($role)) {
                 $this->Flash->success(__('The role has been saved.'));
@@ -89,6 +98,7 @@ class RolesController extends AppController
             }
         }
         $parentRoles = $this->Roles->ParentRoles->find('treeList')->toArray();
+        debug($parentRoles);die;
         unset($parentRoles[$id]);
         $users = $this->Roles->Users->find('list', ['limit' => 200]);
         $this->set(compact('role', 'parentRoles', 'users'));
