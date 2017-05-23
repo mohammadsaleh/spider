@@ -207,6 +207,44 @@ class SpiderHelper extends Helper
         return '';
     }
 
+    /**
+     * Convert numeric to string
+     *
+     * @param $number
+     * @param $text
+     * @return mixed
+     */
+    public function getNumericString($number, $text = null)
+    {
+        $dayNumericString = [
+            1   => __d('spider', 'first'),
+            2   => __d('spider', 'second'),
+            3   => __d('spider', 'third'),
+            4   => __d('spider', 'fourth'),
+            5   => __d('spider', 'fifth'),
+            6   => __d('spider', 'sixth'),
+            7   => __d('spider', 'seventh'),
+            8   => __d('spider', 'eighth'),
+            9   => __d('spider', 'ninth'),
+            10  => __d('spider', 'tenth'),
+        ];
+        if($text){
+            $dayNumericString = [
+                1   => __d('spider', 'first {0}', $text),
+                2   => __d('spider', 'second {0}', $text),
+                3   => __d('spider', 'third {0}', $text),
+                4   => __d('spider', 'fourth {0}', $text),
+                5   => __d('spider', 'fifth {0}', $text),
+                6   => __d('spider', 'sixth {0}', $text),
+                7   => __d('spider', 'seventh {0}', $text),
+                8   => __d('spider', 'eighth {0}', $text),
+                9   => __d('spider', 'ninth {0}', $text),
+                10  => __d('spider', 'tenth {0}', $text),
+            ];
+        }
+        return $dayNumericString[$number];
+    }
+
     public function status($status, $options = [], $url = null, $ajax = true)
     {
         $text = isset($options[$status]['text']) ? $options[$status]['text'] : $status;
