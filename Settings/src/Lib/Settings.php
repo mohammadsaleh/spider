@@ -1,6 +1,7 @@
 <?php
 namespace Settings\Lib;
 
+use Cake\Datasource\ConnectionManager;
 use Cake\ORM\TableRegistry;
 use Cake\Routing\Router;
 use Cake\Utility\Hash;
@@ -22,14 +23,16 @@ class Settings
             }
         }
         $checkUserId = ($userId === false) ? false : true;
-        $Settings = TableRegistry::get('Settings.Settings');
-        $query = $Settings->find('all');
+        $conn = ConnectionManager::get('default');
+        $query = $conn->newQuery();
+        $query->select('*')->from('spider_settings_settings');
         if($checkUserId){
             $query->where(['created_by' => $userId]);
         }
         $settings = $query->where(['name LIKE' => $key . '%'])
             ->orderDesc('weight')
-            ->toArray();
+            ->execute()
+            ->fetchAll('assoc');
         if(!empty($settings)){
             $settings = Hash::expand($settings);
         }
@@ -44,8 +47,13 @@ class Settings
      */
     public static function get($id)
     {
-        $Settings = TableRegistry::get('Settings.Settings');
-        $settings = $Settings->find()->where(['id' => $id])->first();
+        $conn = ConnectionManager::get('default');
+        $query = $conn->newQuery();
+        $settings = $query->select('*')
+            ->from('spider_settings_settings')
+            ->where(['id' => $id])
+            ->execute()
+            ->fetch('assoc');
         if(!empty($settings)){
             $settings = Hash::combine([$settings], '{n}.name', '{n}.value');
             $settings = Hash::expand($settings);
@@ -62,17 +70,16 @@ class Settings
      */
     public static function save($key, $data, $userId = false)
     {
-        $Settings = TableRegistry::get('Settings.Settings');
-        $data['created_by'] = Router::getRequest()->session()->read('Auth.User.id') ?: null;
+        $conn = ConnectionManager::get('default');
+        $data['created_by'] = (Router::getRequest() && Router::getRequest()->session()->read('Auth.User.id')) ?: $userId ?: null;
         $data['name'] = $key;
         if($exist = self::find($key, $userId)){
-            $setting = $Settings->patchEntity(array_shift($exist), $data);
+            $data = array_merge(array_shift($exist), $data);
         }else{
-            $setting = $Settings->newEntity($data);
+            $data['created'] = time();
         }
-//        debug($setting);die;
-        if($Settings->save($setting)){
-            return $setting;
+        if($conn->insert('spider_settings_settings', $data)){
+            return $data;
         }
         return false;
     }
