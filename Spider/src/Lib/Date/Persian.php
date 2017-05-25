@@ -14,8 +14,8 @@ class Persian
         $args = func_get_args();
         if(isset($args[1])){
             $date = $args[1];
-            if(($date instanceof FrozenDate) || ($date instanceof Time) || ($date instanceof FrozenTime)){
-                $args[1] = (int)$date->toUnixString();
+            if(($date instanceof FrozenDate) || ($date instanceof Time) || ($date instanceof FrozenTime)|| ($date instanceof \DateTime)){
+                $args[1] = (new Time($date, null))->toUnixString();
             }elseif(is_string($date)){
                 $args[1] = strtotime($date);
             }
