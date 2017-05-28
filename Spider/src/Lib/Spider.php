@@ -4,6 +4,7 @@ use Cake\Core\Configure;
 use Cake\ORM\Entity;
 use Cake\Utility\Hash;
 
+require_once 'Date/jdf.php';
 class Spider
 {
     public static function getTimeAgo($givenTime)
