@@ -148,7 +148,7 @@ class Hook
         } else {
             $propertyValue = $value;
         }
-        Configure::write($configKeyPrefix, $propertyValue);
+        Configure::write($configKeyPrefix, Hash::expand(Hash::flatten($propertyValue)));
     }
 
     /**
