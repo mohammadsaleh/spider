@@ -68,7 +68,12 @@ class Hook
             $prefix = ($prefix = Router::getRequest()->param('prefix')) ? (Inflector::camelize($prefix) . '.') : '';
             $plugin = ($plugin = Router::getRequest()->param('plugin')) ? ($plugin . '.') : '';
             $objectName = $prefix . $plugin . $objectName;
-            $hookMethods = Configure::read($configKey . '.' . $objectName);
+            $hookMethods = Configure::read($configKey);
+            if(isset($hookMethods[$objectName])){
+                $hookMethods = $hookMethods[$objectName];
+            }else{
+                $hookMethods = [];
+            }
             if (is_array(Configure::read($configKey . '.*'))) {
                 $hookMethods = Hash::merge(Configure::read($configKey . '.*'), $hookMethods);
             }
@@ -96,7 +101,12 @@ class Hook
         $plugin = ($plugin = $View->request->param('plugin')) ? ($plugin . '.') : '';
         $controller = $View->request->param('controller');
         $objectName = $prefix . $plugin . $controller;
-        $hookHelpers = Configure::read($configKey . '.' . $objectName);
+        $hookHelpers = Configure::read($configKey);
+        if(isset($hookHelpers[$objectName])){
+            $hookHelpers = $hookHelpers[$objectName];
+        }else{
+            $hookHelpers = [];
+        }
         if (is_array(Configure::read($configKey . '.*'))) {
             $hookHelpers = Hash::merge(Configure::read($configKey . '.*'), $hookHelpers);
         }
@@ -148,7 +158,7 @@ class Hook
         } else {
             $propertyValue = $value;
         }
-        Configure::write($configKeyPrefix, Hash::expand(Hash::flatten($propertyValue)));
+        Configure::write($configKeyPrefix, $propertyValue);
     }
 
     /**
