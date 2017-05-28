@@ -1,6 +1,7 @@
 <?php
 namespace Spider\Lib;
 use Cake\Core\Configure;
+use Cake\I18n\Time;
 use Cake\ORM\Entity;
 use Cake\Utility\Hash;
 
