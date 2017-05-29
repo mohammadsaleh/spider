@@ -282,7 +282,7 @@ class SpiderHelper extends Helper
     public function fetch($blockName)
     {
         //Read script block items.
-        $output = '';
+        $output = $this->getView()->fetch($blockName);
         $scripts = Configure::consume('Spider.' . $blockName);
         $scripts = Hash::sort($scripts, '{s}.weight', 'asc');
         foreach($scripts as $script){
