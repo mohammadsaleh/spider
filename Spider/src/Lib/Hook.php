@@ -64,13 +64,14 @@ class Hook
         }else{
             $objectName = $object->name;
         }
-        if(php_sapi_name() !== 'cli'){
+        if(php_sapi_name() !== 'cli') {
             $prefix = ($prefix = Router::getRequest()->param('prefix')) ? (Inflector::camelize($prefix) . '.') : '';
             $plugin = ($plugin = Router::getRequest()->param('plugin')) ? ($plugin . '.') : '';
             $objectName = $prefix . $plugin . $objectName;
             $hookMethods = Configure::read($configKey);
-            if(isset($hookMethods[$objectName])){
+            if (isset($hookMethods[$objectName])) {
                 $hookMethods = $hookMethods[$objectName];
+            } elseif ($hookMethods = Configure::read($configKey . '.' . $objectName)){
             }else{
                 $hookMethods = [];
             }
@@ -104,6 +105,7 @@ class Hook
         $hookHelpers = Configure::read($configKey);
         if(isset($hookHelpers[$objectName])){
             $hookHelpers = $hookHelpers[$objectName];
+        }elseif ($hookHelpers = Configure::read($configKey . '.' . $objectName)){
         }else{
             $hookHelpers = [];
         }
