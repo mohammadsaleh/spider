@@ -20,6 +20,7 @@ class PermissionsController extends AppController
     {
         parent::initialize();
     }
+
     /**
      * Index method
      *
@@ -28,30 +29,40 @@ class PermissionsController extends AppController
     {
         $allAcos = $this->Aco->getAll();
         $this->set(compact('allAcos'));
-//        debug($allAcos);
-        $permissions = [];
-        if($this->request->is('post') && !empty($this->request->data)){
-            $allowAcos = $this->request->data('permissions');
-            $denyAcos = array_diff(array_keys($allAcos), $allowAcos);
-            foreach($denyAcos as $acoName){
-                $this->Acl->clearRoleAccess($acoName, (int)$roleId);
-            }
-            foreach($allowAcos as $acoName){
-                $this->Acl->setRoleAccess($acoName, (int)$roleId);
-            }
-            //save permissions
-        }else if($this->request->is('ajax') && !empty($roleId)){
-            //load permissions related to roleId
-            $this->viewBuilder()->layout(false);
-            $permissions = $this->Aro->getPermissions($this->Aro->getRole($roleId));
-            $this->viewBuilder()->template('ajax_permissions');
-            $permissions = array_keys($permissions);
-//        debug($permissions);die;
-        }
+
         //load page
         $Roles = TableRegistry::get('AclManager.Roles');
         $roles = $Roles->find('treeList')->toArray();
-//            debug($roles);die;
+
+        $permissions = [];
+        if ($this->request->is('post') && !empty($this->request->data)) {
+            $allowAcos = $this->request->data('permissions');
+            $denyAcos = array_diff(array_keys($allAcos), $allowAcos);
+
+            $childernRoles =  $Roles->find('children', ['for' => $roleId]);
+
+            foreach ($denyAcos as $acoName) {
+                $this->Acl->clearRoleAccess($acoName, (int)$roleId);
+            }
+            foreach ($allowAcos as $acoName) {
+                $this->Acl->setRoleAccess($acoName, (int)$roleId);
+                if(!empty($childernRoles)) {
+                    foreach ($childernRoles as $child) {
+                         $this->Acl->setRoleAccess($acoName, (int)$child->id);
+                    }
+                }
+            }
+            //save permissions
+        } else if ($this->request->is('ajax') && !empty($roleId)) {
+            //load permissions related to roleId
+            $this->viewBuilder()->layout(false);
+            $permissions = $this->Aro->getPermissions($this->Aro->getRole($roleId));
+
+            $this->viewBuilder()->template('ajax_permissions');
+            $permissions = array_keys($permissions);
+            //debug($permissions);die;
+        }
+
         $this->set(compact('permissions', 'roles', 'roleId'));
     }
 
@@ -67,19 +78,19 @@ class PermissionsController extends AppController
 
         //Find table actions which deleted from it's controller, so we must delete those from aco table too
         $deleteAcos = array_diff($pluginAcos, array_keys($resources));
-        foreach($deleteAcos as $id => $aco){
+        foreach ($deleteAcos as $id => $aco) {
             $this->Aco->remove($id);
         }
 
         //Find resources which not exist in aco table so must be add
         $resources = array_diff(array_keys($resources), $pluginAcos);
-        if(Configure::check('acos')){
-            foreach(Configure::read('acos') as $aco){
+        if (Configure::check('acos')) {
+            foreach (Configure::read('acos') as $aco) {
                 $resources[$aco['name']] = $aco['name'];
             }
         }
-        foreach($resources as $acoPath){
-            if(!$this->Aco->check($acoPath)){
+        foreach ($resources as $acoPath) {
+            if (!$this->Aco->check($acoPath)) {
                 $this->Aco->add(['name' => $acoPath]);
             }
         }
@@ -107,13 +118,16 @@ class PermissionsController extends AppController
         die;
 //        debug($this->Acl->denyRole('plugin/b2b', 'registered'));die;
 //        debug($this->Acl->allowUser('plugin/b2b', 1));die;
-        debug($this->Acl->allowRole('plugin/b2b', 'registered'));die;
-        debug($this->Acl->allowRole('plugin/b2b/tours/edit', 'registered'));die;
-        debug($this->Acl->checkRole(1, 'plugin/b2b/tours/edit'));die;
+        debug($this->Acl->allowRole('plugin/b2b', 'registered'));
+        die;
+        debug($this->Acl->allowRole('plugin/b2b/tours/edit', 'registered'));
+        die;
+        debug($this->Acl->checkRole(1, 'plugin/b2b/tours/edit'));
+        die;
         die;
         $Aros = TableRegistry::get('AclManager.Aros');
         $allAcos = $this->Aco->getAll();
-        if($id){
+        if ($id) {
 //            $ownAro = $this->Aro->getAros(['role_id' => $id, 'parents' => false]);
 //            $parentAro = $this->Aro->getAros(['role_id' => $id, 'parents' => true, 'own' => false]);
 //            $ownPermissions = $this->Aro->getPermissions($ownAro);
@@ -123,7 +137,8 @@ class PermissionsController extends AppController
 //        $allAcos = array_diff_key($allAcos, $acoNames);
         debug($ownPermissions);
         debug($parentsPermissions);
-        debug($allAcos);die;
+        debug($allAcos);
+        die;
     }
 
 }
