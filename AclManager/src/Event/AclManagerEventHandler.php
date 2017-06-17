@@ -29,8 +29,17 @@ class AclManagerEventHandler implements EventListenerInterface
 		    'SpiderTable.afterConstruct' => 'onAfterSpiderTableConstruct',
 		    'Users.Users.login.success' => 'onUserLoginSuccessfully',
 			'Users.Admin.Users.login.success' => 'onUserLoginSuccessfully',
-	    ];
+            'Spider.bootstrap.complete' => 'onAfterBootstrap',
+        ];
 	}
+
+    public function onAfterBootstrap(Event $event)
+    {
+        $acosConstants = Configure::read('acos');
+        foreach($acosConstants as $constant => $value){
+            define($constant, $value['name']);
+        }
+    }
 
 	public function onUserLoginSuccessfully(Event $event)
 	{
