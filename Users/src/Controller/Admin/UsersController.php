@@ -139,13 +139,16 @@ class UsersController extends AppController
         if ($this->request->is(['patch', 'post', 'put'])) {
             if(!($isResetPassword = $this->request->data('reset_password'))){
                 unset($this->request->data['password'], $this->request->data['confirm_password']);
-            }else{
+            }elseif($this->Auth->hasAllow(USERS_RESET_PASSWORD)){
                 $this->request->data = [
                     'reset_password' => true,
                     'password' => $this->request->data('password'),
                     'confirm_password' => $this->request->data('confirm_password'),
                     'apply' => true
                 ];
+            }else{
+                $isResetPassword = false;
+                unset($this->request->data['password'], $this->request->data['confirm_password']);
             }
             $user = $this->Users->patchEntity($user, $this->request->data);
             $this->eventManager()->dispatch(new Event('Users.Admin.Users.edit.before.save', $this, ['user' => &$user]));
