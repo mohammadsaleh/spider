@@ -36,8 +36,10 @@ class AclManagerEventHandler implements EventListenerInterface
     public function onAfterBootstrap(Event $event)
     {
         $acosConstants = Configure::read('acos');
-        foreach($acosConstants as $constant => $value){
-            define($constant, $value['name']);
+        if(!empty($acosConstants)){
+            foreach($acosConstants as $constant => $value){
+                define($constant, $value['name']);
+            }
         }
     }
 
