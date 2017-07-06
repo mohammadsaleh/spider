@@ -41,9 +41,8 @@ class UsersEventHandler implements EventListenerInterface
 //TODO:: but that's not send $user as reference so we can not using that yet
     public function onSuccessLogin(Event $event)
     {
-//        $controller = $event->subject();
-//        $userInfo = $event->data['user'];
-//        return $userInfo;
+        $controller = $event->getSubject();
+        $controller->request->session()->delete("Flash.flash");
     }
 
     /**
