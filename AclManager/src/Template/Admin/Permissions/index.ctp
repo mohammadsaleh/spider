@@ -37,7 +37,7 @@ $this->Html->addCrumb(!empty($title) ? $title : __('Permissions'));
 
                     <div class="panel-group panel-group-control" id="accordion">
                         <?php foreach($roles as $id => $role){?>
-                        <form class="panel" action="<?= \Cake\Routing\Router::url("/admin/access/permissions/r-$id")?>" method="post">
+                            <form class="panel" action="<?= \Cake\Routing\Router::url(\Spider\Lib\SpiderNav::getAdminScope() . "/access/permissions/r-$id")?>" method="post">
                             <div class="panel-heading bg-grey-300 clearfix">
                                 <span class="panel-title pull-left">
                                     <?= $this->Html->link($role,
@@ -46,7 +46,7 @@ $this->Html->addCrumb(!empty($title) ? $title : __('Permissions'));
                                             'data-toggle' => "collapse",
                                             'data-parent' => "#accordion",
                                             'data-id' => $id,
-                                            'data-href' => \Cake\Routing\Router::url("/admin/access/permissions/r-$id"),
+                                            'data-href' => \Cake\Routing\Router::url(\Spider\Lib\SpiderNav::getAdminScope() . "/access/permissions/r-$id"),
                                             'class' => 'role-permissions collapsed'
                                         ]
                                     )
