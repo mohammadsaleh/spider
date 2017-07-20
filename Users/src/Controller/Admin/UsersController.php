@@ -5,6 +5,8 @@ use Cake\Auth\DefaultPasswordHasher;
 use Cake\Auth\PasswordHasherFactory;
 use Cake\Core\Configure;
 use Cake\Event\Event;
+use Cake\ORM\TableRegistry;
+use Spider\Lib\Date\Persian;
 use Spider\Lib\SpiderNav;
 use Users\Controller\AppController;
 
@@ -71,15 +73,20 @@ class UsersController extends AppController
      */
     public function index()
     {
-        $query = $this->Users->find('search', $this->Users->filterParams($this->request->query))
+        $Users = TableRegistry::get('Users.Users');
+        $users = $Users->find()
             ->where(['Users.id <>' => $this->Auth->user('id')])
             ->matching('Roles', function($q){
-                return $q->where(['name <>' => 'superadmin']);
+                return $q->where(['Roles.name <>' => 'superadmin']);
             })
             ->contain(['Roles']);
-        $this->set('users', $query->toArray()/*$this->paginate($query)*/);
+        $users = $this->DataTables->dataTable($users);
+        foreach ($users['datatable'] as $key => $user){
+            $users['datatable'][$key]['created'] = Persian::date('Y-m-d H:i', $user['created']);
+            $users['datatable'][$key]['modified'] = Persian::date('Y-m-d H:i', $user['modified']);
+        }
+        $this->set(compact('users'));
         $this->set('title', 'Users List');
-        $this->set('_serialize', ['users']);
     }
 
     /**
@@ -139,16 +146,13 @@ class UsersController extends AppController
         if ($this->request->is(['patch', 'post', 'put'])) {
             if(!($isResetPassword = $this->request->data('reset_password'))){
                 unset($this->request->data['password'], $this->request->data['confirm_password']);
-            }elseif($this->Auth->hasAllow(USERS_RESET_PASSWORD)){
+            }else{
                 $this->request->data = [
                     'reset_password' => true,
                     'password' => $this->request->data('password'),
                     'confirm_password' => $this->request->data('confirm_password'),
                     'apply' => true
                 ];
-            }else{
-                $isResetPassword = false;
-                unset($this->request->data['password'], $this->request->data['confirm_password']);
             }
             $user = $this->Users->patchEntity($user, $this->request->data);
             $this->eventManager()->dispatch(new Event('Users.Admin.Users.edit.before.save', $this, ['user' => &$user]));
