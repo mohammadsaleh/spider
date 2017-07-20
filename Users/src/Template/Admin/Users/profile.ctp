@@ -1,6 +1,6 @@
 <?php
 $this->extend('/Common/content_form');
-$this->element('form_scripts');
+
 $this->set('form', $this->Form->create($user, ['class' => 'form-horizontal']));
 $this->assign('content_title', !empty($title) ? $title : __('My Profile'));
 $this->Html->addCrumb(!empty($title) ? $title : __('My Profile'));

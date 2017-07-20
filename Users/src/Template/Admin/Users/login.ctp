@@ -9,7 +9,7 @@
             <div class="content">
                 <!-- Simple login form -->
                 <?= $this->Form->create(null);?>
-                <div class="panel panel-body login-form">
+                    <div class="panel panel-body login-form">
                         <div class="text-center mb-20">
                             <div class="icon-object border-slate-300 text-slate-300"><i class="fa fa-user"></i></div>
                             <h5 class="content-group"><?= __d('users', 'Login to your account')?>
@@ -73,7 +73,7 @@
         </div>
         <!-- /main content -->
     </div>
-    <!-- /page content -->
+<!-- /page content -->
 </div>
 
 <script>

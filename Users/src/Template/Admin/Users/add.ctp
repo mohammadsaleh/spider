@@ -1,6 +1,6 @@
 <?php
 $this->extend('/Common/content_form');
-$this->element('form_scripts');
+
 $this->assign('content_title', !empty($title) ? $title : __('Add User'));
 $this->Html->addCrumb(__('List Users'), ['action' => 'index']);
 $this->Html->addCrumb(!empty($title) ? $title : __('Add User'));
