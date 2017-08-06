@@ -30,7 +30,7 @@ $this->Html->script('forms/uniform.min.js', ['block' => 'core_script']);
                                 <div class="col-sm-6">
                                     <div class="checkbox ml-5">
                                         <label>
-                                            <input name="remember_me" type="checkbox" class="styled">
+                                            <input name="remember_me" checked="checked" type="checkbox" class="styled">
                                             Remember me
                                         </label>
                                     </div>
