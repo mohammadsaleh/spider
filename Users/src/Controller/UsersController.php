@@ -44,6 +44,7 @@ class UsersController extends AppController
     private function __setCookie()
     {
         if($this->request->data('remember_me')){
+            $this->Cookie->configKey('remember_me', 'expires', '+3 days');
             $this->Cookie->write('remember_me', $this->Auth->user());
         }else{
             if($this->Cookie->check('remember_me')){
