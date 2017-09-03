@@ -33,7 +33,7 @@ class AclHelper extends Helper
                 }
             }
             if(is_array($url) || (is_string($url) && (strpos($url, '#') === false))){
-                $prefix = Inflector::camelize(trim(SpiderNav::getAdminScope()), '/') . '/';
+                $prefix = 'Admin' . '/';
                 $plugin = Inflector::camelize($url['plugin']) ? 'plugin/' . Inflector::camelize($url['plugin']) . '/' : '';
                 $controller = Inflector::camelize($url['controller']) . '/';
                 $action = $url['action'];

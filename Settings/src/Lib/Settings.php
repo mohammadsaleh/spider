@@ -75,6 +75,10 @@ class Settings
         $data['name'] = $key;
         if($exist = self::find($key, $userId)){
             $data = array_merge(array_shift($exist), $data);
+            $id = $data['id'];
+            unset($data['id']);
+            $conn->update('spider_settings_settings', $data, ['id' => $id]);
+            return $data;
         }else{
             $data['created'] = time();
         }
