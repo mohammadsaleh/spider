@@ -1,23 +1,26 @@
 <?php
 namespace Users\Event;
 
-use Cake\Collection\Collection;
 use Cake\Core\Plugin;
 use Cake\Event\Event;
 use Cake\Event\EventListenerInterface;
 use Cake\ORM\TableRegistry;
 use Cake\Routing\Router;
+use Settings\Lib\Settings;
 use Users\Lib\UserLib;
 
 class UsersEventHandler implements EventListenerInterface
 {
+    private $__controller = null;
+
     public function implementedEvents(){
         return [
-            'SpiderController.afterInitialize' => 'onAfterSpiderControllerInitialize',
+            'SpiderController.afterConstruct' => 'onAfterSpiderControllerConstruct',
             'Users.Users.add.success' => [
                 'callable' => 'onSuccessRegister', // create and send activation key to user's email
                 'priority' => -1
             ],
+            'Spider.SpiderAppView.initialize' => 'onSpiderViewInitialize',
             'Users.Users.login.success' => [
                 'callable' => 'onSuccessLogin',
                 'priority' => -1
@@ -37,26 +40,60 @@ class UsersEventHandler implements EventListenerInterface
         ];
     }
 
-//TODO:: it would be better if using "Auth.afterIdentify" event instead custom,
-//TODO:: but that's not send $user as reference so we can not using that yet
+    //TODO:: it would be better if using "Auth.afterIdentify" event instead custom,
+    //TODO:: but that's not send $user as reference so we can not using that yet
     public function onSuccessLogin(Event $event)
     {
-        $controller = $event->getSubject();
-        $controller->request->session()->delete("Flash.flash");
+    }
+
+    public function onSpiderViewInitialize(Event $event)
+    {
+        $view = $event->subject();
+        if(Plugin::loaded('Users')){
+            $view->loadHelper('Users.Users');
+        }
     }
 
     /**
      * Send Auth object to UserLib to accessible anywhere when using UserLib::check($cap, $userId)
      * @param Event $event
      */
-    public function onAfterSpiderControllerInitialize(Event $event){
-        $controller = $event->subject();
-        new UserLib($event->subject()->Auth);
-        $avatar = Router::url($controller->request->session()->read('Auth.User.avatar'), true);
-        if(empty($avatar)){
+    public function onAfterSpiderControllerConstruct(Event $event){
+        if(!$this->__controller){
+            $this->__controller = $event->getSubject();
+        }
+        new UserLib($this->__controller->Auth);
+        $this->__forceLogout();
+        $userAvatar = $this->__controller->request->session()->read('Auth.User.avatar');
+        $avatar = Router::url($userAvatar, true);
+        if(empty($userAvatar)){
             $avatar = Router::url('/assets/images/default-avatar.jpg', true);
         }
-        $controller->set(compact('avatar'));
+        $this->__controller->set(compact('avatar'));
+    }
+
+    private function __forceLogout()
+    {
+        if($user = $this->__controller->Auth->user()){
+            $forceLogoutSetting = Settings::find('users.force_logout', false);
+            $forceLogout = false;
+            if(!empty($forceLogoutSetting)){
+                $forceLogoutSetting = array_shift($forceLogoutSetting);
+                $forceLogout = $forceLogoutSetting['value'];
+            }
+            if($forceLogout){
+                $UsersForceLogout = TableRegistry::get('Users.UsersForceLogout');
+                $logoutUser = $UsersForceLogout->find()->where(['user_id' => $user['id']])->first();
+                if(!empty($logoutUser) && ($logoutUser['logout'] == 0)){
+                    $logoutUser['logout'] = 1;
+                }elseif(empty($logoutUser)){
+                    $logoutUser = $UsersForceLogout->newEntity(['user_id' => $user['id'], 'logout' => 1]);
+                }
+                if($UsersForceLogout->save($logoutUser)){
+                    return $this->__controller->redirect(['plugin' => 'users', 'controller' => 'users', 'action' => 'logout']);
+                }
+            }
+        }
     }
 
     /**
