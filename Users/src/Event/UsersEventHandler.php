@@ -84,12 +84,15 @@ class UsersEventHandler implements EventListenerInterface
             if($forceLogout){
                 $UsersForceLogout = TableRegistry::get('Users.UsersForceLogout');
                 $logoutUser = $UsersForceLogout->find()->where(['user_id' => $user['id']])->first();
+                $logout = false;
                 if(!empty($logoutUser) && ($logoutUser['logout'] == 0)){
+                    $logout = true;
                     $logoutUser['logout'] = 1;
                 }elseif(empty($logoutUser)){
+                    $logout = true;
                     $logoutUser = $UsersForceLogout->newEntity(['user_id' => $user['id'], 'logout' => 1]);
                 }
-                if($UsersForceLogout->save($logoutUser)){
+                if($logout && $UsersForceLogout->save($logoutUser)){
                     return $this->__controller->redirect(['plugin' => 'users', 'controller' => 'users', 'action' => 'logout']);
                 }
             }
