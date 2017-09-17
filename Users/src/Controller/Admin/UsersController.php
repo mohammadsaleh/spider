@@ -239,13 +239,14 @@ class UsersController extends AppController
             }
         }else{
             if(Configure::check('unlock')){
-                $user = Configure::consume('unlock');
+                $user = Configure::read('unlock');
                 $user = $this->Users->find()->where(['Users.username' => $user['username']])->first();
             }else{
                 $cookie = $this->Cookie->read('remember_me');
                 $user = null;
                 if(!empty($cookie)){
                     $user = $this->Users->find()->where(['Users.username' => $cookie['username']])->first();
+                    $user = Configure::delete('unlock');
                 }
             }
             if(empty($user)){
