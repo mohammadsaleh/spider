@@ -64,7 +64,7 @@ class Hook
         }else{
             $objectName = $object->name;
         }
-        if(php_sapi_name() !== 'cli') {
+        if((php_sapi_name() !== 'cli') && Router::getRequest()) {
             $prefix = ($prefix = Router::getRequest()->param('prefix')) ? (Inflector::camelize($prefix) . '.') : '';
             $plugin = ($plugin = Router::getRequest()->param('plugin')) ? ($plugin . '.') : '';
             $objectName = $prefix . $plugin . $objectName;
