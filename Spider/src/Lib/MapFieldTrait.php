@@ -49,7 +49,7 @@ trait MapFieldTrait
      * @param array $data
      * @return array
      */
-    protected function _mapFields(Array $data = [])
+    public function mapFields(Array $data = [])
     {
         $this->__setMapFields();
         $this->__setOutputFields();
