@@ -9,10 +9,10 @@ $this->set('form', $this->Form->create(null, ['class' => 'form-horizontal']));
 
 
 <?php $this->append('form');?>
-<div class="panel-heading">
+    <div class="panel-heading">
     <h4 class="panel-title"><?= __('Add Setting') ?></h4>
 </div>
-<div class="panel-body">
+    <div class="panel-body">
     <div class="tabbable">
         <ul class="nav nav-tabs nav-tabs-highlight">
             <li class="active">
@@ -31,6 +31,7 @@ $this->set('form', $this->Form->create(null, ['class' => 'form-horizontal']));
                         continue;
                     }
                     $options = ['type' => $setting['type'], 'label' => false, 'class' => 'form-control'];
+                    $options['value'] = $setting['value'];
                     $options['id'] = 'settings-' . str_replace('.', '-', $setting['name']);
                     if($setting['params']){
                         $options = array_merge($options, json_decode($setting['params'], true));
@@ -45,14 +46,14 @@ $this->set('form', $this->Form->create(null, ['class' => 'form-horizontal']));
                         unset($options['ckeditor']);
                     }
 //                    debug($options);die;
-                ?>
-                <div class="form-group">
+                    ?>
+                    <div class="form-group">
                     <label class="control-label col-lg-3"><?= $setting['title'] ?></label>
                     <div class="col-lg-9">
                     <?= $this->Form->input('settings.' . $setting['name'], $options); ?>
                     </div>
                 </div>
-                <?php
+                    <?php
                 }
                 ?>
             </div>
