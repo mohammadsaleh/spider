@@ -77,6 +77,7 @@ class Settings
             $data = array_merge(array_shift($exist), $data);
             $id = $data['id'];
             unset($data['id']);
+            $data['updated'] = date('Y-m-d H:i:s');
             $conn->update('spider_settings_settings', $data, ['id' => $id]);
             return $data;
         }else{
