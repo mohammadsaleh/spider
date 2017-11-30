@@ -52,7 +52,7 @@ class MaintenanceMiddleware
     {
         $url = $this->_config['config']['url'];
         if (empty($url)) {
-            $url = $request->getUri()->withPath('/maintenance.html');
+            $url = $request->getUri()->withPath(MAINTENANCE_URL);
         }
         return $url;
     }

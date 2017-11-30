@@ -1,4 +1,5 @@
 <?php
+define('MAINTENANCE_URL', '/maintenance.html');
 
 \Spider\Lib\SpiderNav::add('sidebar', 'Settings', [
     'title' => __d('settings', 'Settings'),

@@ -38,12 +38,12 @@ class SettingsEventHandler implements EventListenerInterface
 
         Configure::write('Site.enable', $this->__getSiteStatus());
         $middleware = $event->getData('middleware');
-        $redirectUrl = Router::url('/maintenance.html');
+        $redirectUrl = Router::url(MAINTENANCE_URL);
 
         if($redirectUrl != Router::url($request->getRequestTarget())){
             $middleware->add(new MaintenanceMiddleware([
                     'config' => [
-                        'url' => Router::url('/maintenance.html', true),
+                        'url' => MAINTENANCE_URL,
                         'code' => 303,
                     ]
 
