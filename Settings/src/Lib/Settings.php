@@ -71,7 +71,7 @@ class Settings
     public static function save($key, $data, $userId = false)
     {
         $conn = ConnectionManager::get('default');
-        $data['created_by'] = $userId ?: (Router::getRequest() && Router::getRequest()->session()->read('Auth.User.id')) ? Router::getRequest()->session()->read('Auth.User.id') :  null;
+        $data['created_by'] = $userId ? $userId : ((Router::getRequest() && Router::getRequest()->session()->read('Auth.User.id')) ? Router::getRequest()->session()->read('Auth.User.id') :  null);
         $data['name'] = $key;
         if($exist = self::find($key, $userId)){
             $data = array_merge(array_shift($exist), $data);
