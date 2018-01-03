@@ -17,7 +17,7 @@ class Spider
 
         if ($diffTime < 60)
         {
-            return 'چند لحظه';
+            return 'چند لحظه قبل';
         }
 
         $times = [
