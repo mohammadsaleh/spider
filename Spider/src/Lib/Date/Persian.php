@@ -47,12 +47,12 @@ class Persian
     }
 
     /**
-     * @param $jalaliDateTime
      * @return \DateTime
      */
-    public static function toGregorian($jalaliDateTime)
+    public static function toGregorian()
     {
-        $gregorianDateTime = call_user_func_array('formated_to_gregorian', [$jalaliDateTime]);
+        $args = func_get_args();
+        $gregorianDateTime = call_user_func_array('formated_to_gregorian', $args);
         $asiaTime = new \DateTime($gregorianDateTime, new \DateTimeZone('Asia/Tehran'));
         $utcTime = $asiaTime->setTimezone(new \DateTimeZone('UTC'));
         return $utcTime;
