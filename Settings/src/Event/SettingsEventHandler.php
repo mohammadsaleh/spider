@@ -35,20 +35,7 @@ class SettingsEventHandler implements EventListenerInterface
         if(strpos($currentUrl, $adminScope) === 0){
             return true;
         }
-
         Configure::write('Site.enable', $this->__getSiteStatus());
-        $middleware = $event->getData('middleware');
-        $redirectUrl = Router::url(MAINTENANCE_URL);
-
-        if($redirectUrl != Router::url($request->getRequestTarget())){
-            $middleware->add(new MaintenanceMiddleware([
-                    'config' => [
-                        'url' => MAINTENANCE_URL,
-                        'code' => 303,
-                    ]
-
-            ]));
-        }
     }
 
     private function __getSiteStatus()
