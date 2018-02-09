@@ -32,10 +32,10 @@ class SettingsEventHandler implements EventListenerInterface
         $request = ServerRequestFactory::fromGlobals();
         $currentUrl = $request->url;
         $adminScope = trim(SpiderNav::getAdminScope(), '/');
+        Configure::write('Site.enable', $this->__getSiteStatus());
         if(strpos($currentUrl, $adminScope) === 0){
             return true;
         }
-        Configure::write('Site.enable', $this->__getSiteStatus());
     }
 
     private function __getSiteStatus()
