@@ -4,6 +4,7 @@ namespace Settings\Middleware;
 
 use Cake\Core\Configure;
 use Cake\Core\InstanceConfigTrait;
+use Cake\Routing\Router;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Zend\Diactoros\Response\RedirectResponse;
@@ -28,33 +29,17 @@ class MaintenanceMiddleware
     {
         $this->setConfig($config);
     }
+
     public function __invoke($request, $response, $next)
     {
-
-        if (Configure::read('Site.enable')) {
-            return $next($request, $response);
-        }
-
-
-        $url = $this->_getUrl($request);
-        $headers = $this->getConfig('headers');
-
-        $response = new RedirectResponse($url, $this->getConfig('code'), $headers);
-       // debug($response);die;
-        if ($response instanceof ResponseInterface) {
+        $response = $next($request, $response);
+        if (Configure::read('Site.enable') || $response->getFile()) {
             return $response;
         }
-
-        return $next($request, $response);
-    }
-
-    protected function _getUrl(ServerRequestInterface $request)
-    {
-        $url = $this->_config['config']['url'];
-        if (empty($url)) {
-            $url = $request->getUri()->withPath('/maintenance.html');
+        if($request->url != trim(MAINTENANCE_URL, '/')){
+            $response = $response->withLocation(Router::url(MAINTENANCE_URL));
         }
-        return $url;
+        return $response;
     }
 
 }

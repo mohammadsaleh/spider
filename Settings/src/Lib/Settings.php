@@ -71,16 +71,17 @@ class Settings
     public static function save($key, $data, $userId = false)
     {
         $conn = ConnectionManager::get('default');
-        $data['created_by'] = (Router::getRequest() && Router::getRequest()->session()->read('Auth.User.id')) ?: $userId ?: null;
+        $data['created_by'] = $userId ? $userId : ((Router::getRequest() && Router::getRequest()->session()->read('Auth.User.id')) ? Router::getRequest()->session()->read('Auth.User.id') :  null);
         $data['name'] = $key;
         if($exist = self::find($key, $userId)){
             $data = array_merge(array_shift($exist), $data);
             $id = $data['id'];
             unset($data['id']);
+            $data['updated'] = date('Y-m-d H:i:s');
             $conn->update('spider_settings_settings', $data, ['id' => $id]);
             return $data;
         }else{
-            $data['created'] = time();
+            $data['created'] = date('Y-m-d H:i:s');
         }
         if($conn->insert('spider_settings_settings', $data)){
             return $data;

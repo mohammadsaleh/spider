@@ -86,7 +86,7 @@ class AclManagerEventHandler implements EventListenerInterface
 	public function onBeforeMarshal(Event $event, \ArrayObject $data, \ArrayObject $options)
 	{
 		$this->table = $event->subject();
-		if (($this->table->alias() == 'Users') && isset($data['roles'])) {
+		if (($this->table->registryAlias() == 'Users.Users') && isset($data['roles'])) {
 			$roles = $data['roles'];
 			if(!is_array($roles)){
 				$roles = [$roles];

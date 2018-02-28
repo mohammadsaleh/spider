@@ -1,4 +1,15 @@
 <?php
+define('MAINTENANCE_URL', '/maintenance.html');
+
+\Cake\Event\EventManager::instance()->on(
+    'Server.buildMiddleware',
+    function ($event, $middlewareQueue) {
+        $middlewareQueue->insertAfter(
+            'Cake\Routing\Middleware\AssetMiddleware',
+            new \Settings\Middleware\MaintenanceMiddleware
+        );
+    }
+);
 
 \Spider\Lib\SpiderNav::add('sidebar', 'Settings', [
     'title' => __d('settings', 'Settings'),

@@ -32,22 +32,9 @@ class SettingsEventHandler implements EventListenerInterface
         $request = ServerRequestFactory::fromGlobals();
         $currentUrl = $request->url;
         $adminScope = trim(SpiderNav::getAdminScope(), '/');
+        Configure::write('Site.enable', $this->__getSiteStatus());
         if(strpos($currentUrl, $adminScope) === 0){
             return true;
-        }
-
-        Configure::write('Site.enable', $this->__getSiteStatus());
-        $middleware = $event->getData('middleware');
-        $redirectUrl = Router::url('/maintenance.html');
-
-        if($redirectUrl != Router::url($request->getRequestTarget())){
-            $middleware->add(new MaintenanceMiddleware([
-                    'config' => [
-                        'url' => Router::url('/maintenance.html', true),
-                        'code' => 303,
-                    ]
-
-            ]));
         }
     }
 
