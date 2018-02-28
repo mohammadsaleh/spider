@@ -66,7 +66,7 @@ class AclManagerEventHandler implements EventListenerInterface
 	public function onBeforeFind(Event $event, /*Query*/ $query, \ArrayObject $options, $primary)
 	{
 		$table = $event->subject();
-		if($table->alias() == 'Users'){
+		if($table->registryAlias() == 'Users.Users'){
 			$query->contain(['Roles']);
 		}
 	}
@@ -118,7 +118,7 @@ class AclManagerEventHandler implements EventListenerInterface
 	public function onAfterSave(Event $event, Entity $entity, $options = [])
 	{
 		$table = $event->subject();
-		if(($table->alias() == 'Users')){
+		if(($table->registryAlias() == 'Users.Users')){
 			$userId = $entity['id'];
 			if(!isset($entity['permissions'])){
 				$entity['permissions'] = [];
@@ -160,7 +160,7 @@ class AclManagerEventHandler implements EventListenerInterface
 	public function onAfterSpiderTableConstruct(Event $event)
 	{
 	    $table = $event->subject();
-		if($table->alias() == 'Users'){
+		if($table->registryAlias() == 'Users.Users'){
 			//Associate AclManager.Roles to Users.Users model
 			$table->belongsToMany('AclManager.Roles', [
 				'through' => 'AclManager.UsersRoles',
