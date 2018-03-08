@@ -62,7 +62,8 @@ trait MapFieldTrait
                 $value = $data[$fromField];
                 $mapKey = $toField;
                 $mapValue = $value;
-            }elseif(is_array($toField)){
+            }
+            if(is_array($toField)){
                 $toField = array_merge(['value' => $value, 'key' => $fromField], $toField);
                 $mapKey = $toField['key'];
                 $mapValue = $toField['value'];
