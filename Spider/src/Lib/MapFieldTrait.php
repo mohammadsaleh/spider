@@ -68,7 +68,7 @@ trait MapFieldTrait
                 $mapKey = $toField['key'];
                 $mapValue = $toField['value'];
             }
-            if(method_exists($this, $mapValue)){
+            if(is_string($mapValue) && method_exists($this, $mapValue)){
                 $mapValue = $this->{$mapValue}($value, $data);
             }
             $data[$mapKey] = $mapValue;
