@@ -230,6 +230,7 @@ class AclManagerEventHandler implements EventListenerInterface
             if(!empty($user) && $user['status'] > 0){
                 $currentUrl = $this->controller->request->url;
                 $adminScope = trim(SpiderNav::getAdminScope(), '/');
+                // If url is an admin url
                 if(strpos($currentUrl, $adminScope) === 0){
                     //go to unlock page to get password to login
                     Configure::write('unlock', $user);
@@ -237,8 +238,9 @@ class AclManagerEventHandler implements EventListenerInterface
                     if($this->controller->request->url != trim($unlockUrl, '/')){
                         return $this->controller->redirect($unlockUrl);
                     }
+                }else{
+                    $this->controller->Auth->setUser($cookie);
                 }
-                $this->controller->Auth->setUser($cookie);
             }
         }
     }
