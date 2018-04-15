@@ -28,7 +28,7 @@ class PluginManagerEventHandler implements EventListenerInterface
     public function onSpiderAppView(Event $event)
     {
         if(!$this->_View){
-            $this->_View = $event->subject();
+            $this->_View = $event->getSubject();
             if(($this->__controller->request->prefix === 'admin')){
                 $this->__hookAdminNavbar();
                 if($this->_View->request->here() == (Router::url(SpiderNav::getDashboardUrl()))){
@@ -45,14 +45,14 @@ class PluginManagerEventHandler implements EventListenerInterface
         if($theme) {
             $this->__controller->viewBuilder()->theme($theme);
             if($this->__controller->Flash){
-                $this->__controller->Flash->config('plugin', $theme);
+                $this->__controller->Flash->setConfig('plugin', $theme);
             }
         }
     }
 
     public function beforeFilter(Event $event)
     {
-        $this->__controller = $event->subject();
+        $this->__controller = $event->getSubject();
         if($this->__controller instanceof ErrorController){
             $this->__setDefaultTheme();
         }
@@ -60,7 +60,7 @@ class PluginManagerEventHandler implements EventListenerInterface
 
     public function onAfterSpiderControllerConstruct(Event $event)
     {
-        $this->__controller = $event->subject();
+        $this->__controller = $event->getSubject();
         $this->__setDefaultTheme();
     }
 
@@ -70,7 +70,7 @@ class PluginManagerEventHandler implements EventListenerInterface
      */
     public function onBeforeAdminTemplateStructure(Event $event)
     {
-        $this->_View = $view = $event->subject();
+        $this->_View = $view = $event->getSubject();
         $this->__hookAdminActions();
         $this->__hookAdminBoxes();
         $this->__hookAdminForms();

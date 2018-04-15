@@ -45,7 +45,7 @@ class CaptchaBehavior extends Behavior
      *
      */
     public function validateCaptcha($value, array $context) {
-        return $value == $this->captcha[$this->config('field')];
+        return $value == $this->captcha[$this->getConfig('field')];
     }
 
     /**
@@ -64,9 +64,9 @@ class CaptchaBehavior extends Behavior
      */
     public function buildValidator(Event $event, Validator $validator, $name)
     {
-        $validator->add($this->config('field'), 'captcha', [
+        $validator->add($this->getConfig('field'), 'captcha', [
             'rule' => 'validateCaptcha',
-            'message' => $this->config('message'),
+            'message' => $this->getConfig('message'),
             'provider' => 'table'
         ]);
         return $validator;

@@ -163,7 +163,7 @@ class CaptchaComponent extends Component
         if(!empty($passData)){
             parse_str(base64_decode(array_shift($passData)), $passData);
         }
-        $this->config(array_merge($this->config(), $passData));
+        $this->config(array_merge($this->getConfig(), $passData));
         $this->Controller->eventManager()->dispatch(new Event('Captcha.beforeInit', $this));
         $this->__init();
     }
@@ -221,7 +221,7 @@ class CaptchaComponent extends Component
      */
     public function beforeRender(Event $event)
     {
-        $this->Controller->helpers['Captcha.Captcha'] = $this->config();
+        $this->Controller->helpers['Captcha.Captcha'] = $this->getConfig();
     }
 
     /**
@@ -236,7 +236,7 @@ class CaptchaComponent extends Component
             return;
         }
         //Preference is given the settings parameter passed through helper
-        foreach ($this->config() as $key => $value) {
+        foreach ($this->getConfig() as $key => $value) {
             if (isset($query[$key]) && $query[$key]){
                 $this->config($key, $query[$key]);
             }
@@ -250,11 +250,11 @@ class CaptchaComponent extends Component
      */
     private function __AlphaNumeric()
     {
-        $possible = $this->config('characters');
+        $possible = $this->getConfig('characters');
 
         $code = '';
         $i = 0;
-        while ($i < $this->config('length')) {
+        while ($i < $this->getConfig('length')) {
             $code .= substr($possible, mt_rand(0, strlen($possible) - 1), 1);
             $i++;
         }
@@ -269,7 +269,7 @@ class CaptchaComponent extends Component
     private function __setSessionKey()
     {
         //todo:: can merge with __getSessionKey func
-        $this->sessionKey = "{$this->config('field')}";
+        $this->sessionKey = "{$this->getConfig('field')}";
     }
 
     /**
@@ -284,28 +284,28 @@ class CaptchaComponent extends Component
 
     public function create($settings = array())
     {
-        switch ($this->config('type')):
+        switch ($this->getConfig('type')):
             case 'image';
                 $this->__imageCaptcha();
                 break;
             case 'math';
-                /*if(isset($this->Controller->request->data[$this->config('model')][$this->config('field')]))  {
+                /*if(isset($this->Controller->request->data[$this->getConfig('field')]))  {
                   $this->Controller->Session->write('security_code_math', $this->Controller->Session->read('security_code'));
                 }*/
 
                 $this->__mathCaptcha();
-                echo __($this->config('stringOperation'));
+                echo __($this->getConfig('stringOperation'));
                 break;
         endswitch;
     }
 
     private function __initType()
     {
-        if ($this->config('type') == 'image') {
+        if ($this->getConfig('type') == 'image') {
             // Gets full path to fonts dir
             $fontPath = dirname(dirname(dirname(__FILE__))) . DS . 'Lib' . DS . 'Fonts';
             $fontName = $this->__fonts[array_rand($this->__fonts)] . ".ttf";
-            $this->config('font', $fontPath . DS . $fontName);
+            $this->setConfig('font', $fontPath . DS . $fontName);
 
             if (!$this->__gdInfo()) {
                 $this->__setError(__('Cannot use image captcha as GD library is not enabled! Set $this->config(\'type\', \'math\') in order to show a simple math captcha instead!'));
@@ -316,8 +316,8 @@ class CaptchaComponent extends Component
                     if (Configure::read('debug')) {
                         debug(__("CAPTCHA COMPONENT - For best results use GD library with Freetype enabled!"));
                     }
-                } else if (!file_exists($this->config('font'))) {
-                    $this->__setError(__("Font file does not exist at location: ") . $this->config('font'));
+                } else if (!file_exists($this->getConfig('font'))) {
+                    $this->__setError(__("Font file does not exist at location: ") . $this->getConfig('font'));
                     $this->fatalError = true;
                 }
             }
@@ -348,8 +348,8 @@ class CaptchaComponent extends Component
                 $stringOperation = $a . " * " . $b;
                 break;
         endswitch;
-        $this->config('stringOperation', $stringOperation);
-        //debug($this->config('stringOperation'));
+        $this->setConfig('stringOperation', $stringOperation);
+        //debug($this->getConfig('stringOperation'));
         //debug($this->__getSessionKey());
         //debug($code);
         $this->Session->write($this->__getSessionKey(), $code);
@@ -357,10 +357,10 @@ class CaptchaComponent extends Component
 
     function __imageCaptcha()
     {
-        $width = $this->config('width');
-        $height = $this->config('height');
+        $width = $this->getConfig('width');
+        $height = $this->getConfig('height');
         $this->__prepareThemes();
-        $theme = $this->config('theme');
+        $theme = $this->getConfig('theme');
         if (!$this->__TTFEnabled()) {
             $width = 70;
             $height = 30;
@@ -370,7 +370,7 @@ class CaptchaComponent extends Component
 
         $code = $this->__AlphaNumeric();
         /* font size will be 75% of the image height */
-        $font_size = $height * $this->config('fontAdjustment');
+        $font_size = $height * $this->getConfig('fontAdjustment');
         $image = @imagecreate($width, $height) or die('Cannot initialize new GD image stream');
         /* set the colours */
         $background_color = imagecolorallocate($image, $this->themes[$theme]['bgcolor'][0], $this->themes[$theme]['bgcolor'][1], $this->themes[$theme]['bgcolor'][2]);
@@ -390,17 +390,17 @@ class CaptchaComponent extends Component
 
             //If specified, rotate text
             $angle = 0;
-            if ($this->config('rotate')) {
+            if ($this->getConfig('rotate')) {
                 $angle = rand(-15, 15);
             }
 
-            $textbox = imagettfbbox($font_size, $angle, $this->config('font'), $code) or die('Error in imagettfbbox function');
+            $textbox = imagettfbbox($font_size, $angle, $this->getConfig('font'), $code) or die('Error in imagettfbbox function');
             $x = ($width - $textbox[4]) / 2;
             $y = ($height - $textbox[5]) / 2;
             $y -= 5;
-            imagettftext($image, $font_size, $angle, $x, $y, $text_color, $this->config('font'), $code) or die('Error in imagettftext function');
+            imagettftext($image, $font_size, $angle, $x, $y, $text_color, $this->getConfig('font'), $code) or die('Error in imagettftext function');
         } else if (function_exists("imagestring")) {
-            //$font_size = imageloadfont($this->config('font'));
+            //$font_size = imageloadfont($this->getConfig('font'));
             $textbox = imagestring($image, 5, 5, 5, $code, $text_color) or die('Error in imagestring function');
         } else {
             $this->__setError("Cannot use image captcha without GD Library enabled!");
@@ -425,7 +425,7 @@ class CaptchaComponent extends Component
 
     private function __prepareThemes()
     {
-        if ($this->config('theme') == 'random') {
+        if ($this->getConfig('theme') == 'random') {
             $this->themes['random'] = array(
                 'bgcolor' => array($bg_r = rand(0, 255), $bg_g = rand(0, 255), $bg_b = rand(0, 255)),
                 'txtcolor' => array(rand(0, 255), rand(0, 255), rand(0, 255)),
@@ -491,7 +491,7 @@ class CaptchaComponent extends Component
 
     public function validate($field, $value)
     {
-        if(!$this->config('sensitive')){
+        if(!$this->getConfig('sensitive')){
             return strtolower($this->get($field)) == strtolower($value);
         }
         return $this->get($field) == $value;

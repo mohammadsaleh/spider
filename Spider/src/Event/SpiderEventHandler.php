@@ -27,7 +27,7 @@ class SpiderEventHandler implements EventListenerInterface
 
     public function onViewInitialize(Event $event)
     {
-        $View = $event->subject();
+        $View = $event->getSubject();
         Hook::applyHookHelpers('Hook.helpers', $View);
     }
 }

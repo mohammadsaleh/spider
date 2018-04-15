@@ -30,7 +30,7 @@ class SpiderController extends Controller
     }
 
     public function onAfterSpiderControllerConstruct(Event $event){
-        $controller = $event->subject();
+        $controller = $event->getSubject();
         if($controller->request->is('ajax')){
             $controller->viewBuilder()->autoLayout(false);
         }

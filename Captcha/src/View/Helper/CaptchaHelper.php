@@ -25,10 +25,10 @@ class CaptchaHelper extends Helper {
 
     public function create($field = 'captcha', $config = []) {
         $html = '';
-        $this->config(array_merge($this->config(), (array)$config));
-        $qstring = ['type' => $this->config('type'), 'field' =>  $field];
+        $this->config(array_merge($this->getConfig(), (array)$config));
+        $qstring = ['type' => $this->getConfig('type'), 'field' =>  $field];
 
-        switch($this->config('type')):
+        switch($this->getConfig('type')):
             case 'image':
                 $qstring = array_merge($qstring, [
                     'width' =>  $this->_config['width'],
@@ -37,21 +37,21 @@ class CaptchaHelper extends Helper {
                     'length' => $this->_config['length'],
                 ]);
 
-                $html .= $this->Html->image(array_merge($this->config('captchaGenerator'), [base64_encode(http_build_query($qstring))]), ['hspace' => 2, 'id' => $field]);
-                if($this->config('reload')){
-                    $html .= $this->Html->link($this->config('reload_txt'), '#', ['class' => 'creload', 'escape' => false, 'data-target' => '#' . $field]);
+                $html .= $this->Html->image(array_merge($this->getConfig('captchaGenerator'), [base64_encode(http_build_query($qstring))]), ['hspace' => 2, 'id' => $field]);
+                if($this->getConfig('reload')){
+                    $html .= $this->Html->link($this->getConfig('reload_txt'), '#', ['class' => 'creload', 'escape' => false, 'data-target' => '#' . $field]);
                 }
-                if($this->config('input')){
-                    $html .= $this->Form->input($field, $this->config('input'));
+                if($this->getConfig('input')){
+                    $html .= $this->Form->input($field, $this->getConfig('input'));
                 }
             break;
             case 'math':
                 $qstring = array_merge($qstring, ['type' => 'math']);
-                if($this->config('stringOperation')) {
-                    $html .= $this->config('mlabel') .  $this->config('stringOperation') . ' = ?';
+                if($this->getConfig('stringOperation')) {
+                    $html .= $this->getConfig('mlabel') .  $this->config('stringOperation') . ' = ?';
                 }else{
                     ob_start();
-                    $this->_View->requestAction(array_merge($this->config('captchaGenerator'), [base64_encode(http_build_query($qstring))]));
+                    $this->_View->requestAction(array_merge($this->getConfig('captchaGenerator'), [base64_encode(http_build_query($qstring))]));
                     $mathstring = ob_get_contents();
                     ob_end_clean();
                 }
@@ -59,15 +59,15 @@ class CaptchaHelper extends Helper {
                 if($this->Form->isFieldError($field)){
                     $errorclass = 'error';
                 }
-                $html .= '<div class = "input text required ' . $errorclass.'">' . $this->Form->label($field, $this->config('mlabel')) . '</div>';
+                $html .= '<div class = "input text required ' . $errorclass.'">' . $this->Form->label($field, $this->getConfig('mlabel')) . '</div>';
                 $html .= '<div><strong>' . $mathstring . '</strong>' . ' = ?</div>';
                 $html .= $this->Form->input($field, ['autocomplete' => 'off', 'label' => false, 'class' => '']);
             break;
         endswitch;
 
         if(!$this->__isLoadedScript){
-            if($this->config('timeout')){
-                $html .= $this->Html->scriptBlock('var captchaTimeout = ' . $this->config('timeout') * 1000 .';');
+            if($this->getConfig('timeout')){
+                $html .= $this->Html->scriptBlock('var captchaTimeout = ' . $this->getConfig('timeout') * 1000 .';');
             }
             $html .= $this->Html->script('Captcha.script');
             $this->__isLoadedScript = true;

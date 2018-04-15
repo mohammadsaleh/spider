@@ -48,7 +48,7 @@ class UsersEventHandler implements EventListenerInterface
 
     public function onSpiderViewInitialize(Event $event)
     {
-        $view = $event->subject();
+        $view = $event->getSubject();
         if(Plugin::loaded('Users')){
             $view->loadHelper('Users.Users');
         }
@@ -104,7 +104,7 @@ class UsersEventHandler implements EventListenerInterface
      * @param Event $event
      */
     public function onSuccessRegister(Event $event){
-        $controller = $event->subject();
+        $controller = $event->getSubject();
         $user = $event->data['user'];
         $controller->_sendActivationEmail($user)
             ->template('Bazibartar.register')

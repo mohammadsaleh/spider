@@ -65,7 +65,7 @@ class AclManagerEventHandler implements EventListenerInterface
 	 */
 	public function onBeforeFind(Event $event, /*Query*/ $query, \ArrayObject $options, $primary)
 	{
-		$table = $event->subject();
+		$table = $event->getSubject();
 		if($table->registryAlias() == 'Users.Users'){
 			$query->contain(['Roles']);
 		}
@@ -85,7 +85,7 @@ class AclManagerEventHandler implements EventListenerInterface
 	 */
 	public function onBeforeMarshal(Event $event, \ArrayObject $data, \ArrayObject $options)
 	{
-		$this->table = $event->subject();
+		$this->table = $event->getSubject();
 		if (($this->table->registryAlias() == 'Users.Users') && isset($data['roles'])) {
 			$roles = $data['roles'];
 			if(!is_array($roles)){
@@ -117,7 +117,7 @@ class AclManagerEventHandler implements EventListenerInterface
 	 */
 	public function onAfterSave(Event $event, Entity $entity, $options = [])
 	{
-		$table = $event->subject();
+		$table = $event->getSubject();
 		if(($table->registryAlias() == 'Users.Users')){
 			$userId = $entity['id'];
 			if(!isset($entity['permissions'])){
@@ -159,7 +159,7 @@ class AclManagerEventHandler implements EventListenerInterface
 
 	public function onAfterSpiderTableConstruct(Event $event)
 	{
-	    $table = $event->subject();
+	    $table = $event->getSubject();
 		if($table->registryAlias() == 'Users.Users'){
 			//Associate AclManager.Roles to Users.Users model
 			$table->belongsToMany('AclManager.Roles', [
@@ -171,7 +171,7 @@ class AclManagerEventHandler implements EventListenerInterface
 
 	public function onAfterSpiderInitialized(Event $event)
 	{
-	    $this->controller = $event->subject();
+	    $this->controller = $event->getSubject();
 		$this->controller->loadComponent('AclManager.Acl');
 		$this->controller->loadComponent('AclManager.Aco');
 		$this->controller->loadComponent('AclManager.Aro');
@@ -210,8 +210,8 @@ class AclManagerEventHandler implements EventListenerInterface
 		$currentUrl = $this->controller->request->url;
 		$adminScope = trim(SpiderNav::getAdminScope(), '/');
 		if(strpos($currentUrl, $adminScope) === 0){
-			$this->controller->Auth->config('loginAction', $this->controller->Auth->config('admin.loginAction'));
-			$this->controller->Auth->config('loginRedirect', $this->controller->Auth->config('admin.loginRedirect'));
+			$this->controller->Auth->setConfig('loginAction', $this->controller->Auth->getConfig('admin.loginAction'));
+			$this->controller->Auth->setConfig('loginRedirect', $this->controller->Auth->getConfig('admin.loginRedirect'));
 		}
 		if(!$this->controller->Auth->user()){
 			$this->_tryLoginUserWithCookie();
