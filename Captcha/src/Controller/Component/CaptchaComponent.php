@@ -157,14 +157,14 @@ class CaptchaComponent extends Component
     {
 //        $maxlifetime = ini_get("session.gc_maxlifetime");
 //        debug($maxlifetime);die;
-        $this->Session = $this->request->session();
+        $this->Session = $this->request->getSession();
         $this->Controller = $this->_registry->getController();
-        $passData = $this->Controller->request->param('pass');
+        $passData = $this->Controller->request->getParam('pass');
         if(!empty($passData)){
             parse_str(base64_decode(array_shift($passData)), $passData);
         }
-        $this->config(array_merge($this->getConfig(), $passData));
-        $this->Controller->eventManager()->dispatch(new Event('Captcha.beforeInit', $this));
+        $this->setConfig(array_merge($this->getConfig(), $passData));
+        $this->Controller->getEventManager()->dispatch(new Event('Captcha.beforeInit', $this));
         $this->__init();
     }
 
@@ -231,14 +231,14 @@ class CaptchaComponent extends Component
      */
     private function __setDefaults()
     {
-        $query = $this->Controller->request->query;
+        $query = $this->Controller->request->getQuery();
         if(!$query){
             return;
         }
         //Preference is given the settings parameter passed through helper
         foreach ($this->getConfig() as $key => $value) {
             if (isset($query[$key]) && $query[$key]){
-                $this->config($key, $query[$key]);
+                $this->setConfig($key, $query[$key]);
             }
         }
     }
@@ -308,7 +308,7 @@ class CaptchaComponent extends Component
             $this->setConfig('font', $fontPath . DS . $fontName);
 
             if (!$this->__gdInfo()) {
-                $this->__setError(__('Cannot use image captcha as GD library is not enabled! Set $this->config(\'type\', \'math\') in order to show a simple math captcha instead!'));
+                $this->__setError(__('Cannot use image captcha as GD library is not enabled! Set $this->setConfig(\'type\', \'math\') in order to show a simple math captcha instead!'));
                 $this->fatalError = true;
             } else {
                 if (!$this->__TTFEnabled()) {

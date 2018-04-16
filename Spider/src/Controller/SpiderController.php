@@ -34,7 +34,7 @@ class SpiderController extends Controller
         if($controller->request->is('ajax')){
             $controller->viewBuilder()->autoLayout(false);
         }
-        if($this->request->query('debug')){
+        if($this->request->getQuery('debug')){
             Configure::write('debug', true);
         }
     }
@@ -48,13 +48,13 @@ class SpiderController extends Controller
      */
     public function initialize()
     {
-        $this->eventManager()->dispatch(new Event('SpiderController.beforeInitialize', $this));
+        $this->getEventManager()->dispatch(new Event('SpiderController.beforeInitialize', $this));
         parent::initialize();
         $this->set('title', '');
         $this->loadComponent('Flash');
 
         /** This below event trigger Before "SpiderController.afterConstruct" event.*/
-        $this->eventManager()->dispatch(new Event('SpiderController.afterInitialize', $this));
+        $this->getEventManager()->dispatch(new Event('SpiderController.afterInitialize', $this));
     }
 
     /**
@@ -70,7 +70,7 @@ class SpiderController extends Controller
         Hook::applyHookMethods('Hook.controller_methods', $this);
 
         /** This below event trigger After "SpiderController.afterInitialize" event.*/
-        $this->eventManager()->dispatch(new Event('SpiderController.afterConstruct', $this));
+        $this->getEventManager()->dispatch(new Event('SpiderController.afterConstruct', $this));
     }
     
     public function beforeFilter(Event $event)
@@ -91,8 +91,8 @@ class SpiderController extends Controller
      */
     public function beforeRedirect(Event $event, $url, Response $response)
     {
-        if($this->request->param('prefix') == 'admin'){
-            if(isset($this->request->data['apply'])){
+        if($this->request->getParam('prefix') == 'admin'){
+            if($this->request->getData('apply')){
                 $response->location(Router::url($this->request->here(false), true));
             }
         }
@@ -123,7 +123,7 @@ class SpiderController extends Controller
     public function beforeRender(Event $event)
     {
         parent::beforeRender($event);
-        if($this->request->query('is_dialog')){
+        if($this->request->getQuery('is_dialog')){
             //TODO: convert popup dialog to a plugin
             $this->viewBuilder()->layout('admin_popup');
         }

@@ -36,7 +36,7 @@ class MaintenanceMiddleware
         if (Configure::read('Site.enable') || $response->getFile()) {
             return $response;
         }
-        if($request->url != trim(MAINTENANCE_URL, '/')){
+        if($request->getRequestTarget() != trim(MAINTENANCE_URL, '/')){
             $response = $response->withLocation(Router::url(MAINTENANCE_URL));
         }
         return $response;

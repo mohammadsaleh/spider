@@ -77,7 +77,7 @@
                                             ?>
                                             <div class="col-md-4">
                                                 <?php
-                                                echo $this->Form->input('name', [
+                                                echo $this->Form->control('name', [
                                                     'class' => 'form-control',
                                                     'label' => false,
                                                     'div' => false
@@ -93,7 +93,7 @@
                                             ?>
                                             <div class="col-md-4">
                                                 <?php
-                                                echo $this->Form->input('theme', [
+                                                echo $this->Form->control('theme', [
                                                     'class' => 'form-control',
                                                     'label' => false,
                                                     'div' => false
@@ -109,7 +109,7 @@
                                             ?>
                                             <div class="col-md-4">
                                                 <?php
-                                                echo $this->Form->input('version', [
+                                                echo $this->Form->control('version', [
                                                     'class' => 'form-control',
                                                     'label' => false,
                                                     'div' => false
@@ -125,7 +125,7 @@
                                             ?>
                                             <div class="col-md-4">
                                                 <?php
-                                                echo $this->Form->input('new_version', [
+                                                echo $this->Form->control('new_version', [
                                                     'class' => 'form-control',
                                                     'label' => false,
                                                     'div' => false
@@ -141,7 +141,7 @@
                                             ?>
                                             <div class="col-md-4">
                                                 <?php
-                                                echo $this->Form->input('order', [
+                                                echo $this->Form->control('order', [
                                                     'class' => 'form-control',
                                                     'label' => false,
                                                     'div' => false
@@ -157,7 +157,7 @@
                                             ?>
                                             <div class="col-md-4">
                                                 <?php
-                                                echo $this->Form->input('status', [
+                                                echo $this->Form->control('status', [
                                                     'class' => 'form-control',
                                                     'label' => false,
                                                     'div' => false

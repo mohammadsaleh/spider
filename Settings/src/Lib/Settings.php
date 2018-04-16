@@ -18,7 +18,7 @@ class Settings
     public static function find($key, $userId = null)
     {
         if(!$userId){
-            if(is_null($userId) && !($userId = Router::getRequest()->session()->read('Auth.User.id'))){
+            if(is_null($userId) && !($userId = Router::getRequest()->getSession()->read('Auth.User.id'))){
                 return null;
             }
         }
@@ -71,7 +71,7 @@ class Settings
     public static function save($key, $data, $userId = false)
     {
         $conn = ConnectionManager::get('default');
-        $data['created_by'] = $userId ? $userId : ((Router::getRequest() && Router::getRequest()->session()->read('Auth.User.id')) ? Router::getRequest()->session()->read('Auth.User.id') :  null);
+        $data['created_by'] = $userId ? $userId : ((Router::getRequest() && Router::getRequest()->getSession()->read('Auth.User.id')) ? Router::getRequest()->getSession()->read('Auth.User.id') :  null);
         $data['name'] = $key;
         if($exist = self::find($key, $userId)){
             $data = array_merge(array_shift($exist), $data);

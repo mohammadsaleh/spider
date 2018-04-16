@@ -25,7 +25,7 @@ class CaptchaHelper extends Helper {
 
     public function create($field = 'captcha', $config = []) {
         $html = '';
-        $this->config(array_merge($this->getConfig(), (array)$config));
+        $this->setConfig(array_merge($this->getConfig(), (array)$config));
         $qstring = ['type' => $this->getConfig('type'), 'field' =>  $field];
 
         switch($this->getConfig('type')):
@@ -42,13 +42,13 @@ class CaptchaHelper extends Helper {
                     $html .= $this->Html->link($this->getConfig('reload_txt'), '#', ['class' => 'creload', 'escape' => false, 'data-target' => '#' . $field]);
                 }
                 if($this->getConfig('input')){
-                    $html .= $this->Form->input($field, $this->getConfig('input'));
+                    $html .= $this->Form->control($field, $this->getConfig('input'));
                 }
             break;
             case 'math':
                 $qstring = array_merge($qstring, ['type' => 'math']);
                 if($this->getConfig('stringOperation')) {
-                    $html .= $this->getConfig('mlabel') .  $this->config('stringOperation') . ' = ?';
+                    $html .= $this->getConfig('mlabel') .  $this->getConfig('stringOperation') . ' = ?';
                 }else{
                     ob_start();
                     $this->_View->requestAction(array_merge($this->getConfig('captchaGenerator'), [base64_encode(http_build_query($qstring))]));
@@ -61,7 +61,7 @@ class CaptchaHelper extends Helper {
                 }
                 $html .= '<div class = "input text required ' . $errorclass.'">' . $this->Form->label($field, $this->getConfig('mlabel')) . '</div>';
                 $html .= '<div><strong>' . $mathstring . '</strong>' . ' = ?</div>';
-                $html .= $this->Form->input($field, ['autocomplete' => 'off', 'label' => false, 'class' => '']);
+                $html .= $this->Form->control($field, ['autocomplete' => 'off', 'label' => false, 'class' => '']);
             break;
         endswitch;
 

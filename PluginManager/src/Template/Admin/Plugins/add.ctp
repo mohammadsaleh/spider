@@ -69,7 +69,7 @@
                                             ?>
                                             <div class="col-md-4">
                                                 <?php
-                                                echo $this->Form->input('file', [
+                                                echo $this->Form->control('file', [
                                                     'type' => 'file',
                                                     'class' => 'form-control',
                                                     'label' => false,

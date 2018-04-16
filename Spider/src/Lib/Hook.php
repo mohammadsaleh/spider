@@ -62,7 +62,7 @@ class Hook
         if($object instanceof Table){
             $objectName = $object->getAlias();
         }else{
-            $objectName = $object->name;
+            $objectName = $object->getName();
         }
         if((php_sapi_name() !== 'cli') && Router::getRequest()) {
             $prefix = ($prefix = Router::getRequest()->getParam('prefix')) ? (Inflector::camelize($prefix) . '.') : '';

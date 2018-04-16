@@ -207,7 +207,7 @@ class AclManagerEventHandler implements EventListenerInterface
 	 */
 	protected function _setupAuthAccess(){
 		$this->controller->Auth->deny();
-		$currentUrl = $this->controller->request->url;
+		$currentUrl = $this->controller->request->getRequestTarget();
 		$adminScope = trim(SpiderNav::getAdminScope(), '/');
 		if(strpos($currentUrl, $adminScope) === 0){
 			$this->controller->Auth->setConfig('loginAction', $this->controller->Auth->getConfig('admin.loginAction'));
@@ -228,14 +228,14 @@ class AclManagerEventHandler implements EventListenerInterface
             $Users = TableRegistry::get('Users.Users');
             $user = $Users->find()->where(['Users.username' => $cookie['username']])->first();
             if(!empty($user) && $user['status'] > 0){
-                $currentUrl = $this->controller->request->url;
+                $currentUrl = $this->controller->request->getRequestTarget();
                 $adminScope = trim(SpiderNav::getAdminScope(), '/');
                 // If url is an admin url
                 if(strpos($currentUrl, $adminScope) === 0){
                     //go to unlock page to get password to login
                     Configure::write('unlock', $user);
                     $unlockUrl = SpiderNav::getAdminScope() . '/unlock';
-                    if($this->controller->request->url != trim($unlockUrl, '/')){
+                    if($this->controller->request->getRequestTarget() != trim($unlockUrl, '/')){
                         return $this->controller->redirect($unlockUrl);
                     }
                 }else{
