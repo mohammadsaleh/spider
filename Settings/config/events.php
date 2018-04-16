@@ -1,4 +1,4 @@
 <?php
-$config = [
+return [
 	'EventHandlers' => ['Settings.SettingsEventHandler']
 ];

@@ -65,8 +65,8 @@ class Hook
             $objectName = $object->name;
         }
         if((php_sapi_name() !== 'cli') && Router::getRequest()) {
-            $prefix = ($prefix = Router::getRequest()->param('prefix')) ? (Inflector::camelize($prefix) . '.') : '';
-            $plugin = ($plugin = Router::getRequest()->param('plugin')) ? ($plugin . '.') : '';
+            $prefix = ($prefix = Router::getRequest()->getParam('prefix')) ? (Inflector::camelize($prefix) . '.') : '';
+            $plugin = ($plugin = Router::getRequest()->getParam('plugin')) ? ($plugin . '.') : '';
             $objectName = $prefix . $plugin . $objectName;
             $hookMethods = Configure::read($configKey);
             if (isset($hookMethods[$objectName])) {
@@ -98,9 +98,9 @@ class Hook
      */
     public static function applyHookHelpers($configKey, $View)
     {
-        $prefix = ($prefix = $View->request->param('prefix')) ? (Inflector::camelize($prefix) . '.') : '';
-        $plugin = ($plugin = $View->request->param('plugin')) ? ($plugin . '.') : '';
-        $controller = $View->request->param('controller');
+        $prefix = ($prefix = $View->request->getParam('prefix')) ? (Inflector::camelize($prefix) . '.') : '';
+        $plugin = ($plugin = $View->request->getParam('plugin')) ? ($plugin . '.') : '';
+        $controller = $View->request->getParam('controller');
         $objectName = $prefix . $plugin . $controller;
         $hookHelpers = Configure::read($configKey);
         if(isset($hookHelpers[$objectName])){

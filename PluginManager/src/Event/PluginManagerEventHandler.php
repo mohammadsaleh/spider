@@ -29,7 +29,7 @@ class PluginManagerEventHandler implements EventListenerInterface
     {
         if(!$this->_View){
             $this->_View = $event->getSubject();
-            if(($this->__controller->request->prefix === 'admin')){
+            if(($this->__controller->request->getParam('prefix') === 'admin')){
                 $this->__hookAdminNavbar();
                 if($this->_View->request->here() == (Router::url(SpiderNav::getDashboardUrl()))){
                     $this->__hookAdminDashboard();
@@ -40,7 +40,7 @@ class PluginManagerEventHandler implements EventListenerInterface
 
     private function __setDefaultTheme()
     {
-        $themeType = ($this->__controller->request->prefix === 'admin') ? 'admin' : 'front';
+        $themeType = ($this->__controller->request->getParam('prefix') === 'admin') ? 'admin' : 'front';
         $theme = PluginManager::getDefaultTheme($themeType);
         if($theme) {
             $this->__controller->viewBuilder()->theme($theme);

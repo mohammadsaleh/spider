@@ -25,6 +25,6 @@ class SpiderAppView extends View
 //        $this->loadHelper('Form', ['className' => 'BootstrapUI.Form']);
 //        $this->loadHelper('Flash', ['className' => 'BootstrapUI.Flash']);
 //        $this->loadHelper('Paginator', ['className' => 'BootstrapUI.Paginator']);
-        $this->eventManager()->dispatch(new Event('Spider.SpiderAppView.initialize', $this));
+        $this->getEventManager()->dispatch(new Event('Spider.SpiderAppView.initialize', $this));
     }
 }

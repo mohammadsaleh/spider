@@ -30,7 +30,7 @@ class SettingsEventHandler implements EventListenerInterface
     public function onMiddleware(Event $event)
     {
         $request = ServerRequestFactory::fromGlobals();
-        $currentUrl = $request->url;
+        $currentUrl = $request->getRequestTarget();
         $adminScope = trim(SpiderNav::getAdminScope(), '/');
         Configure::write('Site.enable', $this->__getSiteStatus());
         if(strpos($currentUrl, $adminScope) === 0){
