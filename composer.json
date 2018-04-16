@@ -6,6 +6,7 @@
     "require": {
         "php": ">=5.4.16",
         "cakephp/cakephp": "3.6.*",
+		"cakephp/migrations": "@stable",
 		"friendsofcake/search": "dev-master"
     },
 	"authors": [

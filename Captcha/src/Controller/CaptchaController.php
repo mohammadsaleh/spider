@@ -6,7 +6,6 @@ use Captcha\Controller\AppController;
 /**
  * Captcha Controller
  *
- * @property \Captcha\Model\Table\CaptchaTable $Captcha
  */
 class CaptchaController extends AppController
 {
@@ -19,7 +18,7 @@ class CaptchaController extends AppController
 
     public function create()  {
         $this->autoRender = false;
-        $this->viewBuilder()->layout('ajax');
+        $this->viewBuilder()->setLayout('ajax');
         $this->Captcha->create();
     }
 }

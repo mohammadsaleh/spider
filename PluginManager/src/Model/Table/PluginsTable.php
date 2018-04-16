@@ -24,9 +24,9 @@ class PluginsTable extends SpiderTable
     {
         parent::initialize($config);
 
-        $this->table('spider_plugins_plugins');
-        $this->displayField('name');
-        $this->primaryKey('id');
+        $this->setTable('spider_plugins_plugins');
+        $this->setDisplayField('name');
+        $this->setPrimaryKey('id');
     }
 
     /**
@@ -38,19 +38,29 @@ class PluginsTable extends SpiderTable
     public function validationDefault(Validator $validator)
     {
         $validator
-            ->add('id', 'valid', ['rule' => 'numeric'])            ->allowEmpty('id', 'create');
+            ->add('id', 'valid', ['rule' => 'numeric'])
+            ->allowEmpty('id', 'create');
+
         $validator
             ->allowEmpty('name');
+
         $validator
             ->allowEmpty('theme');
+
         $validator
             ->allowEmpty('version');
+
         $validator
             ->allowEmpty('new_version');
+
         $validator
-            ->add('weight', 'valid', ['rule' => 'numeric'])            ->allowEmpty('weight');
+            ->add('weight', 'valid', ['rule' => 'numeric'])
+            ->allowEmpty('weight');
+
         $validator
-            ->add('status', 'valid', ['rule' => 'numeric'])            ->allowEmpty('status');
+            ->add('status', 'valid', ['rule' => 'numeric'])
+            ->allowEmpty('status');
+
         return $validator;
     }
 }
