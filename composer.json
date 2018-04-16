@@ -5,8 +5,7 @@
 	"homepage": "http://github.com/mohammadsaleh/spider",
     "require": {
         "php": ">=5.4.16",
-        "cakephp/cakephp": "~3.0",
-		"friendsofcake/bootstrap-ui": "~0.3",
+        "cakephp/cakephp": "3.6.*",
 		"friendsofcake/search": "dev-master"
     },
 	"authors": [
