@@ -45,7 +45,7 @@ class AclManagerEventHandler implements EventListenerInterface
 
 	public function onUserLoginSuccessfully(Event $event)
 	{
-		$user = $event->data['user'];
+		$user = $event->getData(user);
 		$user['roles'] = [];
 		$UsersRoles = TableRegistry::get('AclManager.UsersRoles');
 		$roles = $UsersRoles->find()->where(['user_id' => $user['id']])->contain(['Roles'])->toArray();
@@ -199,7 +199,13 @@ class AclManagerEventHandler implements EventListenerInterface
 	 * Setup Auth component settings
 	 */
 	protected function _setupAuthComponent(){
-		$this->controller->loadComponent('Auth', Configure::read('Auth'));
+        $currentUrl = trim($this->controller->getRequest()->getRequestTarget(), '/');
+        $adminScope = trim(SpiderNav::getAdminScope(), '/');
+        if(strpos($currentUrl, $adminScope) === 0){
+		    $this->controller->loadComponent('Auth', Configure::read('Auth.admin'));
+        }else{
+		    $this->controller->loadComponent('Auth', Configure::read('Auth.front'));
+        }
 	}
 
 	/**
@@ -207,12 +213,12 @@ class AclManagerEventHandler implements EventListenerInterface
 	 */
 	protected function _setupAuthAccess(){
 		$this->controller->Auth->deny();
-		$currentUrl = $this->controller->request->getRequestTarget();
-		$adminScope = trim(SpiderNav::getAdminScope(), '/');
-		if(strpos($currentUrl, $adminScope) === 0){
-			$this->controller->Auth->setConfig('loginAction', $this->controller->Auth->getConfig('admin.loginAction'));
-			$this->controller->Auth->setConfig('loginRedirect', $this->controller->Auth->getConfig('admin.loginRedirect'));
-		}
+//		$currentUrl = $this->controller->getRequest()->getRequestTarget();
+//		$adminScope = trim(SpiderNav::getAdminScope(), '/');
+//		if(strpos($currentUrl, $adminScope) === 0){
+//			$this->controller->Auth->setConfig('loginAction', $this->controller->Auth->getConfig('admin.loginAction'));
+//			$this->controller->Auth->setConfig('loginRedirect', $this->controller->Auth->getConfig('admin.loginRedirect'));
+//		}
 		if(!$this->controller->Auth->user()){
 			$this->_tryLoginUserWithCookie();
 		}
@@ -228,14 +234,14 @@ class AclManagerEventHandler implements EventListenerInterface
             $Users = TableRegistry::get('Users.Users');
             $user = $Users->find()->where(['Users.username' => $cookie['username']])->first();
             if(!empty($user) && $user['status'] > 0){
-                $currentUrl = $this->controller->request->getRequestTarget();
+                $currentUrl = $this->controller->getRequest()->getRequestTarget();
                 $adminScope = trim(SpiderNav::getAdminScope(), '/');
                 // If url is an admin url
                 if(strpos($currentUrl, $adminScope) === 0){
                     //go to unlock page to get password to login
                     Configure::write('unlock', $user);
                     $unlockUrl = SpiderNav::getAdminScope() . '/unlock';
-                    if($this->controller->request->getRequestTarget() != trim($unlockUrl, '/')){
+                    if($this->controller->getRequest()->getRequestTarget() != trim($unlockUrl, '/')){
                         return $this->controller->redirect($unlockUrl);
                     }
                 }else{

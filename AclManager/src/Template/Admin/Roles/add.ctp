@@ -2,8 +2,8 @@
 $this->extend('/Common/content_form');
 $this->element('form_scripts');
 $this->assign('content_title', !empty($title) ? $title : __('Add Role'));
-$this->Html->addCrumb(__('List Roles'), ['action' => 'index']);
-$this->Html->addCrumb(!empty($title) ? $title : __('Add Role'));
+$this->Breadcrumbs->add(__('List Roles'), ['action' => 'index']);
+$this->Breadcrumbs->add(!empty($title) ? $title : __('Add Role'));
 $this->set('form', $this->Form->create($role, ['class' => 'form-horizontal']));
 ?>
 

@@ -157,9 +157,9 @@ class CaptchaComponent extends Component
     {
 //        $maxlifetime = ini_get("session.gc_maxlifetime");
 //        debug($maxlifetime);die;
-        $this->Session = $this->request->getSession();
         $this->Controller = $this->_registry->getController();
-        $passData = $this->Controller->request->getParam('pass');
+        $this->Session = $this->Controller->getRequest()->getSession();
+        $passData = $this->Controller->getRequest()->getParam('pass');
         if(!empty($passData)){
             parse_str(base64_decode(array_shift($passData)), $passData);
         }
@@ -231,7 +231,7 @@ class CaptchaComponent extends Component
      */
     private function __setDefaults()
     {
-        $query = $this->Controller->request->getQuery();
+        $query = $this->Controller->getRequest()->getQuery();
         if(!$query){
             return;
         }
@@ -289,7 +289,7 @@ class CaptchaComponent extends Component
                 $this->__imageCaptcha();
                 break;
             case 'math';
-                /*if(isset($this->Controller->request->data[$this->getConfig('field')]))  {
+                /*if(isset($this->Controller->getRequest()->data[$this->getConfig('field')]))  {
                   $this->Controller->Session->write('security_code_math', $this->Controller->Session->read('security_code'));
                 }*/
 

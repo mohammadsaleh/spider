@@ -3,7 +3,7 @@ $this->Html->script('ckeditor_4.6.1/ckeditor', ['block' => true]);
 $this->extend('/Common/content_form');
 $this->element('form_scripts');
 $this->assign('content_title', !empty($title) ? $title : __('Add Setting'));
-$this->Html->addCrumb(!empty($title) ? $title : __('Site Setting'));
+$this->Breadcrumbs->add(!empty($title) ? $title : __('Site Setting'));
 $this->set('form', $this->Form->create(null, ['class' => 'form-horizontal']));
 ?>
 

@@ -4,7 +4,7 @@ $this->element('index_scripts');
 $this->assign('content_title', !empty($title) ? $title : __('List Role'));
 $this->assign('table_title', 'Table Title');
 $this->assign('table_description', 'Table Description');
-$this->Html->addCrumb(!empty($title) ? $title : __('List Role'));
+$this->Breadcrumbs->add(!empty($title) ? $title : __('List Role'));
 ?>
 
 <?php $this->append('actions');?>

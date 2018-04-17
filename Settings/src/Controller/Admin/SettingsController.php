@@ -22,7 +22,7 @@ class SettingsController extends AppController
     public function index()
     {
         $Settings = TableRegistry::get('Settings.Settings');
-        if($settings = $this->request->data('settings')){
+        if($settings = $this->getRequest()->getData('settings')){
             foreach(Hash::flatten($settings) as $key => $setting){
                 Settings::save($key, ['value' => $setting]);
             }
@@ -31,10 +31,8 @@ class SettingsController extends AppController
             ->where(['editable' => 1])
             ->orderDesc('weight')
             ->toArray();
-        $this->request->data['settings'] = Hash::combine($settings, '{n}.name', '{n}.value');
-        $this->request->data = Hash::expand(Hash::flatten($this->request->data));
+        $this->setRequest($this->getRequest()->withData('settings', Hash::combine($settings, '{n}.name', '{n}.value')));
         $this->set(compact('settings'));
-//        debug($settings);die;
     }
 
 }

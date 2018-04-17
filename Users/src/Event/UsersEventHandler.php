@@ -64,7 +64,7 @@ class UsersEventHandler implements EventListenerInterface
         }
         new UserLib($this->__controller->Auth);
         $this->__forceLogout();
-        $userAvatar = $this->__controller->request->getSession()->read('Auth.User.avatar');
+        $userAvatar = $this->__controller->getRequest()->getSession()->read('Auth.User.avatar');
         $avatar = Router::url($userAvatar, true);
         if(empty($userAvatar)){
             $avatar = Router::url('/assets/images/default-avatar.jpg', true);
@@ -105,7 +105,7 @@ class UsersEventHandler implements EventListenerInterface
      */
     public function onSuccessRegister(Event $event){
         $controller = $event->getSubject();
-        $user = $event->data['user'];
+        $user = $event->getData('user');
         $controller->_sendActivationEmail($user)
             ->template('Bazibartar.register')
             ->subject('فعال سازی حساب کاربری')

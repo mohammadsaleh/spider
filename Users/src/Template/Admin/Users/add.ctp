@@ -2,8 +2,8 @@
 $this->extend('/Common/content_form');
 
 $this->assign('content_title', !empty($title) ? $title : __('Add User'));
-$this->Html->addCrumb(__('List Users'), ['action' => 'index']);
-$this->Html->addCrumb(!empty($title) ? $title : __('Add User'));
+$this->Breadcrumbs->add(__('List Users'), ['action' => 'index']);
+$this->Breadcrumbs->add(!empty($title) ? $title : __('Add User'));
 $this->set('form', $this->Form->create($user, ['class' => 'form-horizontal']));
 ?>
 
