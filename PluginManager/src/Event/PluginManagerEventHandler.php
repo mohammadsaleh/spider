@@ -29,7 +29,7 @@ class PluginManagerEventHandler implements EventListenerInterface
     {
         if(!$this->_View){
             $this->_View = $event->getSubject();
-            if(($this->__controller->getRequest()->getParam('prefix') === 'admin')){
+            if(($this->_View->request->getParam('prefix') === 'admin')){
                 $this->__hookAdminNavbar();
                 if($this->_View->request->getRequestTarget() == (Router::url(SpiderNav::getDashboardUrl()))){
                     $this->__hookAdminDashboard();
