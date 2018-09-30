@@ -43,13 +43,13 @@ class UsersController extends AppController
             }else{
                 $user = $this->Auth->identify();
                 if ($user) {
-                    $this->eventManager()->dispatch(new Event('Users.Admin.Users.login.success', $this, ['user' => &$user]));
+                    $this->getEventManager()->dispatch(new Event('Users.Admin.Users.login.success', $this, ['user' => &$user]));
                     $this->Auth->setUser($user);
                     $this->__setCookie();
                     return $this->redirect($this->Auth->redirectUrl());
                 } else {
                     $this->Flash->error(__d('users', 'Username or password is incorrect'), ['key' => 'Auth']);
-                    $this->eventManager()->dispatch(new Event('Users.Admin.Users.login.failed', $this));
+                    $this->getEventManager()->dispatch(new Event('Users.Admin.Users.login.failed', $this));
                 }
             }
         }
@@ -115,13 +115,13 @@ class UsersController extends AppController
         $user = $this->Users->newEntity();
         if ($this->request->is('post')) {
             $user = $this->Users->patchEntity($user, $this->request->data);
-            $this->eventManager()->dispatch(new Event('Users.Admin.Users.add.before.save', $this, ['user' => &$user]));
+            $this->getEventManager()->dispatch(new Event('Users.Admin.Users.add.before.save', $this, ['user' => &$user]));
             if ($this->Users->save($user)) {
                 $this->Flash->success(__('The user has been saved.'));
-                $this->eventManager()->dispatch(new Event('Users.Admin.Users.add.after.save.success', $this, ['user' => &$user]));
+                $this->getEventManager()->dispatch(new Event('Users.Admin.Users.add.after.save.success', $this, ['user' => &$user]));
                 return $this->redirect(['action' => 'index']);
             } else {
-                $this->eventManager()->dispatch(new Event('Users.Admin.Users.add.after.save.error', $this, ['user' => &$user]));
+                $this->getEventManager()->dispatch(new Event('Users.Admin.Users.add.after.save.error', $this, ['user' => &$user]));
                 $this->Flash->error(__('The user could not be saved. Please, try again.'));
             }
         }
@@ -155,14 +155,14 @@ class UsersController extends AppController
                 ];
             }
             $user = $this->Users->patchEntity($user, $this->request->data);
-            $this->eventManager()->dispatch(new Event('Users.Admin.Users.edit.before.save', $this, ['user' => &$user]));
+            $this->getEventManager()->dispatch(new Event('Users.Admin.Users.edit.before.save', $this, ['user' => &$user]));
             if ($this->Users->save($user)) {
                 if($isResetPassword){
                     $this->Flash->success(__('Password Successfully Changed.'), ['key' => 'reset']);
                 }else{
                     $this->Flash->success(__('The user has been saved.'));
                 }
-                $this->eventManager()->dispatch(new Event('Users.Admin.Users.edit.after.save.success', $this, ['user' => &$user]));
+                $this->getEventManager()->dispatch(new Event('Users.Admin.Users.edit.after.save.success', $this, ['user' => &$user]));
                 return $this->redirect(['action' => 'index']);
             } else {
                 if($isResetPassword){
@@ -170,7 +170,7 @@ class UsersController extends AppController
                 }else{
                     $this->Flash->error(__('The user could not be saved. Please, try again.'));
                 }
-                $this->eventManager()->dispatch(new Event('Users.Admin.Users.edit.after.save.error', $this, ['user' => &$user]));
+                $this->getEventManager()->dispatch(new Event('Users.Admin.Users.edit.after.save.error', $this, ['user' => &$user]));
             }
         }
 //        $roles = $this->Users->Roles->find('list', ['limit' => 200]);
@@ -228,14 +228,14 @@ class UsersController extends AppController
             $this->request->data['username'] = $cookie['username'];
             $user = $this->Auth->identify();
             if ($user) {
-                $this->eventManager()->dispatch(new Event('Users.Admin.Users.unlock.success', $this, ['user' => &$user]));
+                $this->getEventManager()->dispatch(new Event('Users.Admin.Users.unlock.success', $this, ['user' => &$user]));
                 $this->Auth->setUser($user);
                 $this->__setCookie();
                 return $this->redirect($this->Auth->redirectUrl());
             } else {
                 $user = $this->Users->find()->where(['Users.username' => $cookie['username']])->first();
                 $this->Flash->error(__d('users', 'password is incorrect or your account may be disabled'), ['key' => 'Auth']);
-                $this->eventManager()->dispatch(new Event('Users.Admin.Users.unlock.failed', $this));
+                $this->getEventManager()->dispatch(new Event('Users.Admin.Users.unlock.failed', $this));
             }
         }else{
             if(Configure::check('unlock')){

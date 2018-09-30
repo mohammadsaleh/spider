@@ -24,9 +24,9 @@ class SettingsTable extends SpiderTable
     {
         parent::initialize($config);
 
-        $this->table('spider_settings_settings');
-        $this->displayField('title');
-        $this->primaryKey('id');
+        $this->setTable('spider_settings_settings');
+        $this->setDisplayField('title');
+        $this->setPrimaryKey('id');
         $this->addBehavior('Timestamp');
     }
 

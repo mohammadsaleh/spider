@@ -27,7 +27,7 @@ class SpiderTable extends Table
     {
         parent::__construct($config);
         Hook::applyHookMethods('Hook.table_methods', $this);
-        $this->eventManager()->dispatch(new Event('SpiderTable.afterConstruct', $this));
+        $this->getEventManager()->dispatch(new Event('SpiderTable.afterConstruct', $this));
     }
 
     //todo: below two funcs is would be better to placed in a trait class and use it.

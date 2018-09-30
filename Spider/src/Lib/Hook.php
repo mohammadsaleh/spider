@@ -60,7 +60,7 @@ class Hook
             $object = self;
         }
         if($object instanceof Table){
-            $objectName = $object->alias();
+            $objectName = $object->getAlias();
         }else{
             $objectName = $object->getName();
         }

@@ -29,9 +29,9 @@ class UsersTable extends SpiderTable
     {
         parent::initialize($config);
 
-        $this->table('spider_users_users');
-        $this->displayField('alias');
-        $this->primaryKey('id');
+        $this->setTable('spider_users_users');
+        $this->setDisplayField('alias');
+        $this->setPrimaryKey('id');
         $this->addBehavior('Timestamp');
         $this->hasMany('Users.ActivationKeys', [
             'foreignKey' => 'user_id',

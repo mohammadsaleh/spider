@@ -30,13 +30,13 @@ class UsersController extends AppController
         if (!empty($this->request->data)) {
             $user = $this->Auth->identify();
             if ($user && ($user['status'] > 0)) {
-                $this->eventManager()->dispatch(new Event('Users.Users.login.success', $this, ['user' => &$user]));
+                $this->getEventManager()->dispatch(new Event('Users.Users.login.success', $this, ['user' => &$user]));
                 $this->Auth->setUser($user);
                 $this->__setCookie();
                 return $this->redirect($this->Auth->redirectUrl());
             } else {
                 $this->Flash->error(__d('users', 'Username or password is incorrect'), ['key' => 'Auth']);
-                $this->eventManager()->dispatch(new Event('Users.Users.login.failed', $this));
+                $this->getEventManager()->dispatch(new Event('Users.Users.login.failed', $this));
             }
         }
     }
@@ -88,11 +88,11 @@ class UsersController extends AppController
                             $userData['presenter_id'] = $presenterUser['id'];
                         }
                     }
-                    $this->eventManager()->dispatch(new Event('Users.Users.add.beforeSave', $this, ['user' => &$user]));
+                    $this->getEventManager()->dispatch(new Event('Users.Users.add.beforeSave', $this, ['user' => &$user]));
                     if ($this->Users->save($user)) {
                         $this->Flash->success(__d('users', 'The user has been saved.'));
                         echo json_encode($this->success());
-                        $this->eventManager()->dispatch(new Event('Users.Users.add.success', $this, ['user' => &$user]));
+                        $this->getEventManager()->dispatch(new Event('Users.Users.add.success', $this, ['user' => &$user]));
                         return;
                     }else{
                         $error = Hash::merge($error, Hash::extract($user->errors(), '{s}.{s}'));
@@ -121,7 +121,7 @@ class UsersController extends AppController
             $user->status = 1;
             if($this->Users->save($user)){
                 $this->Users->ActivationKeys->deleteAll(['activation_key' => $key]);
-                $this->eventManager()->dispatch(new Event('Users.Users.active.success', $this, ['user' => &$user]));
+                $this->getEventManager()->dispatch(new Event('Users.Users.active.success', $this, ['user' => &$user]));
                 //Logged user in
                 unset($user->_matchingData);
                 $this->Auth->setUser($user->toArray());
@@ -246,7 +246,7 @@ class UsersController extends AppController
         if($this->Cookie->check('remember_me')){
             $this->Cookie->delete('remember_me');
         }
-        $this->eventManager()->dispatch(new Event('Users.Users.logout', $this));
+        $this->getEventManager()->dispatch(new Event('Users.Users.logout', $this));
         return $logoutRedirect;
     }
     

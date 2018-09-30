@@ -26,8 +26,8 @@ class UsersRolesTable extends SpiderTable
     {
         parent::initialize($config);
 
-        $this->table('spider_aclmanager_users_roles');
-        $this->primaryKey('id');
+        $this->setTable('spider_aclmanager_users_roles');
+        $this->setPrimaryKey('id');
         $this->belongsTo('Users', [
             'className' => 'Users.Users',
             'foreignKey' => 'user_id'

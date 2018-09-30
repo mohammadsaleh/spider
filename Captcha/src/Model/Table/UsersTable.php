@@ -1,17 +1,18 @@
 <?php
-namespace AclManager\Model\Table;
+namespace App\Model\Table;
 
-use AclManager\Model\Entity\Aro;
+use App\Model\Entity\User;
 use Cake\ORM\Query;
-use Cake\ORM\RulesChecker;
+use Cake\ORM\Table;
 use Cake\Validation\Validator;
-use Spider\Model\Table\SpiderTable;
+use Cake\ORM\RulesChecker;
 
 /**
- * Aros Model
+ * Users Model
  *
- * @property \Cake\ORM\Association\BelongsToMany $Acos */
-class ArosTable extends SpiderTable
+ * @property \Cake\ORM\Association\HasMany $Bookmarks
+ */
+class UsersTable extends Table
 {
 
     /**
@@ -24,14 +25,17 @@ class ArosTable extends SpiderTable
     {
         parent::initialize($config);
 
-        $this->setTable('spider_aclmanager_aros');
+        $this->setTable('users');
         $this->setDisplayField('id');
         $this->setPrimaryKey('id');
-        $this->belongsToMany('Acos', [
-            'foreignKey' => 'aro_id',
-            'targetForeignKey' => 'aco_id',
-            'joinTable' => 'spider_aclmanager_aros_acos',
-            'className' => 'AclManager.Acos'
+
+        $this->addBehavior('Captcha', [
+					'field' => 'securitycode',
+					'message' => 'Incorrect captcha code value'
+				]);
+
+        $this->hasMany('Bookmarks', [
+            'foreignKey' => 'user_id'
         ]);
     }
 
@@ -46,11 +50,18 @@ class ArosTable extends SpiderTable
         $validator
             ->add('id', 'valid', ['rule' => 'numeric'])
             ->allowEmpty('id', 'create');
+
         $validator
-            ->allowEmpty('model');
+            ->add('email', 'valid', ['rule' => 'email'])
+            ->requirePresence('email', 'create')
+            ->notEmpty('email');
+
+
         $validator
-            ->add('foreign_key', 'valid', ['rule' => 'numeric'])
-            ->allowEmpty('foreign_key');
+            ->requirePresence('password', 'create')
+            ->notEmpty('password');
+
         return $validator;
     }
+
 }
