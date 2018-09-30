@@ -64,7 +64,7 @@ class UsersEventHandler implements EventListenerInterface
         }
         new UserLib($this->__controller->Auth);
         $this->__forceLogout();
-        $userAvatar = $this->__controller->request->session()->read('Auth.User.avatar');
+        $userAvatar = $this->__controller->request->getSession()->read('Auth.User.avatar');
         $avatar = Router::url($userAvatar, true);
         if(empty($userAvatar)){
             $avatar = Router::url('/assets/images/default-avatar.jpg', true);

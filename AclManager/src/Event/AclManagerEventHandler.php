@@ -207,7 +207,7 @@ class AclManagerEventHandler implements EventListenerInterface
 	 */
 	protected function _setupAuthAccess(){
 		$this->controller->Auth->deny();
-		$currentUrl = $this->controller->request->url;
+		$currentUrl = $this->controller->request->getPath();
 		$adminScope = trim(SpiderNav::getAdminScope(), '/');
 		if(strpos($currentUrl, $adminScope) === 0){
 			$this->controller->Auth->setConfig('loginAction', $this->controller->Auth->getConfig('admin.loginAction'));
