@@ -10,12 +10,12 @@ class UsersHelper extends Helper
 
     public function isLogin()
     {
-        return $this->request->getSession()->check('Auth.User') ? $this->request->getSession()->read('Auth.User') : false;
+        return $this->request->session()->check('Auth.User') ? $this->request->session()->read('Auth.User') : false;
     }
 
     public function getFullName()
     {
-        $currentUser = $this->request->getSession()->read('Auth.User');
+        $currentUser = $this->request->session()->read('Auth.User');
         if(!empty($currentUser['firstname'])){
             return $currentUser['firstname'] . ' ' . $currentUser['lastname'];
         }
@@ -24,7 +24,7 @@ class UsersHelper extends Helper
 
     public function showAvatar($sessionAvatarAddress = 'Auth.User.avatar', $defaultAvatar = '/assets/images/default-avatar.jpg', $options = [])
     {
-        $session = $this->request->getSession();
+        $session = $this->request->session();
         $avatar = ($session->check($sessionAvatarAddress) && !empty($session->read($sessionAvatarAddress))) ? $session->read($sessionAvatarAddress) : $defaultAvatar;
         return $this->Html->image($avatar, $options);
     }

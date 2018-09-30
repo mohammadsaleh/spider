@@ -45,7 +45,7 @@ class AclManagerEventHandler implements EventListenerInterface
 
 	public function onUserLoginSuccessfully(Event $event)
 	{
-		$user = $event->getData(user);
+		$user = $event->data['user'];
 		$user['roles'] = [];
 		$UsersRoles = TableRegistry::get('AclManager.UsersRoles');
 		$roles = $UsersRoles->find()->where(['user_id' => $user['id']])->contain(['Roles'])->toArray();
@@ -86,7 +86,7 @@ class AclManagerEventHandler implements EventListenerInterface
 	public function onBeforeMarshal(Event $event, \ArrayObject $data, \ArrayObject $options)
 	{
 		$this->table = $event->getSubject();
-		if (($this->table->getRegistryAlias() == 'Users.Users') && isset($data['roles'])) {
+		if (($this->table->registryAlias() == 'Users.Users') && isset($data['roles'])) {
 			$roles = $data['roles'];
 			if(!is_array($roles)){
 				$roles = [$roles];
@@ -118,7 +118,7 @@ class AclManagerEventHandler implements EventListenerInterface
 	public function onAfterSave(Event $event, Entity $entity, $options = [])
 	{
 		$table = $event->getSubject();
-		if(($table->getRegistryAlias() == 'Users.Users')){
+		if(($table->registryAlias() == 'Users.Users')){
 			$userId = $entity['id'];
 			if(!isset($entity['permissions'])){
 				$entity['permissions'] = [];
@@ -160,7 +160,7 @@ class AclManagerEventHandler implements EventListenerInterface
 	public function onAfterSpiderTableConstruct(Event $event)
 	{
 	    $table = $event->getSubject();
-		if($table->getRegistryAlias() == 'Users.Users'){
+		if($table->registryAlias() == 'Users.Users'){
 			//Associate AclManager.Roles to Users.Users model
 			$table->belongsToMany('AclManager.Roles', [
 				'through' => 'AclManager.UsersRoles',
@@ -199,13 +199,7 @@ class AclManagerEventHandler implements EventListenerInterface
 	 * Setup Auth component settings
 	 */
 	protected function _setupAuthComponent(){
-        $currentUrl = trim($this->controller->getRequest()->getRequestTarget(), '/');
-        $adminScope = trim(SpiderNav::getAdminScope(), '/');
-        if(strpos($currentUrl, $adminScope) === 0){
-		    $this->controller->loadComponent('Auth', Configure::read('Auth.admin'));
-        }else{
-		    $this->controller->loadComponent('Auth', Configure::read('Auth.front'));
-        }
+		$this->controller->loadComponent('Auth', Configure::read('Auth'));
 	}
 
 	/**
@@ -213,12 +207,12 @@ class AclManagerEventHandler implements EventListenerInterface
 	 */
 	protected function _setupAuthAccess(){
 		$this->controller->Auth->deny();
-//		$currentUrl = $this->controller->getRequest()->getRequestTarget();
-//		$adminScope = trim(SpiderNav::getAdminScope(), '/');
-//		if(strpos($currentUrl, $adminScope) === 0){
-//			$this->controller->Auth->setConfig('loginAction', $this->controller->Auth->getConfig('admin.loginAction'));
-//			$this->controller->Auth->setConfig('loginRedirect', $this->controller->Auth->getConfig('admin.loginRedirect'));
-//		}
+		$currentUrl = $this->controller->request->url;
+		$adminScope = trim(SpiderNav::getAdminScope(), '/');
+		if(strpos($currentUrl, $adminScope) === 0){
+			$this->controller->Auth->setConfig('loginAction', $this->controller->Auth->getConfig('admin.loginAction'));
+			$this->controller->Auth->setConfig('loginRedirect', $this->controller->Auth->getConfig('admin.loginRedirect'));
+		}
 		if(!$this->controller->Auth->user()){
 			$this->_tryLoginUserWithCookie();
 		}
@@ -234,14 +228,14 @@ class AclManagerEventHandler implements EventListenerInterface
             $Users = TableRegistry::get('Users.Users');
             $user = $Users->find()->where(['Users.username' => $cookie['username']])->first();
             if(!empty($user) && $user['status'] > 0){
-                $currentUrl = $this->controller->getRequest()->getRequestTarget();
+                $currentUrl = $this->controller->request->url;
                 $adminScope = trim(SpiderNav::getAdminScope(), '/');
                 // If url is an admin url
                 if(strpos($currentUrl, $adminScope) === 0){
                     //go to unlock page to get password to login
                     Configure::write('unlock', $user);
                     $unlockUrl = SpiderNav::getAdminScope() . '/unlock';
-                    if($this->controller->getRequest()->getRequestTarget() != trim($unlockUrl, '/')){
+                    if($this->controller->request->url != trim($unlockUrl, '/')){
                         return $this->controller->redirect($unlockUrl);
                     }
                 }else{

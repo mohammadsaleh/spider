@@ -31,10 +31,10 @@ class SpiderController extends Controller
 
     public function onAfterSpiderControllerConstruct(Event $event){
         $controller = $event->getSubject();
-        if($controller->getRequest()->is('ajax')){
+        if($controller->request->is('ajax')){
             $controller->viewBuilder()->autoLayout(false);
         }
-        if($this->getRequest()->getQuery('debug')){
+        if($this->request->getQuery('debug')){
             Configure::write('debug', true);
         }
     }
@@ -76,7 +76,7 @@ class SpiderController extends Controller
     public function beforeFilter(Event $event)
     {
         parent::beforeFilter($event);
-        if(!$this->getRequest()->is('post')){
+        if(!$this->request->is('post')){
             $this->loadComponent('Search.Prg');
         }
     }
@@ -91,9 +91,9 @@ class SpiderController extends Controller
      */
     public function beforeRedirect(Event $event, $url, Response $response)
     {
-        if($this->getRequest()->getParam('prefix') == 'admin'){
-            if($this->getRequest()->getData('apply')){
-                $response->location(Router::url($this->getRequest()->getRequestTarget(false), true));
+        if($this->request->param('prefix') == 'admin'){
+            if(isset($this->request->data['apply'])){
+                $response->location(Router::url($this->request->here(false), true));
             }
         }
         return true;
@@ -123,7 +123,7 @@ class SpiderController extends Controller
     public function beforeRender(Event $event)
     {
         parent::beforeRender($event);
-        if($this->getRequest()->getQuery('is_dialog')){
+        if($this->request->getQuery('is_dialog')){
             //TODO: convert popup dialog to a plugin
             $this->viewBuilder()->layout('admin_popup');
         }

@@ -27,23 +27,23 @@ class UsersController extends AppController
      * @return \Cake\Network\Response|void
      */
     public function login(){
-        if (!empty($this->getRequest()->data)) {
+        if (!empty($this->request->data)) {
             $user = $this->Auth->identify();
             if ($user && ($user['status'] > 0)) {
-                $this->getEventManager()->dispatch(new Event('Users.Users.login.success', $this, ['user' => &$user]));
+                $this->eventManager()->dispatch(new Event('Users.Users.login.success', $this, ['user' => &$user]));
                 $this->Auth->setUser($user);
                 $this->__setCookie();
                 return $this->redirect($this->Auth->redirectUrl());
             } else {
                 $this->Flash->error(__d('users', 'Username or password is incorrect'), ['key' => 'Auth']);
-                $this->getEventManager()->dispatch(new Event('Users.Users.login.failed', $this));
+                $this->eventManager()->dispatch(new Event('Users.Users.login.failed', $this));
             }
         }
     }
 
     private function __setCookie()
     {
-        if($this->getRequest()->getData('remember_me')){
+        if($this->request->data('remember_me')){
             $this->Cookie->configKey('remember_me', 'expires', '+3 days');
             $this->Cookie->write('remember_me', $this->Auth->user());
         }else{
@@ -59,11 +59,11 @@ class UsersController extends AppController
      */
     public function add()
     {
-        if($this->getRequest()->is('ajax')){
+        if($this->request->is('ajax')){
             $this->autoRender = false;
             $error = [];
-            if (!empty($this->getRequest()->getData())) {
-                $data = array_map(function($value){return trim($value);}, $this->getRequest()->getData());
+            if (!empty($this->request->data)) {
+                $data = array_map(function($value){return trim($value);}, $this->request->data);
                 $userData = [];
                 $userData['username'] = $data['mailUserRegister'];
                 $userData['password'] = $data['passwordRegister'];
@@ -88,11 +88,11 @@ class UsersController extends AppController
                             $userData['presenter_id'] = $presenterUser['id'];
                         }
                     }
-                    $this->getEventManager()->dispatch(new Event('Users.Users.add.beforeSave', $this, ['user' => &$user]));
+                    $this->eventManager()->dispatch(new Event('Users.Users.add.beforeSave', $this, ['user' => &$user]));
                     if ($this->Users->save($user)) {
                         $this->Flash->success(__d('users', 'The user has been saved.'));
                         echo json_encode($this->success());
-                        $this->getEventManager()->dispatch(new Event('Users.Users.add.success', $this, ['user' => &$user]));
+                        $this->eventManager()->dispatch(new Event('Users.Users.add.success', $this, ['user' => &$user]));
                         return;
                     }else{
                         $error = Hash::merge($error, Hash::extract($user->errors(), '{s}.{s}'));
@@ -121,7 +121,7 @@ class UsersController extends AppController
             $user->status = 1;
             if($this->Users->save($user)){
                 $this->Users->ActivationKeys->deleteAll(['activation_key' => $key]);
-                $this->getEventManager()->dispatch(new Event('Users.Users.active.success', $this, ['user' => &$user]));
+                $this->eventManager()->dispatch(new Event('Users.Users.active.success', $this, ['user' => &$user]));
                 //Logged user in
                 unset($user->_matchingData);
                 $this->Auth->setUser($user->toArray());
@@ -133,17 +133,17 @@ class UsersController extends AppController
 
     public function editPassword()
     {
-        if($this->getRequest()->is('ajax')){
+        if($this->request->is('ajax')){
             $this->autoRender = false;
             $user = $this->Users->get($this->Auth->user('id'));
-            if (!empty($this->getRequest()->getData())) {
-                if(!(new DefaultPasswordHasher)->check($this->getRequest()->getData('currentPass'), $user->password)){
+            if (!empty($this->request->data)) {
+                if(!(new DefaultPasswordHasher)->check($this->request->data('currentPass'), $user->password)){
                     echo json_encode($this->error(['پسورد اشتباه می باشد.']));
                     return;
                 }
                 $data = [
-                    'password' => $this->getRequest()->getData('newPass'),
-                    'confirm_password' => $this->getRequest()->getData('newRePass'),
+                    'password' => $this->request->data('newPass'),
+                    'confirm_password' => $this->request->data('newRePass'),
                 ];
                 $user = $this->Users->patchEntity($user, $data);
                 if ($this->Users->save($user)) {
@@ -161,8 +161,8 @@ class UsersController extends AppController
     public function checkEmail()
     {
         $this->autoRender = false;
-        if($this->getRequest()->is('post')){
-            $data = $this->getRequest()->getData();
+        if($this->request->is('post')){
+            $data = $this->request->data;
             if(isset($data['mailUserRegister'])){
                 $users = TableRegistry::get('Users');
                 $query = $users->find();
@@ -183,8 +183,8 @@ class UsersController extends AppController
 
     public function forgetPass()
     {
-        if($this->getRequest()->is('post')) {
-            $postData = $this->getRequest()->getData();
+        if($this->request->is('post')) {
+            $postData = $this->request->data();
             if (!empty($postData['mailUserForgot'])) {
                 $user = $this->Users->find()
                     ->where(['username' => $postData['mailUserForgot']])
@@ -220,8 +220,8 @@ class UsersController extends AppController
                     $this->set('invalidActivation', true);
                 }
             }
-        }elseif($this->getRequest()->getQuery('activation')){
-            $activationKey = $this->getRequest()->getQuery('activation');
+        }elseif($this->request->query('activation')){
+            $activationKey = $this->request->query('activation');
             $activation = $this->Users->ActivationKeys->find()->where([
                 'activation_key' => $activationKey
             ])->first();
@@ -246,7 +246,7 @@ class UsersController extends AppController
         if($this->Cookie->check('remember_me')){
             $this->Cookie->delete('remember_me');
         }
-        $this->getEventManager()->dispatch(new Event('Users.Users.logout', $this));
+        $this->eventManager()->dispatch(new Event('Users.Users.logout', $this));
         return $logoutRedirect;
     }
     
@@ -254,9 +254,9 @@ class UsersController extends AppController
     {
         $this->autoRender = false;
         $this->loadComponent('Users.Uploader');
-        if(!empty($this->getRequest()->getData())){
+        if(!empty($this->request->data())){
             $destination = DS . 'img' . DS . 'avatars' . DS . $this->Auth->user('id');
-            $file = $this->getRequest()->getData('avatarFile');
+            $file = $this->request->data('avatarFile');
             if($file['size'] > (100 * 1024)){
                 echo json_encode($this->error(['اندازه فایل بیش از حد مجاز است.']));
                 return;
@@ -269,7 +269,7 @@ class UsersController extends AppController
                     unlink(WWW_ROOT . $imagePath);
                 }
                 $userEntity->avatar = $fileInfo['path'];
-                $this->getRequest()->getSession()->write('Auth.User.avatar', $fileInfo['path']);
+                $this->request->session()->write('Auth.User.avatar', $fileInfo['path']);
                 if($this->Users->save($userEntity)){
                     echo json_encode($this->success(['src' => Router::url($fileInfo['path'])]));
                     return;

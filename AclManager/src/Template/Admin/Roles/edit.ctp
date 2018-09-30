@@ -2,8 +2,8 @@
 $this->extend('/Common/content_form');
 $this->element('form_scripts');
 $this->assign('content_title', !empty($title) ? $title : __('Edit Role'));
-$this->Breadcrumbs->add(__('List Roles'), ['action' => 'index']);
-$this->Breadcrumbs->add(!empty($title) ? $title : __('Edit Role'));
+$this->Html->addCrumb(__('List Roles'), ['action' => 'index']);
+$this->Html->addCrumb(!empty($title) ? $title : __('Edit Role'));
 $this->set('form', $this->Form->create($role, ['class' => 'form-horizontal']));
 ?>
 
@@ -29,19 +29,19 @@ $this->set('form', $this->Form->create($role, ['class' => 'form-horizontal']));
     <div class="form-group">
         <label class="control-label col-lg-3"><?= __('name')?></label>
         <div class="col-lg-9">
-        <?= $this->Form->control('name', ['class' => 'form-control', 'label' => false]);?>
+        <?= $this->Form->input('name', ['class' => 'form-control', 'label' => false]);?>
         </div>
     </div>
     <div class="form-group">
         <label class="control-label col-lg-3"><?= __('title')?></label>
         <div class="col-lg-9">
-        <?= $this->Form->control('title', ['class' => 'form-control', 'label' => false]);?>
+        <?= $this->Form->input('title', ['class' => 'form-control', 'label' => false]);?>
         </div>
     </div>
     <div class="form-group">
         <label class="control-label col-lg-3"><?= __('description')?></label>
         <div class="col-lg-9">
-        <?= $this->Form->control('description', ['class' => 'form-control', 'label' => false]);?>
+        <?= $this->Form->input('description', ['class' => 'form-control', 'label' => false]);?>
         </div>
     </div>
 </div>

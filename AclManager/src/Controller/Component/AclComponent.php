@@ -67,10 +67,10 @@ class AclComponent extends Component
     public function request()
     {
         $request = $this->controller->request;
-        $prefix = $request->getParam('prefix') ? $request->getParam('prefix') . '/' : '';
-        $plugin = $request->getParam('plugin') ? 'plugin/' . $request->getParam('plugin') . '/' : '';
-        $controller = $request->getParam('controller') . '/';
-        $action = $request->getParam('action');
+        $prefix = $request->param('prefix') ? $request->param('prefix') . '/' : '';
+        $plugin = $request->param('plugin') ? 'plugin/' . $request->param('plugin') . '/' : '';
+        $controller = $request->param('controller') . '/';
+        $action = $request->param('action');
         return $plugin . $prefix . $controller . $action . '/';
     }
 

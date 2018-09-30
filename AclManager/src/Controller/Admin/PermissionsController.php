@@ -35,8 +35,8 @@ class PermissionsController extends AppController
         $roles = $Roles->find('treeList')->toArray();
 
         $permissions = [];
-        if ($this->getRequest()->is('post') && !empty($this->getRequest()->data)) {
-            $allowAcos = $this->getRequest()->data('permissions');
+        if ($this->request->is('post') && !empty($this->request->data)) {
+            $allowAcos = $this->request->data('permissions');
             $denyAcos = array_diff(array_keys($allAcos), $allowAcos);
 
             $childernRoles =  $Roles->find('children', ['for' => $roleId]);
@@ -53,9 +53,9 @@ class PermissionsController extends AppController
                 }
             }
             //save permissions
-        } else if ($this->getRequest()->is('ajax') && !empty($roleId)) {
+        } else if ($this->request->is('ajax') && !empty($roleId)) {
             //load permissions related to roleId
-            $this->viewBuilder()->setLayout(false);
+            $this->viewBuilder()->layout(false);
             $permissions = $this->Aro->getPermissions($this->Aro->getRole($roleId));
 
             $this->viewBuilder()->template('ajax_permissions');

@@ -49,9 +49,9 @@ Add similar logic to the the "action" of your form in your controller. Line endi
     public function add()
     {
         $user = $this->Users->newEntity();
-        if ($this->getRequest()->is('post')) {
+        if ($this->request->is('post')) {
 	    $this->Users->setCaptcha('securitycode', $this->Captcha->getCode('securitycode')); //captcha
-            $user = $this->Users->patchEntity($user, $this->getRequest()->data);
+            $user = $this->Users->patchEntity($user, $this->request->data);
             if ($this->Users->save($user)) {
                 $this->Flash->success(__('The user has been saved.'));
                 return $this->redirect(['action' => 'index']);

@@ -24,9 +24,9 @@ class SettingsTable extends SpiderTable
     {
         parent::initialize($config);
 
-        $this->setTable('spider_settings_settings');
-        $this->setDisplayField('title');
-        $this->setPrimaryKey('id');
+        $this->table('spider_settings_settings');
+        $this->displayField('title');
+        $this->primaryKey('id');
         $this->addBehavior('Timestamp');
     }
 
@@ -41,38 +41,28 @@ class SettingsTable extends SpiderTable
         $validator
             ->add('id', 'valid', ['rule' => 'numeric'])
             ->allowEmpty('id', 'create');
-
         $validator
             ->allowEmpty('name');
-
         $validator
             ->allowEmpty('value');
-
         $validator
             ->allowEmpty('title');
-
         $validator
             ->allowEmpty('description');
-
         $validator
             ->allowEmpty('params');
-
         $validator
             ->add('weight', 'valid', ['rule' => 'numeric'])
             ->allowEmpty('weight');
-
         $validator
             ->add('editable', 'valid', ['rule' => 'numeric'])
             ->allowEmpty('editable');
-
         $validator
             ->add('created_by', 'valid', ['rule' => 'numeric'])
             ->allowEmpty('created_by');
-
         $validator
             ->add('updated_by', 'valid', ['rule' => 'numeric'])
             ->allowEmpty('updated_by');
-
         return $validator;
     }
 

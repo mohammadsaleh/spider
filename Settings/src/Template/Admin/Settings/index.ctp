@@ -3,7 +3,7 @@ $this->Html->script('ckeditor_4.6.1/ckeditor', ['block' => true]);
 $this->extend('/Common/content_form');
 $this->element('form_scripts');
 $this->assign('content_title', !empty($title) ? $title : __('Add Setting'));
-$this->Breadcrumbs->add(!empty($title) ? $title : __('Site Setting'));
+$this->Html->addCrumb(!empty($title) ? $title : __('Site Setting'));
 $this->set('form', $this->Form->create(null, ['class' => 'form-horizontal']));
 ?>
 
@@ -50,7 +50,7 @@ $this->set('form', $this->Form->create(null, ['class' => 'form-horizontal']));
                     <div class="form-group">
                     <label class="control-label col-lg-3"><?= $setting['title'] ?></label>
                     <div class="col-lg-9">
-                    <?= $this->Form->control('settings.' . $setting['name'], $options); ?>
+                    <?= $this->Form->input('settings.' . $setting['name'], $options); ?>
                     </div>
                 </div>
                     <?php

@@ -54,9 +54,9 @@ class PluginsController extends AppController
     public function add()
     {
         $plugin = $this->Plugins->newEntity();
-        if ($this->getRequest()->is('post')) {
-            $file = $this->getRequest()->getData('file');
-            $this->setRequest($this->getRequest()->withoutData('file'));
+        if ($this->request->is('post')) {
+            $file = $this->request->data['file'];
+            unset($this->request->data['file']);
             $pluginInstaller = new PluginInstaller;
             try{
                 $pluginInfo = $pluginInstaller->install($file['tmp_name']);
@@ -91,8 +91,8 @@ class PluginsController extends AppController
         $plugin = $this->Plugins->get($id, [
             'contain' => []
         ]);
-        if ($this->getRequest()->is(['patch', 'post', 'put'])) {
-            $plugin = $this->Plugins->patchEntity($plugin, $this->getRequest()->getData());
+        if ($this->request->is(['patch', 'post', 'put'])) {
+            $plugin = $this->Plugins->patchEntity($plugin, $this->request->data);
             if ($this->Plugins->save($plugin)) {
                 $this->Flash->success(__('The plugin has been saved.'));
                 return $this->redirect(['action' => 'index']);
@@ -113,7 +113,7 @@ class PluginsController extends AppController
      */
     public function delete($id = null)
     {
-        $this->getRequest()->allowMethod(['post', 'delete']);
+        $this->request->allowMethod(['post', 'delete']);
         $plugin = $this->Plugins->get($id);
         if ($this->Plugins->delete($plugin)) {
             $this->Flash->success(__('The plugin has been deleted.'));

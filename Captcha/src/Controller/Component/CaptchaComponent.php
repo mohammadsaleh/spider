@@ -238,7 +238,7 @@ class CaptchaComponent extends Component
         //Preference is given the settings parameter passed through helper
         foreach ($this->getConfig() as $key => $value) {
             if (isset($query[$key]) && $query[$key]){
-                $this->setConfig($key, $query[$key]);
+                $this->config($key, $query[$key]);
             }
         }
     }
@@ -289,7 +289,7 @@ class CaptchaComponent extends Component
                 $this->__imageCaptcha();
                 break;
             case 'math';
-                /*if(isset($this->Controller->getRequest()->data[$this->getConfig('field')]))  {
+                /*if(isset($this->Controller->request->data[$this->getConfig('field')]))  {
                   $this->Controller->Session->write('security_code_math', $this->Controller->Session->read('security_code'));
                 }*/
 
@@ -308,7 +308,7 @@ class CaptchaComponent extends Component
             $this->setConfig('font', $fontPath . DS . $fontName);
 
             if (!$this->__gdInfo()) {
-                $this->__setError(__('Cannot use image captcha as GD library is not enabled! Set $this->setConfig(\'type\', \'math\') in order to show a simple math captcha instead!'));
+                $this->__setError(__('Cannot use image captcha as GD library is not enabled! Set $this->config(\'type\', \'math\') in order to show a simple math captcha instead!'));
                 $this->fatalError = true;
             } else {
                 if (!$this->__TTFEnabled()) {

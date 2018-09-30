@@ -43,9 +43,6 @@ class CaptchaBehavior extends Behavior
     /**
      * Custom rule to validate captcha value
      *
-     * @param $value
-     * @param array $context
-     * @return bool
      */
     public function validateCaptcha($value, array $context) {
         return $value == $this->captcha[$this->getConfig('field')];
@@ -54,8 +51,6 @@ class CaptchaBehavior extends Behavior
     /**
      * Store captcha value in controller
      *
-     * @param $field
-     * @param $captcha
      */
     public function setCaptcha($field, $captcha) {
         $this->captcha[$field] = $captcha;
@@ -64,9 +59,7 @@ class CaptchaBehavior extends Behavior
     /**
      * Default validation rules.
      *
-     * @param Event $event
      * @param \Cake\Validation\Validator $validator Validator instance.
-     * @param $name
      * @return \Cake\Validation\Validator
      */
     public function buildValidator(Event $event, Validator $validator, $name)

@@ -31,9 +31,9 @@ class RolesTable extends SpiderTable
     {
         parent::initialize($config);
 
-        $this->setTable('spider_aclmanager_roles');
-        $this->setDisplayField('name');
-        $this->setPrimaryKey('id');
+        $this->table('spider_aclmanager_roles');
+        $this->displayField('name');
+        $this->primaryKey('id');
         $this->addBehavior('Tree');
         $this->belongsTo('ParentRoles', [
             'className' => 'AclManager.Roles',

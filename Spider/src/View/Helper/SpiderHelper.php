@@ -79,7 +79,7 @@ class SpiderHelper extends Helper
         $items = Hash::sort($items, '{s}.weight', 'ASC');
         foreach($items as $item){
             $liClass = [];
-            if($this->request->getRequestTarget() == Router::url($item['url'])){
+            if($this->request->here == Router::url($item['url'])){
                 $liClass[] = 'active';
                 if($depth > 0){
                     $this->_hasActiveMenuItem = true;
@@ -128,7 +128,7 @@ class SpiderHelper extends Helper
         $items = Hash::sort($items, '{s}.weight', 'ASC');
         foreach($items as $item){
             $liClass = [];
-            if($this->request->getRequestTarget() == Router::url($item['url'])){
+            if($this->request->here == Router::url($item['url'])){
                 $liClass[] = 'active';
                 if($depth > 0){
                     $this->_hasActiveMenuItem = true;

@@ -4,7 +4,7 @@ $this->Html->css('tree/jquery.tree-multiselect.min', ['block' => true]);
 $this->extend('/Common/content_index');
 $this->assign('table_description', '');
 $this->assign('content_title', !empty($title) ? $title : __('Permissions'));
-$this->Breadcrumbs->add(!empty($title) ? $title : __('Permissions'));
+$this->Html->addCrumb(!empty($title) ? $title : __('Permissions'));
 ?>
 <?php $this->append('actions');?>
 <?= $this->Html->link('<i class="fa fa-plus positio-left"></i> ' . __('New Setting'), ['action' => 'add'], ['class' => 'btn btn-success btn-sm', 'escape' => false]);?>

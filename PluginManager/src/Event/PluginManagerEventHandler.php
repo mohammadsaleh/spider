@@ -29,9 +29,9 @@ class PluginManagerEventHandler implements EventListenerInterface
     {
         if(!$this->_View){
             $this->_View = $event->getSubject();
-            if(($this->_View->request->getParam('prefix') === 'admin')){
+            if(($this->__controller->request->getParam('prefix') === 'admin')){
                 $this->__hookAdminNavbar();
-                if($this->_View->request->getRequestTarget() == (Router::url(SpiderNav::getDashboardUrl()))){
+                if($this->_View->request->here() == (Router::url(SpiderNav::getDashboardUrl()))){
                     $this->__hookAdminDashboard();
                 }
             }
@@ -40,10 +40,10 @@ class PluginManagerEventHandler implements EventListenerInterface
 
     private function __setDefaultTheme()
     {
-        $themeType = ($this->__controller->getRequest()->getParam('prefix') === 'admin') ? 'admin' : 'front';
+        $themeType = ($this->__controller->request->getParam('prefix') === 'admin') ? 'admin' : 'front';
         $theme = PluginManager::getDefaultTheme($themeType);
         if($theme) {
-            $this->__controller->viewBuilder()->theme($theme);
+            $this->__controller->viewBuilder()->setTheme($theme);
             if($this->__controller->Flash){
                 $this->__controller->Flash->setConfig('plugin', $theme);
             }
@@ -144,9 +144,9 @@ class PluginManagerEventHandler implements EventListenerInterface
      */
     protected function _addBlock($type, $blocksArr)
     {
-        $plugin = $this->_View->request->getParam('plugin');
-        $controller = $this->_View->request->getParam('controller');
-        $action = $this->_View->request->getParam('action');
+        $plugin = $this->_View->request->param('plugin');
+        $controller = $this->_View->request->param('controller');
+        $action = $this->_View->request->param('action');
         $target = [
             $action,
             $controller . '/' . $action,
