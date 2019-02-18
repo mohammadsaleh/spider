@@ -27,7 +27,7 @@ class UsersController extends AppController
      * @return \Cake\Network\Response|void
      */
     public function login(){
-        if (!empty($this->request->data)) {
+        if (!empty($this->request->getData())) {
             $user = $this->Auth->identify();
             if ($user && ($user['status'] > 0)) {
                 $this->getEventManager()->dispatch(new Event('Users.Users.login.success', $this, ['user' => &$user]));
@@ -43,7 +43,7 @@ class UsersController extends AppController
 
     private function __setCookie()
     {
-        if($this->request->data('remember_me')){
+        if($this->request->getData('remember_me')){
             $this->Cookie->configKey('remember_me', 'expires', '+3 days');
             $this->Cookie->write('remember_me', $this->Auth->user());
         }else{
@@ -62,8 +62,8 @@ class UsersController extends AppController
         if($this->request->is('ajax')){
             $this->autoRender = false;
             $error = [];
-            if (!empty($this->request->data)) {
-                $data = array_map(function($value){return trim($value);}, $this->request->data);
+            if (!empty($this->request->getData())) {
+                $data = array_map(function($value){return trim($value);}, $this->request->getData());
                 $userData = [];
                 $userData['username'] = $data['mailUserRegister'];
                 $userData['password'] = $data['passwordRegister'];
@@ -75,8 +75,8 @@ class UsersController extends AppController
                 //TODO:: dar in marhale bayad unique boodan username barresi shavad .. darhale hazer kar nemikonad
                 //TODO:: chon checkRules dar in marhale ettefaq nemiofte, balke dar save ettefaq miofte
                 $user = $this->Users->newEntity($userData, ['checkRules' => true]);
-                if(!empty($user->errors())){
-                    $error = Hash::merge($error, Hash::extract($user->errors(), '{s}.{s}'));
+                if(!empty($user->getErrors())){
+                    $error = Hash::merge($error, Hash::extract($user->getErrors(), '{s}.{s}'));
                 }
                 if(empty($error)) {
                     if(!empty($data['presenterRegister'])){
@@ -95,7 +95,7 @@ class UsersController extends AppController
                         $this->getEventManager()->dispatch(new Event('Users.Users.add.success', $this, ['user' => &$user]));
                         return;
                     }else{
-                        $error = Hash::merge($error, Hash::extract($user->errors(), '{s}.{s}'));
+                        $error = Hash::merge($error, Hash::extract($user->getErrors(), '{s}.{s}'));
                     }
                 }
             }else{
@@ -111,6 +111,7 @@ class UsersController extends AppController
     /**
      * Active a new registered user comming from email
      * @param $key
+     * @return \Cake\Http\Response|null
      */
     public function active($key){
         $user = $this->Users->find()->matching('ActivationKeys', function($q) use ($key){
@@ -136,21 +137,21 @@ class UsersController extends AppController
         if($this->request->is('ajax')){
             $this->autoRender = false;
             $user = $this->Users->get($this->Auth->user('id'));
-            if (!empty($this->request->data)) {
-                if(!(new DefaultPasswordHasher)->check($this->request->data('currentPass'), $user->password)){
+            if (!empty($this->request->getData())) {
+                if(!(new DefaultPasswordHasher)->check($this->request->getData('currentPass'), $user->password)){
                     echo json_encode($this->error(['پسورد اشتباه می باشد.']));
                     return;
                 }
                 $data = [
-                    'password' => $this->request->data('newPass'),
-                    'confirm_password' => $this->request->data('newRePass'),
+                    'password' => $this->request->getData('newPass'),
+                    'confirm_password' => $this->request->getData('newRePass'),
                 ];
                 $user = $this->Users->patchEntity($user, $data);
                 if ($this->Users->save($user)) {
                     echo json_encode($this->success());
                     return;
                 } else {
-                    echo json_encode($this->error(Hash::extract($user->errors(), '{s}.{s}')));
+                    echo json_encode($this->error(Hash::extract($user->getErrors(), '{s}.{s}')));
                     return;
                 }
             }
@@ -162,7 +163,7 @@ class UsersController extends AppController
     {
         $this->autoRender = false;
         if($this->request->is('post')){
-            $data = $this->request->data;
+            $data = $this->request->getData();
             if(isset($data['mailUserRegister'])){
                 $users = TableRegistry::get('Users');
                 $query = $users->find();
@@ -184,7 +185,7 @@ class UsersController extends AppController
     public function forgetPass()
     {
         if($this->request->is('post')) {
-            $postData = $this->request->data();
+            $postData = $this->request->getData();
             if (!empty($postData['mailUserForgot'])) {
                 $user = $this->Users->find()
                     ->where(['username' => $postData['mailUserForgot']])
@@ -192,8 +193,8 @@ class UsersController extends AppController
                     ->first();
                 if ($user) {
                     $this->_sendActivationEmail($user, '/forgetpass?activation=')
-                        ->template($this->viewBuilder()->theme() . '.forget_pass')
-                        ->subject('بازیابی رمز عبور شما در بازی برتر')
+                        ->setTemplate($this->viewBuilder()->getTheme() . '.forget_pass')
+                        ->setSubject('بازیابی رمز عبور شما در بازی برتر')
                         ->send();
                     $this->set('successSendActivation', true);
                 }
@@ -220,8 +221,8 @@ class UsersController extends AppController
                     $this->set('invalidActivation', true);
                 }
             }
-        }elseif($this->request->query('activation')){
-            $activationKey = $this->request->query('activation');
+        }elseif($this->request->getQuery('activation')){
+            $activationKey = $this->request->getQuery('activation');
             $activation = $this->Users->ActivationKeys->find()->where([
                 'activation_key' => $activationKey
             ])->first();
@@ -254,9 +255,9 @@ class UsersController extends AppController
     {
         $this->autoRender = false;
         $this->loadComponent('Users.Uploader');
-        if(!empty($this->request->data())){
+        if(!empty($this->request->getData())){
             $destination = DS . 'img' . DS . 'avatars' . DS . $this->Auth->user('id');
-            $file = $this->request->data('avatarFile');
+            $file = $this->request->getData('avatarFile');
             if($file['size'] > (100 * 1024)){
                 echo json_encode($this->error(['اندازه فایل بیش از حد مجاز است.']));
                 return;
@@ -269,7 +270,7 @@ class UsersController extends AppController
                     unlink(WWW_ROOT . $imagePath);
                 }
                 $userEntity->avatar = $fileInfo['path'];
-                $this->request->session()->write('Auth.User.avatar', $fileInfo['path']);
+                $this->request->getSession()->write('Auth.User.avatar', $fileInfo['path']);
                 if($this->Users->save($userEntity)){
                     echo json_encode($this->success(['src' => Router::url($fileInfo['path'])]));
                     return;
