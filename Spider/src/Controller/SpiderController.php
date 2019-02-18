@@ -41,10 +41,8 @@ class SpiderController extends Controller
 
     /**
      * Initialization hook method.
-     *
      * Use this method to add common initialization code like loading components.
-     *
-     * @return void
+     * @throws \Exception
      */
     public function initialize()
     {
@@ -91,9 +89,9 @@ class SpiderController extends Controller
      */
     public function beforeRedirect(Event $event, $url, Response $response)
     {
-        if($this->request->param('prefix') == 'admin'){
-            if(isset($this->request->data['apply'])){
-                $response->location(Router::url($this->request->here(false), true));
+        if($this->request->getParam('prefix') == 'admin'){
+            if($this->request->getData('apply')){
+                $response->withLocation(Router::url($this->request->getRequestTarget(false), true));
             }
         }
         return true;
@@ -117,7 +115,7 @@ class SpiderController extends Controller
      */
     public function loadHelper($helperName, $config = [])
     {
-        $this->viewBuilder()->helpers([$helperName => $config]);
+        $this->viewBuilder()->setHelpers([$helperName => $config]);
     }
 
     public function beforeRender(Event $event)
@@ -125,7 +123,7 @@ class SpiderController extends Controller
         parent::beforeRender($event);
         if($this->request->getQuery('is_dialog')){
             //TODO: convert popup dialog to a plugin
-            $this->viewBuilder()->layout('admin_popup');
+            $this->viewBuilder()->setLayout('admin_popup');
         }
     }
 
