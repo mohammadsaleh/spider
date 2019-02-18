@@ -45,7 +45,7 @@ class AclManagerEventHandler implements EventListenerInterface
 
 	public function onUserLoginSuccessfully(Event $event)
 	{
-		$user = $event->data['user'];
+		$user = $event->getData('user');
 		$user['roles'] = [];
 		$UsersRoles = (new TableLocator)->get('AclManager.UsersRoles');
 		$roles = $UsersRoles->find()->where(['user_id' => $user['id']])->contain(['Roles'])->toArray();
