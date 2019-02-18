@@ -6,8 +6,8 @@ use Cake\Core\Exception\Exception;
 use Cake\Event\Event;
 use Cake\Event\EventListenerInterface;
 use Cake\ORM\Entity;
+use Cake\ORM\Locator\TableLocator;
 use Cake\ORM\Query;
-use Cake\ORM\TableRegistry;
 use Cake\Utility\Hash;
 use Spider\Lib\SpiderNav;
 
@@ -47,7 +47,7 @@ class AclManagerEventHandler implements EventListenerInterface
 	{
 		$user = $event->data['user'];
 		$user['roles'] = [];
-		$UsersRoles = TableRegistry::get('AclManager.UsersRoles');
+		$UsersRoles = (new TableLocator)->get('AclManager.UsersRoles');
 		$roles = $UsersRoles->find()->where(['user_id' => $user['id']])->contain(['Roles'])->toArray();
 		if(!empty($roles)){
 			$user['roles'] = Hash::extract($roles, '{n}.role');
@@ -225,17 +225,17 @@ class AclManagerEventHandler implements EventListenerInterface
     {
         if($this->controller->Cookie->check('remember_me')){
             $cookie = $this->controller->Cookie->read('remember_me');
-            $Users = TableRegistry::get('Users.Users');
+            $Users = (new TableLocator)->get('Users.Users');
             $user = $Users->find()->where(['Users.username' => $cookie['username']])->first();
             if(!empty($user) && $user['status'] > 0){
-                $currentUrl = $this->controller->request->url;
+                $currentUrl = $this->controller->request->getUri();
                 $adminScope = trim(SpiderNav::getAdminScope(), '/');
                 // If url is an admin url
                 if(strpos($currentUrl, $adminScope) === 0){
                     //go to unlock page to get password to login
                     Configure::write('unlock', $user);
                     $unlockUrl = SpiderNav::getAdminScope() . '/unlock';
-                    if($this->controller->request->url != trim($unlockUrl, '/')){
+                    if($this->controller->request->getUri() != trim($unlockUrl, '/')){
                         return $this->controller->redirect($unlockUrl);
                     }
                 }else{

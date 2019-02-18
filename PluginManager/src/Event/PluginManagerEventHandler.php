@@ -44,7 +44,7 @@ class PluginManagerEventHandler implements EventListenerInterface
         $theme = PluginManager::getDefaultTheme($themeType);
         if($theme) {
             $this->__controller->viewBuilder()->setTheme($theme);
-            if($this->__controller->Flash){
+            if(isset($this->__controller->Flash)){
                 $this->__controller->Flash->setConfig('plugin', $theme);
             }
         }
@@ -144,9 +144,9 @@ class PluginManagerEventHandler implements EventListenerInterface
      */
     protected function _addBlock($type, $blocksArr)
     {
-        $plugin = $this->_View->request->param('plugin');
-        $controller = $this->_View->request->param('controller');
-        $action = $this->_View->request->param('action');
+        $plugin = $this->_View->request->getParam('plugin');
+        $controller = $this->_View->request->getParam('controller');
+        $action = $this->_View->request->getParam('action');
         $target = [
             $action,
             $controller . '/' . $action,

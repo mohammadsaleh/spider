@@ -3,7 +3,7 @@ $this->extend('/Common/content_form');
 
 $this->set('form', $this->Form->create($user, ['class' => 'form-horizontal']));
 $this->assign('content_title', !empty($title) ? $title : __('My Profile'));
-$this->Html->addCrumb(!empty($title) ? $title : __('My Profile'));
+$this->Breadcrumbs->add(!empty($title) ? $title : __('My Profile'));
 
 ?>
 

@@ -2,8 +2,8 @@
 $this->extend('/Common/content_form');
 $this->element('form_scripts');
 $this->assign('content_title', !empty($title) ? $title : __('Add Setting'));
-$this->Html->addCrumb(__('List Settings'), ['action' => 'index']);
-$this->Html->addCrumb(!empty($title) ? $title : __('Add Setting'));
+$this->Breadcrumbs->add(__('List Settings'), ['action' => 'index']);
+$this->Breadcrumbs->add(!empty($title) ? $title : __('Add Setting'));
 $this->set('form', $this->Form->create($setting, ['class' => 'form-horizontal']));
 ?>
 

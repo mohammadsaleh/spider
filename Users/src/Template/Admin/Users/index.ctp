@@ -9,7 +9,7 @@ $this->element('index_scripts');
 $this->assign('content_title', !empty($title) ? $title : __('List User'));
 $this->assign('table_title', 'Table Title');
 $this->assign('table_description', 'Table Description');
-$this->Html->addCrumb(!empty($title) ? $title : __('List User'));
+$this->Breadcrumbs->add(!empty($title) ? $title : __('List User'));
 
 $indexDataTable = $this->DataTables->create('.index-datatable');
 $indexDataTable->setConfig('columnSearch', true);
