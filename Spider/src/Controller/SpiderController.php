@@ -127,6 +127,7 @@ class SpiderController extends Controller
         }
     }
 
+    //todo: these functions should be changed
     public function success($data = [], $message = 'SUCCESS'){
         if(is_object($data)){
             $data = (array)$data;
