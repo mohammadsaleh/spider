@@ -4,10 +4,9 @@
 	"license": "MIT",
 	"homepage": "http://github.com/mohammadsaleh/spider",
     "require": {
-        "php": ">=5.4.16",
-        "cakephp/cakephp": "~3.0",
-		"friendsofcake/bootstrap-ui": "~0.3",
-		"friendsofcake/search": "dev-master"
+        "php": ">=5.6",
+        "cakephp/cakephp": "3.7.*",
+		"friendsofcake/search": "^5.1"
     },
 	"authors": [
 		{
