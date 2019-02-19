@@ -1,10 +1,17 @@
 <?php
 
-namespace Spider\Spider;
+namespace Spider;
 
+use Cake\Core\App;
 use Cake\Core\BasePlugin;
+use Cake\Core\ClassLoader;
 use Cake\Core\Configure;
 use Cake\Core\PluginApplicationInterface;
+use Cake\Core\PluginCollection;
+use Cake\Event\EventManager;
+use Cake\Log\Log;
+use Cake\Utility\Inflector;
+use Spider\Event\SpiderEventManager;
 
 /**
  * Plugin for Spider
@@ -20,10 +27,9 @@ class Plugin extends BasePlugin
 
     public function bootstrap(PluginApplicationInterface $app)
     {
-        debug('aaaaaaa');die;
         parent::bootstrap($app);
 
-        $plugins = Configure::read('App.paths.plugins');
+        $plugins = Configure::read('Hook.plugins');
         foreach ($plugins as $plugin) {
             $pluginName = Inflector::camelize($plugin);
             $pluginPath = APP . 'plugins' . DS . $pluginName;
@@ -41,17 +47,34 @@ class Plugin extends BasePlugin
                     continue;
                 }
             }
-            $option = array(
-                str_replace('Spider/', '', $pluginName) => array(
-                    'bootstrap' => true,
-                    'routes' => true,
-                    'autoload' => true,
-                    'ignoreMissing' => true,
-                )
-            );
-            SpiderPlugin::load($option);
+            $pluginName = str_replace('Spider/', '', $pluginName);
+            $configs = [
+                'bootstrap' => true,
+                'routes' => true,
+                'ignoreMissing' => true,
+            ];
+            $app->addPlugin($pluginName, $configs);
+            $this->__autoLoadPlugin($pluginName);
         }
         SpiderEventManager::loadListeners();
         (new EventManager())->dispatch('Spider.bootstrap.complete');
+    }
+
+    /**
+     * Loading Spider Plugin
+     */
+    private function __autoLoadPlugin($pluginName)
+    {
+        $path = (new PluginCollection())->findPath($pluginName);
+        $loader = (new ClassLoader());
+        $loader->register();
+        $loader->addNamespace(
+            $pluginName,
+            $path . 'src' . DIRECTORY_SEPARATOR
+        );
+        $loader->addNamespace(
+            $pluginName . '\Test',
+            $path. 'tests' . DIRECTORY_SEPARATOR
+        );
     }
 }
