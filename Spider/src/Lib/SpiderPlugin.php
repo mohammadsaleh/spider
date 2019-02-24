@@ -24,26 +24,4 @@ class SpiderPlugin
             ->fetchAll('assoc');
         return $plugins;
     }
-
-    /**
-     * Loads a plugin and optionally loads bootstrapping and routing files.
-     *
-     * This method is identical to CakePlugin::load() with extra functionality
-     * that loads event configuration when Plugin/Config/events.php is present.
-     *
-     * @see CakePlugin::load()
-     * @param mixed $plugin name of plugin, or array of plugin and its config
-     * @return void
-     */
-    public static function load($plugin, $config = []) {
-        Plugin::load($plugin, $config);
-        if (is_string($plugin)) {
-            $plugin = [$plugin => $config];
-        }
-        Cache::delete('EventHandlers', 'default');
-        foreach ($plugin as $name => $conf) {
-            list($name, $conf) = (is_numeric($name)) ? [$conf, $config] : [$name, $conf];
-            Hook::applyHookConfigFiles('Hook.config_files', $name);
-        }
-    }
 }

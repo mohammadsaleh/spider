@@ -17,22 +17,16 @@ Request::addDetector(
     ['env' => 'HTTP_USER_AGENT', 'pattern' => '/Chrome/i']
 );
 
-//Plugin::load('BootstrapUI');
-
 /**
  * List of core plugins
  */
 $corePlugins = [
-    'Spider/Settings',
-    'Spider/Captcha',
-    'Spider/AclManager',
-    'Spider/PluginManager',
-    'Spider/Users',
-    'Spider/Search',
+    'Spider',
+    'Settings',
+    'Captcha',
+    'AclManager',
+    'PluginManager',
+    'Users',
+    'Search',
 ];
-Configure::write('Core.corePlugins', $corePlugins);
-
-if(!Configure::check('Hook.plugins')){
-    Configure::write('Hook.plugins', Configure::read('Core.corePlugins'));
-}
-Spider::mergeConfig('Hook.plugins', Hash::extract(SpiderPlugin::getPlugins(), '{n}.name'));
+Configure::write('Spider.corePlugins', $corePlugins);

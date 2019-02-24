@@ -50,7 +50,7 @@ class SpiderEventManager
         }
         foreach ($cached as $cache) {
             extract($cache);
-            if (Plugin::loaded($plugin)) {
+            if (Plugin::isLoaded($plugin)) {
                 $settings = isset($eventOptions['options']) ? $eventOptions['options'] : array();
                 $namespace = '\\'.$plugin.'\\Event\\'.$class;
                 $listener = new $namespace($settings);
