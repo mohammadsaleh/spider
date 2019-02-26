@@ -4,6 +4,7 @@ namespace Spider;
 
 use Cake\Core\BasePlugin;
 use Cake\Core\PluginApplicationInterface;
+use Settings\Middleware\MaintenanceMiddleware;
 use Spider\Middleware\SpiderMiddleware;
 
 /**
@@ -26,7 +27,7 @@ class Plugin extends BasePlugin
 
     public function middleware($middleware)
     {
-        $middleware->add(new SpiderMiddleware);
+        $middleware->insertAfter(MaintenanceMiddleware::class, new SpiderMiddleware);
         return $middleware;
     }
 }

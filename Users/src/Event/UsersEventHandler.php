@@ -1,6 +1,7 @@
 <?php
 namespace Users\Event;
 
+use App\Controller\ErrorController;
 use Cake\Core\Plugin;
 use Cake\Event\Event;
 use Cake\Event\EventListenerInterface;
@@ -62,41 +63,15 @@ class UsersEventHandler implements EventListenerInterface
         if(!$this->__controller){
             $this->__controller = $event->getSubject();
         }
-        new UserLib($this->__controller->Auth);
-        $this->__forceLogout();
+        if(!($this->__controller instanceof ErrorController)){
+            new UserLib($this->__controller->Auth);
+        }
         $userAvatar = $this->__controller->request->getSession()->read('Auth.User.avatar');
         $avatar = Router::url($userAvatar, true);
         if(empty($userAvatar)){
             $avatar = Router::url('/assets/images/default-avatar.jpg', true);
         }
         $this->__controller->set(compact('avatar'));
-    }
-
-    private function __forceLogout()
-    {
-        if($user = $this->__controller->Auth->user()){
-            $forceLogoutSetting = Settings::find('users.force_logout', false);
-            $forceLogout = false;
-            if(!empty($forceLogoutSetting)){
-                $forceLogoutSetting = array_shift($forceLogoutSetting);
-                $forceLogout = $forceLogoutSetting['value'];
-            }
-            if($forceLogout){
-                $UsersForceLogout = TableRegistry::get('Users.UsersForceLogout');
-                $logoutUser = $UsersForceLogout->find()->where(['user_id' => $user['id']])->first();
-                $logout = false;
-                if(!empty($logoutUser) && ($logoutUser['logout'] == 0)){
-                    $logout = true;
-                    $logoutUser['logout'] = 1;
-                }elseif(empty($logoutUser)){
-                    $logout = true;
-                    $logoutUser = $UsersForceLogout->newEntity(['user_id' => $user['id'], 'logout' => 1]);
-                }
-                if($logout && $UsersForceLogout->save($logoutUser)){
-                    return $this->__controller->redirect(['plugin' => 'users', 'controller' => 'users', 'action' => 'logout']);
-                }
-            }
-        }
     }
 
     /**
