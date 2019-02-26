@@ -8,9 +8,6 @@
 
 namespace PluginManager\Lib;
 
-
-use Cake\ORM\TableRegistry;
-
 class PluginManager
 {
 
@@ -22,16 +19,7 @@ class PluginManager
      */
     public static function getDefaultTheme($themeType = 'front')
     {
-        $themeName = null;
-        $Plugins = TableRegistry::get('PluginManager.Plugins');
-        $theme = $Plugins->find('all')
-            ->where(['theme' => $themeType])
-            ->where(['`status`' => 1])
-            ->where(['`default`' => 1])
-            ->first();
-        if(!empty($theme)){
-            $themeName = $theme->name;
-        }
-        return $themeName;
+        $themeType = strtoupper($themeType);
+        return env("{$themeType}_THEME_PLUGIN");
     }
 }
