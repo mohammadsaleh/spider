@@ -22,7 +22,7 @@ class UserPermissionComponent extends Component
     {
         parent::initialize($config);
         $this->_controller = $this->_registry->getController();
-        $action = $this->_controller->request->param('action');
+        $action = $this->_controller->getRequest()->getParam('action');
         if(in_array($action, ['edit', 'add'])){
             $this->__setCurrentUserPermissions();
         }
@@ -33,7 +33,7 @@ class UserPermissionComponent extends Component
      */
     private function __setCurrentUserPermissions()
     {
-        $passParam = $this->_controller->request->param('pass');
+        $passParam = $this->_controller->getRequest()->getParam('pass');
         $userId = array_shift($passParam);
         $permissions = [];
         if($userId){
