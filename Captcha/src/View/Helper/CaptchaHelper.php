@@ -25,7 +25,7 @@ class CaptchaHelper extends Helper {
 
     public function create($field = 'captcha', $config = []) {
         $html = '';
-        $this->config(array_merge($this->getConfig(), (array)$config));
+        $this->setConfig(array_merge($this->getConfig(), (array)$config));
         $qstring = ['type' => $this->getConfig('type'), 'field' =>  $field];
 
         switch($this->getConfig('type')):
@@ -48,7 +48,7 @@ class CaptchaHelper extends Helper {
             case 'math':
                 $qstring = array_merge($qstring, ['type' => 'math']);
                 if($this->getConfig('stringOperation')) {
-                    $html .= $this->getConfig('mlabel') .  $this->config('stringOperation') . ' = ?';
+                    $html .= $this->getConfig('mlabel') .  $this->getConfig('stringOperation') . ' = ?';
                 }else{
                     ob_start();
                     $this->_View->requestAction(array_merge($this->getConfig('captchaGenerator'), [base64_encode(http_build_query($qstring))]));
