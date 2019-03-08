@@ -50,7 +50,7 @@ class UsersEventHandler implements EventListenerInterface
     public function onSpiderViewInitialize(Event $event)
     {
         $view = $event->getSubject();
-        if(Plugin::loaded('Users')){
+        if(Plugin::isLoaded('Users')){
             $view->loadHelper('Users.Users');
         }
     }

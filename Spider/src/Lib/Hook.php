@@ -98,9 +98,9 @@ class Hook
      */
     public static function applyHookHelpers($configKey, $View)
     {
-        $prefix = ($prefix = $View->request->getParam('prefix')) ? (Inflector::camelize($prefix) . '.') : '';
-        $plugin = ($plugin = $View->request->getParam('plugin')) ? ($plugin . '.') : '';
-        $controller = $View->request->getParam('controller');
+        $prefix = ($prefix = $View->getRequest()->getParam('prefix')) ? (Inflector::camelize($prefix) . '.') : '';
+        $plugin = ($plugin = $View->getRequest()->getParam('plugin')) ? ($plugin . '.') : '';
+        $controller = $View->getRequest()->getParam('controller');
         $objectName = $prefix . $plugin . $controller;
         $hookHelpers = Configure::read($configKey);
         if(isset($hookHelpers[$objectName])){
