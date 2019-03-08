@@ -14,20 +14,20 @@
                             <div class="icon-object border-slate-300 text-slate-300"><i class="fa fa-user"></i></div>
                             <h5 class="content-group"><?= __d('users', 'Login to your account')?>
                                 <small class="display-block">
-                                    <?= $this->request->session()->check('Flash.Auth') ? $this->Flash->render('Auth') : __d('users', 'Please put your credentials')?>
+                                    <?= $this->getSession()->check('Flash.Auth') ? $this->Flash->render('Auth') : __d('users', 'Please put your credentials')?>
                                 </small>
                             </h5>
                         </div>
 
                         <div class="form-group has-feedback has-feedback-left">
-                            <?= $this->Form->input('username', ['class' => 'form-control', 'label' => false, 'placeholder' => __d('users', 'username')]);?>
+                            <?= $this->Form->control('username', ['class' => 'form-control', 'label' => false, 'placeholder' => __d('users', 'username')]);?>
                             <div class="form-control-feedback">
                                 <i class="fa fa-user text-muted"></i>
                             </div>
                         </div>
 
                         <div class="form-group has-feedback has-feedback-left">
-                            <?= $this->Form->input('password', ['class' => 'form-control', 'label' => false, 'placeholder' => __d('users', 'password')]);?>
+                            <?= $this->Form->control('password', ['class' => 'form-control', 'label' => false, 'placeholder' => __d('users', 'password')]);?>
                             <div class="form-control-feedback">
                                 <i class="fa fa-lock text-muted"></i>
                             </div>
