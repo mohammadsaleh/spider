@@ -34,7 +34,7 @@ class SpiderMiddleware
         //Remove Spider Plugin from list
         array_shift($plugins);
         foreach($plugins as $pluginName){
-            if(Plugin::loaded($pluginName)){
+            if(Plugin::isLoaded($pluginName)){
                 Cache::delete('EventHandlers', 'default');
                 Hook::applyHookConfigFiles('Hook.config_files', $pluginName);
             }
