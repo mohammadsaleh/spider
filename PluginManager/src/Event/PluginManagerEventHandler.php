@@ -31,7 +31,7 @@ class PluginManagerEventHandler implements EventListenerInterface
             $this->_View = $event->getSubject();
             if(($this->__controller->request->getParam('prefix') === 'admin')){
                 $this->__hookAdminNavbar();
-                if($this->_View->request->here() == (Router::url(SpiderNav::getDashboardUrl()))){
+                if($this->_View->getRequest()->getRequestTarget() == (Router::url(SpiderNav::getDashboardUrl()))){
                     $this->__hookAdminDashboard();
                 }
             }
@@ -144,9 +144,9 @@ class PluginManagerEventHandler implements EventListenerInterface
      */
     protected function _addBlock($type, $blocksArr)
     {
-        $plugin = $this->_View->request->getParam('plugin');
-        $controller = $this->_View->request->getParam('controller');
-        $action = $this->_View->request->getParam('action');
+        $plugin = $this->_View->getRequest()->getParam('plugin');
+        $controller = $this->_View->getRequest()->getParam('controller');
+        $action = $this->_View->getRequest()->getParam('action');
         $target = [
             $action,
             $controller . '/' . $action,
