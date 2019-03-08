@@ -14,7 +14,7 @@
                             <div class="icon-object border-slate-300 text-slate-300"><i class="fa fa-user"></i></div>
                             <h5 class="content-group"><?= __d('users', 'Login to your account')?>
                                 <small class="display-block">
-                                    <?= $this->getSession()->check('Flash.Auth') ? $this->Flash->render('Auth') : __d('users', 'Please put your credentials')?>
+                                    <?= $this->getRequest()->getSession()->check('Flash.Auth') ? $this->Flash->render('Auth') : __d('users', 'Please put your credentials')?>
                                 </small>
                             </h5>
                         </div>
