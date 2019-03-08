@@ -19,7 +19,7 @@ class CaptchaController extends AppController
 
     public function create()  {
         $this->autoRender = false;
-        $this->viewBuilder()->layout('ajax');
+        $this->viewBuilder()->setLayout('ajax');
         $this->Captcha->create();
     }
 }
