@@ -31,12 +31,12 @@ class PermissionsController extends AppController
         $this->set(compact('allAcos'));
 
         //load page
-        $Roles = TableRegistry::get('AclManager.Roles');
+        $Roles = TableRegistry::getTableLocator()->get('AclManager.Roles');
         $roles = $Roles->find('treeList')->toArray();
 
         $permissions = [];
-        if ($this->request->is('post') && !empty($this->request->data)) {
-            $allowAcos = $this->request->data('permissions');
+        if ($this->getRequest()->is('post') && !empty($this->getRequest()->getData())) {
+            $allowAcos = $this->getRequest()->getData('permissions');
             $denyAcos = array_diff(array_keys($allAcos), $allowAcos);
 
             $childernRoles =  $Roles->find('children', ['for' => $roleId]);
@@ -48,17 +48,17 @@ class PermissionsController extends AppController
                 $this->Acl->setRoleAccess($acoName, (int)$roleId);
                 if(!empty($childernRoles)) {
                     foreach ($childernRoles as $child) {
-                         $this->Acl->setRoleAccess($acoName, (int)$child->id);
+                        $this->Acl->setRoleAccess($acoName, (int)$child->id);
                     }
                 }
             }
             //save permissions
         } else if ($this->request->is('ajax') && !empty($roleId)) {
             //load permissions related to roleId
-            $this->viewBuilder()->layout(false);
+            $this->viewBuilder()->setLayout(false);
             $permissions = $this->Aro->getPermissions($this->Aro->getRole($roleId));
 
-            $this->viewBuilder()->template('ajax_permissions');
+            $this->viewBuilder()->setTemplate('ajax_permissions');
             $permissions = array_keys($permissions);
             //debug($permissions);die;
         }
@@ -100,7 +100,7 @@ class PermissionsController extends AppController
 
     public function acoList($id = null)
     {
-        $Users = TableRegistry::get('Users.Users');
+        $Users = TableRegistry::getTableLocator()->get('Users.Users');
 //        $user = $Users->newEntity([
 //            'username' => 'ali_s'.Text::uuid().'@gmail.com',
 //            'password' => 123456789,
