@@ -60,7 +60,7 @@ var indexDatatable = {
             searchable:false,
             render: function(data, type, full, meta){
                 if(data){
-                    return '<img src="<?= $this->request->base?>' + data + '" class="avatar" alt="">';
+                    return '<img src="<?= $this->request->getAttribute('base')?>' + data + '" class="avatar" alt="">';
                 }
                 return '';
             }
