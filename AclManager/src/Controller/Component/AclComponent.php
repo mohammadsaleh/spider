@@ -633,19 +633,13 @@ class AclComponent extends Component
      */
     public function getResources($type = 'flatten'){
         $controllers = $this->findControllers();
-        foreach(Configure::read('Hook.plugins') as $plugin){
-            $pluginName = Inflector::camelize($plugin);
-            foreach (App::path('Plugin') as $pluginPath) {
-                $pluginName = str_replace('Spider/', '', $pluginName);
-                if(Plugin::loaded($pluginName)){
-                    if (is_dir($pluginPath . $pluginName)) {
-                        $findedControllers = $this->findControllers($pluginPath . $pluginName . DS . 'src' . DS);
-                        if(!empty($findedControllers)){
-                            $controllers[$pluginName] = $findedControllers;
-                        }
-                        break;
-                    }
-                }
+        $plugins = Plugin::getCollection();
+        foreach($plugins as $plugin){
+            $pluginName = $plugin->getName();
+            $pluginPath = $plugin->getPath();
+            $findedControllers = $this->findControllers($pluginPath . 'src' . DS);
+            if(!empty($findedControllers)){
+                $controllers[$pluginName] = $findedControllers;
             }
         }
         $resources = [];
