@@ -29,19 +29,19 @@ $this->set('form', $this->Form->create($role, ['class' => 'form-horizontal']));
     <div class="form-group">
         <label class="control-label col-lg-3"><?= __('name')?></label>
         <div class="col-lg-9">
-        <?= $this->Form->input('name', ['class' => 'form-control', 'label' => false]);?>
+        <?= $this->Form->control('name', ['class' => 'form-control', 'label' => false]);?>
         </div>
     </div>
     <div class="form-group">
         <label class="control-label col-lg-3"><?= __('title')?></label>
         <div class="col-lg-9">
-        <?= $this->Form->input('title', ['class' => 'form-control', 'label' => false]);?>
+        <?= $this->Form->control('title', ['class' => 'form-control', 'label' => false]);?>
         </div>
     </div>
     <div class="form-group">
         <label class="control-label col-lg-3"><?= __('description')?></label>
         <div class="col-lg-9">
-        <?= $this->Form->input('description', ['class' => 'form-control', 'label' => false]);?>
+        <?= $this->Form->control('description', ['class' => 'form-control', 'label' => false]);?>
         </div>
     </div>
 </div>

@@ -50,7 +50,7 @@ $this->set('form', $this->Form->create(null, ['class' => 'form-horizontal']));
                     <div class="form-group">
                     <label class="control-label col-lg-3"><?= $setting['title'] ?></label>
                     <div class="col-lg-9">
-                    <?= $this->Form->input('settings.' . $setting['name'], $options); ?>
+                    <?= $this->Form->control('settings.' . $setting['name'], $options); ?>
                     </div>
                 </div>
                     <?php

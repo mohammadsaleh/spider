@@ -42,7 +42,7 @@ class CaptchaHelper extends Helper {
                     $html .= $this->Html->link($this->getConfig('reload_txt'), '#', ['class' => 'creload', 'escape' => false, 'data-target' => '#' . $field]);
                 }
                 if($this->getConfig('input')){
-                    $html .= $this->Form->input($field, $this->getConfig('input'));
+                    $html .= $this->Form->control($field, $this->getConfig('input'));
                 }
             break;
             case 'math':
@@ -61,7 +61,7 @@ class CaptchaHelper extends Helper {
                 }
                 $html .= '<div class = "input text required ' . $errorclass.'">' . $this->Form->label($field, $this->getConfig('mlabel')) . '</div>';
                 $html .= '<div><strong>' . $mathstring . '</strong>' . ' = ?</div>';
-                $html .= $this->Form->input($field, ['autocomplete' => 'off', 'label' => false, 'class' => '']);
+                $html .= $this->Form->control($field, ['autocomplete' => 'off', 'label' => false, 'class' => '']);
             break;
         endswitch;
 
