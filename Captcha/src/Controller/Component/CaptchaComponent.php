@@ -238,7 +238,7 @@ class CaptchaComponent extends Component
         //Preference is given the settings parameter passed through helper
         foreach ($this->getConfig() as $key => $value) {
             if (isset($query[$key]) && $query[$key]){
-                $this->config($key, $query[$key]);
+                $this->setConfig($key, $query[$key]);
             }
         }
     }
