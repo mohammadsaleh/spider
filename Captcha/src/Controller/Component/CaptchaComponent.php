@@ -491,6 +491,9 @@ class CaptchaComponent extends Component
 
     public function validate($field, $value)
     {
+        if(empty(trim($value))){
+            return false;
+        }
         if(!$this->getConfig('sensitive')){
             return strtolower($this->get($field)) == strtolower($value);
         }
