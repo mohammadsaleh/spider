@@ -69,7 +69,7 @@ class CaptchaHelper extends Helper {
             if($this->getConfig('timeout')){
                 $html .= $this->Html->scriptBlock('var captchaTimeout = ' . $this->getConfig('timeout') * 1000 .';');
             }
-            $html .= $this->Html->script('Captcha.script');
+            $html .= $this->Html->script('Captcha.script', ['block' => true]);
             $this->__isLoadedScript = true;
         }
         return $html;
