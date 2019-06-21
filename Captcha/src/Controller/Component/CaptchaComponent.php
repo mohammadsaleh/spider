@@ -74,6 +74,8 @@ use Cake\Event\Event;
 class CaptchaComponent extends Component
 {
 
+    private $__Session = null;
+
     /**
      * Default monospaced fonts available
      *
@@ -158,7 +160,7 @@ class CaptchaComponent extends Component
 //        $maxlifetime = ini_get("session.gc_maxlifetime");
 //        debug($maxlifetime);die;
         $this->Controller = $this->_registry->getController();
-        $this->Session = $this->Controller->getRequest()->getSession();
+        $this->__Session = $this->Controller->getRequest()->getSession();
         $passData = $this->Controller->getRequest()->getParam('pass');
         if(!empty($passData)){
             parse_str(base64_decode(array_shift($passData)), $passData);
@@ -352,7 +354,7 @@ class CaptchaComponent extends Component
         //debug($this->getConfig('stringOperation'));
         //debug($this->__getSessionKey());
         //debug($code);
-        $this->Session->write($this->__getSessionKey(), $code);
+        $this->__Session->write($this->__getSessionKey(), $code);
     }
 
     function __imageCaptcha()
@@ -408,8 +410,8 @@ class CaptchaComponent extends Component
 
         $sessionKey = $this->__getSessionKey();
 
-        $this->Session->delete($sessionKey);
-        $this->Session->write($sessionKey, $code);
+        $this->__Session->delete($sessionKey);
+        $this->__Session->write($sessionKey, $code);
         //@ob_end_clean(); //clean buffers, as a fix for 'headers already sent errors..'
 
         /* output captcha image to browser */
@@ -420,7 +422,7 @@ class CaptchaComponent extends Component
 
     public function get($sessionKey)
     {
-        return $this->Session->read("{$sessionKey}");
+        return $this->__Session->read("{$sessionKey}");
     }
 
     private function __prepareThemes()
