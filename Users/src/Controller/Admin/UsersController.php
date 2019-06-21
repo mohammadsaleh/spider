@@ -254,4 +254,17 @@ class UsersController extends AppController
         }
         $this->set(compact('user'));
     }
+
+    /**
+     * Logging user out
+     * @return \Cake\Network\Response|null
+     */
+    public function logout() {
+        $logoutRedirect = $this->redirect($this->Auth->logout());
+        if($this->Cookie->check('remember_me')){
+            $this->Cookie->delete('remember_me');
+        }
+        $this->getEventManager()->dispatch(new Event('Users.Users.logout', $this));
+        return $logoutRedirect;
+    }
 }

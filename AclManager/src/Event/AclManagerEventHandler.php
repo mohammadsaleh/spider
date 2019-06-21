@@ -210,8 +210,10 @@ class AclManagerEventHandler implements EventListenerInterface
         $currentUrl = trim($this->controller->request->getPath(), '/');
 		$adminScope = trim(SpiderNav::getAdminScope(), '/');
 		if(strpos($currentUrl, $adminScope) === 0){
-			$this->controller->Auth->setConfig('loginAction', $this->controller->Auth->getConfig('admin.loginAction'));
-			$this->controller->Auth->setConfig('loginRedirect', $this->controller->Auth->getConfig('admin.loginRedirect'));
+            $this->controller->Auth->setConfig('loginAction', $this->controller->Auth->getConfig('admin.loginAction'));
+            $this->controller->Auth->setConfig('loginRedirect', $this->controller->Auth->getConfig('admin.loginRedirect'));
+            $this->controller->Auth->setConfig('logoutRedirect', $this->controller->Auth->getConfig('admin.logoutRedirect'));
+            $this->controller->Auth->setConfig('unauthorizedRedirect', $this->controller->Auth->getConfig('admin.unauthorizedRedirect'));
 		}
 		if(!$this->controller->Auth->user()){
 			$this->_tryLoginUserWithCookie();
